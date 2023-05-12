@@ -1,0 +1,54 @@
+<div class="home profile-style promoted-style sidebar-page-data wo_sidebar_pages group-sug" data-page-id="<?php echo $wo['GroupList']['id']?>">
+    <div class="card hovercard promoted">
+        <div class="cardheader">
+			<a href="<?php echo $wo['GroupList']['url'];?>" data-ajax="?link1=timeline&u=<?php echo $wo['GroupList']['username']?>">
+				<img src="<?php echo $wo['GroupList']['cover']?>" id="cover-image" alt="<?php echo $wo['GroupList']['username']?> Cover Image">
+			</a>
+		</div>
+		<div class="page_middle">
+        <div class="avatar <?php echo Wo_RightToLeft('pull-left');?>">
+            <img id="updateImage-<?php echo $wo['GroupList']['id']?>" alt="<?php echo $wo['GroupList']['username']?> Profile Picture" src="<?php echo $wo['GroupList']['avatar']?>">
+        </div>
+        <div class="info">
+            <div class="title">
+                <span class="user-popover" data-id="<?php echo $wo['GroupList']['id'];?>" data-type="<?php echo $wo['GroupList']['type'];?>">
+                <a id="user-full-name" href="<?php echo $wo['GroupList']['url'];?>" data-ajax="?link1=timeline&u=<?php echo $wo['GroupList']['username']?>"><?php echo $wo['GroupList']['group_title'];?></a>  <?php if ($wo['GroupList']['verified'] == 1) { ?> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="verified-color feather feather-check-circle" title="<?php echo $wo['lang']['verified_user'];?>" data-toggle="tooltip" style="vertical-align: unset;"><path d="M23,12L20.56,9.22L20.9,5.54L17.29,4.72L15.4,1.54L12,3L8.6,1.54L6.71,4.72L3.1,5.53L3.44,9.21L1,12L3.44,14.78L3.1,18.47L6.71,19.29L8.6,22.47L12,21L15.4,22.46L17.29,19.28L20.9,18.46L20.56,14.78L23,12M10,17L6,13L7.41,11.59L10,14.17L16.59,7.58L18,9L10,17Z" /></svg> <?php } ?>
+                </span>
+            </div>
+			<div class="page_catg text-muted" style="font-size: 12px;"><?php echo $wo['GroupList']['category']?></div>
+			<div class="text-muted" style="font-size: 12px;">
+				<?php echo Wo_CountGroupMembers($wo['GroupList']['id']);?> <?php echo $wo['lang']['members'];?>
+			</div>
+        </div>
+		</div>
+		<div class="user-follow-button">
+			<?php echo Wo_GetJoinButton($wo['GroupList']['id']);?>
+		</div>
+		<hr>
+    </div>
+</div>
+
+<style>
+.sidebar .wo_sidebar_pages .user-follow-button button {
+	margin: 10px 7px;
+	width: calc(100% - 14px);
+	border-radius: 8px !important;
+	line-height: 30px;
+}
+.sidebar .wo_sidebar_pages .card {
+    position: relative;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: none;
+    /* border-radius: .25rem; */
+}
+.group-sug {
+    padding: 0px;
+}
+</style>

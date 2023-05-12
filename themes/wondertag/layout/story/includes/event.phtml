@@ -1,0 +1,35 @@
+<?php if(!empty($wo['story']['page_event_id'])) { ?>
+	<div class="post-fetched-url wo_post_fetch_event">
+		<?php if (!empty($wo['story']['event']['cover'])) {?>
+			<div class="post-fetched-url-con">
+				<a href="<?php echo $wo['story']['event']['url'];?>"><img src="<?php echo $wo['story']['event']['cover'];?>"/></a>
+			</div>
+		<?php } ?>
+		<div class="fetched-url-text">
+		<?php 
+			$ru_month = array( 'Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь' );
+			$en_month = array( 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December' );
+		?>
+			<div class="short_start_dt">
+				<span>
+				<?php
+					if ($_SESSION["lang"] == "russian"){ 
+						echo str_replace($en_month, $ru_month, date('F',strtotime($wo['story']['event']['start_edit_date']))); 
+					} else {
+						echo date('F',strtotime($wo['story']['event']['start_edit_date'])); 
+					}
+				?>
+				</span>
+				<b><?php echo date('d',strtotime($wo['story']['event']['start_edit_date'])); ?></b>
+			</div>
+			<a href="<?php echo $wo['story']['event']['url'];?>">
+				<h4 class="truncate"><?php echo $wo['story']['event']['name'];?></h4>
+				<div class="description"><?php echo $wo['story']['event']['location']; ?></div>
+			</a>
+			<span id="small-going-<?php echo $wo['story']['event']['id']?>">
+				<?php echo Wo_GetGoingButton($wo['story']['event']['id']);?>
+			</span>
+		</div>
+		<div class="clear"></div>
+	</div>
+<?php } ?>

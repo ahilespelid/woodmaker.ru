@@ -1,0 +1,8 @@
+{
+    "sql_db_host": "127.0.0.1:3310",
+    "sql_db_user": "wood-user",
+    "sql_db_pass": "mU3hW3oW3v",
+    "sql_db_name": "wood-base",
+    "site_url": "https://woodmaker.ru",
+    "purchase_code": "e443f42d-74a0-4552-afee-204eaaab87fa"
+}
