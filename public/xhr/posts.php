@@ -380,7 +380,8 @@ if ($f == 'posts') {
                         'size' => $_FILES["postPhotos"]["size"][0],
                         'type' => $_FILES["postPhotos"]["type"][0]
                     ); 
-                    $media    = Wo_ShareFile($fileInfo, 1); pa($mediaFilename); exit;
+                    $media    = Wo_ShareFile($fileInfo, 1); 
+					pa($mediaFilename); 
                     if (!empty($media)) {
                         $image_file = Wo_GetMedia($media['filename']);
                         $upload     = true;
