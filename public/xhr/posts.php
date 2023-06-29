@@ -1,4 +1,14 @@
 <?php
+function sendErrorResponse($status, $errors, $invalid_file) {
+    header("Content-type: application/json");
+    echo json_encode(array(
+        'status' => $status,
+        'errors' => $errors,
+        'invalid_file' => $invalid_file
+    ));
+    exit();
+}
+
 if ($f == 'posts') {
     if ($s == 'fetch_url') {
         if (preg_match('%(?:youtube(?:-nocookie)?\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)/|.*[?&]v=)|youtu\.be/)([^"&?/ ]{11})%i', $_POST["url"], $match)) {
@@ -174,43 +184,45 @@ if ($f == 'posts') {
         }
     }
     if ($s == 'search_for_posts') {
-        $html = '';
-        if (!empty($_GET['search_query'])) {
-            $search_data = Wo_SearchForPosts($_GET['id'], $_GET['search_query'], 20, $_GET['type']);
-            if (count($search_data) == 0) {
-                $html = Wo_LoadPage('story/filter-no-stories-found');
-            } else {
-                foreach ($search_data as $wo['story']) {
-                    $html .= Wo_LoadPage('story/content');
-                }
-            }
-            $data = array(
-                'status' => 200,
-                'html' => $html
-            );
-        }
-        header("Content-type: application/json");
-        echo json_encode($data);
-        exit();
-    }
-    if ($s == 'get_new_hashtag_posts') {
-        $html = '';
-        if (!empty($_GET['before_post_id']) && !empty($_GET['hashtagName'])) {
-            $posts = Wo_GetHashtagPosts($_GET['hashtagName'], 0, 20, $_GET['before_post_id']);
-            foreach ($posts as $wo['story']) {
-                if (!empty($_GET['api'])) {
-                    echo Wo_LoadPage('story/api-posts');
-                } else {
-                    echo Wo_LoadPage('story/content');
-                }
-            }
-        }
-        exit();
-    }
-    if ($s == 'insert_new_post') {
-///*/ ahilespelid ///*/
-        //pa($_POST);
+		if (empty($_GET['search_query'])) {
+			exit();
+		}
 
+		$html = '';
+		$search_data = Wo_SearchForPosts($_GET['id'], $_GET['search_query'], 20, $_GET['type']);
+
+		if (count($search_data) == 0) {
+			$html = Wo_LoadPage('story/filter-no-stories-found');
+		} else {
+			foreach ($search_data as $wo['story']) {
+				$html .= Wo_LoadPage('story/content');
+			}
+		}
+
+		$data = array(
+			'status' => 200,
+			'html' => $html
+		);
+
+		ob_start();
+		header("Content-type: application/json");
+		echo json_encode($data);
+		ob_end_flush();
+		exit();
+	}
+    if ($s === 'get_new_hashtag_posts' && !empty($_GET['before_post_id']) && !empty($_GET['hashtagName'])) {
+		$html = '';
+		$posts = Wo_GetHashtagPosts($_GET['hashtagName'], 0, 20, $_GET['before_post_id']);
+		foreach ($posts as $wo['story']) {
+			if (!empty($_GET['api'])) {
+				echo Wo_LoadPage('story/api-posts');
+			} else {
+				echo Wo_LoadPage('story/content');
+			}
+		}
+		exit();
+	}
+    if ($s == 'insert_new_post') {
         $media = $mediaFilename = $mediaName = $post_photo = $video_thumb = $html = $ffmpeg_convert_video = '';        
         $recipient_id = $page_id = $group_id = $event_id = $blur = $post_privacy = 0;        
         $invalid_file = $errors = false;
@@ -230,39 +242,46 @@ if ($f == 'posts') {
             exit;
         }
         
-        if(!empty($_POST['recipient_id'])){
-            $recipient_id = Wo_Secure($_POST['recipient_id']);} else
-        if(!empty($_POST['event_id'])){
-            $event_id = Wo_Secure($_POST['event_id']);} else 
-        if(!empty($_POST['page_id'])){
-            $page_id = Wo_Secure($_POST['page_id']);} else 
-        if(!empty($_POST['group_id'])){
-            $group_id = Wo_Secure($_POST['group_id']);
-            $group = Wo_GroupData($group_id);
-            if(!empty($group['id'])){
-                if($group['privacy'] == 1){$_POST['postPrivacy'] = 0;} else if($group['privacy'] == 2){$_POST['postPrivacy'] = 2;}
-            }
-        }
+        if (!empty($_POST['recipient_id'])) {
+			$recipient_id = Wo_Secure($_POST['recipient_id']);
+		} elseif (!empty($_POST['event_id'])) {
+			$event_id = Wo_Secure($_POST['event_id']);
+		} elseif (!empty($_POST['page_id'])) {
+			$page_id = Wo_Secure($_POST['page_id']);
+		} elseif (!empty($_POST['group_id'])) {
+			$group_id = Wo_Secure($_POST['group_id']);
+			$group = Wo_GroupData($group_id);
+			if (!empty($group['id'])) {
+				$_POST['postPrivacy'] = ($group['privacy'] == 1) ? 0 : 2;
+			}
+		}
          
-        if(isset($_FILES['postFile']['name'])){
-            if($_FILES['postFile']['size'] > $wo['config']['maxUpload']){
-                $errors = str_replace('{file_size}', Wo_SizeUnits($wo['config']['maxUpload']), $wo['lang']['file_too_big']);
-            }elseif(Wo_IsFileAllowed($_FILES['postFile']['name']) == false){
-                $errors = $wo['lang']['file_not_supported'];
-            }else{
-                $fileInfo = [
-                    'file' => $_FILES["postFile"]["tmp_name"],
-                    'name' => $_FILES['postFile']['name'],
-                    'size' => $_FILES["postFile"]["size"],
-                    'type' => $_FILES["postFile"]["type"]
-                ];
-                $media = Wo_ShareFile($fileInfo); 
-                if(!empty($media)){
-                    $mediaFilename = $media['filename'];
-                    $mediaName     = $media['name'];
-                }
-            }
-        }
+        if (isset($_FILES['postFile']['name'])) {
+			$postFile = $_FILES['postFile'];
+
+			if ($postFile['size'] > $wo['config']['maxUpload']) {
+				$errors = str_replace('{file_size}', Wo_SizeUnits($wo['config']['maxUpload']), $wo['lang']['file_too_big']);
+				sendErrorResponse(400, $errors, '');
+			}
+
+			if (!Wo_IsFileAllowed($postFile['name'])) {
+				$errors = $wo['lang']['file_not_supported'];
+				sendErrorResponse(400, $errors, '');
+			}
+			$fileInfo = [
+				'file' => $postFile['tmp_name'],
+				'name' => $postFile['name'],
+				'size' => $postFile['size'],
+				'type' => $postFile['type']
+			];
+
+			$media = Wo_ShareFile($fileInfo);
+
+			if (!empty($media)) {
+				$mediaFilename = $media['filename'];
+				$mediaName = $media['name'];
+			}
+		}
 
         $not_video = true;
         if (isset($_FILES['postVideo']['name']) && empty($mediaFilename)) {
@@ -273,10 +292,13 @@ if ($f == 'posts') {
             }
             if ($_FILES['postVideo']['size'] > $wo['config']['maxUpload']) {
                 $errors = str_replace('{file_size}', Wo_SizeUnits($wo['config']['maxUpload']), $wo['lang']['file_too_big']);
+				sendErrorResponse(400, $errors, '');
             } elseif (Wo_IsFileAllowed($_FILES['postVideo']['name']) == false && $wo['config']['ffmpeg_system'] != 'on') {
                 $errors = $wo['lang']['file_not_supported'];
+				sendErrorResponse(400, $errors, '');
             } elseif ($wo['config']['ffmpeg_system'] == 'on' && $not_video) {
                 $errors = $wo['lang']['file_not_supported'];
+				sendErrorResponse(400, $errors, '');
             } else {
                 $fileInfo = array(
                     'file' => $_FILES["postVideo"]["tmp_name"],
@@ -314,42 +336,50 @@ if ($f == 'posts') {
                     $wo['config']['cloud_upload'] = $cloud_upload;
                 }
                 if (!empty($media)) {
-                    $mediaFilename = $media['filename'];
-                    $mediaName     = $media['name'];
-                    if (!empty($mediaFilename) && $wo['config']['ffmpeg_system'] == 'on') {
-                        $ffmpeg_convert_video = $mediaFilename;
-                    }
-                    $img_types = array(
-                        'image/png',
-                        'image/jpeg',
-                        'image/jpg',
-                        'image/gif'
-                    );
-                    if (!empty($_FILES['video_thumb']) && in_array($_FILES["video_thumb"]["type"], $img_types)) {
-                        $fileInfo = array(
-                            'file' => $_FILES["video_thumb"]["tmp_name"],
-                            'name' => $_FILES['video_thumb']['name'],
-                            'size' => $_FILES["video_thumb"]["size"],
-                            'type' => $_FILES["video_thumb"]["type"],
-                            'types' => 'jpeg,png,jpg,gif',
-                            'crop' => array(
-                                'width' => 525,
-                                'height' => 295
-                            )
-                        );
-                        $media    = Wo_ShareFile($fileInfo);
-                        if (!empty($media)) {
-                            $video_thumb = $media['filename'];
-                        }
-                    }
-                }
+					$mediaFilename = $media['filename'];
+					$mediaName = $media['name'];
+
+					if (!empty($mediaFilename) && $wo['config']['ffmpeg_system'] == 'on') {
+						$ffmpeg_convert_video = $mediaFilename;
+					}
+
+					$img_types = array(
+						'image/png' => true,
+						'image/jpeg' => true,
+						'image/jpg' => true,
+						'image/gif' => true
+					);
+
+					if (!empty($_FILES['video_thumb']) && isset($img_types[$_FILES["video_thumb"]["type"]])) {
+						$fileInfo = array(
+							'file' => $_FILES["video_thumb"]["tmp_name"],
+							'name' => $_FILES['video_thumb']['name'],
+							'size' => $_FILES["video_thumb"]["size"],
+							'type' => $_FILES["video_thumb"]["type"],
+							'types' => 'jpeg,png,jpg,gif',
+							'crop' => array(
+								'width' => 525,
+								'height' => 295
+							)
+						);
+
+						$media = Wo_ShareFile($fileInfo);
+
+						if (!empty($media)) {
+							$video_thumb = $media['filename'];
+						}
+					}
+				}
+
             }
         }
         if (isset($_FILES['postMusic']['name']) && empty($mediaFilename)) {
             if ($_FILES['postMusic']['size'] > $wo['config']['maxUpload']) {
                 $errors = str_replace('{file_size}', Wo_SizeUnits($wo['config']['maxUpload']), $wo['lang']['file_too_big']);
+				sendErrorResponse(400, $errors, '');
             } else if (Wo_IsFileAllowed($_FILES['postMusic']['name']) == false) {
                 $errors = $wo['lang']['file_not_supported'];
+				sendErrorResponse(400, $errors, '');
             } else {
                 $fileInfo = array(
                     'file' => $_FILES["postMusic"]["tmp_name"],
@@ -371,8 +401,10 @@ if ($f == 'posts') {
             if (count($_FILES['postPhotos']['name']) == 1) {
                 if ($_FILES['postPhotos']['size'][0] > $wo['config']['maxUpload']) {
                     $errors = str_replace('{file_size}', Wo_SizeUnits($wo['config']['maxUpload']), $wo['lang']['file_too_big']);
+					sendErrorResponse(400, $errors, '');
                 } else if (Wo_IsFileAllowed($_FILES['postPhotos']['name'][0]) == false) {
                     $errors = $wo['lang']['file_not_supported'];
+					sendErrorResponse(400, $errors, '');
                 } else {
                     $fileInfo = array(
                         'file' => $_FILES["postPhotos"]["tmp_name"][0],
@@ -381,7 +413,7 @@ if ($f == 'posts') {
                         'type' => $_FILES["postPhotos"]["type"][0]
                     ); 
                     $media    = Wo_ShareFile($fileInfo, 1); 
-					pa($mediaFilename); 
+					//pa($mediaFilename); 
                     if (!empty($media)) {
                         $image_file = Wo_GetMedia($media['filename']);
                         $upload     = true;
@@ -392,6 +424,7 @@ if ($f == 'posts') {
                             $upload       = false;
                             @unlink($media['filename']);
                             Wo_DeleteFromToS3($media['filename']);
+							sendErrorResponse(400, $errors, '');
                         }
                         $mediaFilename = $media['filename'];
                         $mediaName     = $media['name'];
@@ -404,35 +437,24 @@ if ($f == 'posts') {
         if (!empty($_FILES['postPhotos']) && !empty($_FILES['postMusic'])) {
             $multi = 1;
         }
-        if (empty($_POST['postPrivacy'])) {
-            $_POST['postPrivacy'] = 0;
-        }
+        $post_privacy = isset($_POST['postPrivacy']) ? $_POST['postPrivacy'] : 0;
         $post_privacy  = 0;
-        $privacy_array = array(
-            '0',
-            '1',
-            '2',
-            '3',
-            '4'
-        );
+        $privacy_array = ['0', '1', '2', '3', '4'];
+		
         if ($wo['config']['website_mode'] == 'patreon' || $wo['config']['website_mode'] == 'linkedin') {
             $privacy_array[] = '5';
         }
-        if (isset($_POST['postPrivacy'])) {
-            if (in_array($_POST['postPrivacy'], $privacy_array)) {
-                $post_privacy = $_POST['postPrivacy'];
-            }
-        }
-        if ($wo['config']['shout_box_system'] != 1 && $post_privacy == 4) {
-            $post_privacy = 0;
-        }
-        if (empty($page_id)) {
-            setcookie("post_privacy", $post_privacy, time() + (10 * 365 * 24 * 60 * 60));
-        }
-        $import_url_image = '';
-        $url_link         = '';
-        $url_content      = '';
-        $url_title        = '';
+        if (isset($_POST['postPrivacy']) && in_array($_POST['postPrivacy'], $privacy_array)) {
+			$post_privacy = $_POST['postPrivacy'];
+		}
+        if ($wo['config']['shout_box_system'] !== 1 && $post_privacy === 4) {
+			$post_privacy = 0;
+		}
+
+		if (empty($page_id)) {
+			setcookie("post_privacy", $post_privacy, time() + 315360000); // Set cookie for 10 years
+		}
+		$import_url_image = $url_link = $url_content = $url_title = '';
         if (!empty($_POST['url_link']) && !empty($_POST['url_title']) && filter_var($_POST['url_link'], FILTER_VALIDATE_URL)) {
             $url_link  = $_POST['url_link'];
             $url_title = $_POST['url_title'];
@@ -443,9 +465,7 @@ if ($f == 'posts') {
                 $import_url_image = @Wo_ImportImageFromUrl($_POST['url_image']);
             }
             if (preg_match("/(http|https):\/\/twitter\.com\/[a-zA-Z0-9_]+\/status\/[0-9]+/", $_POST['url_link'])) {
-                $url_content      = '';
-                $import_url_image = '';
-                $url_title        = '';
+                $url_content      = $import_url_image = $url_title = '';
                 $tweet_url        = Wo_Secure($_POST['url_link']);
                 $tweeturl         = 'https://publish.twitter.com/oembed?url=' . $tweet_url;
                 $api_request      = @file_get_contents($tweeturl);
@@ -458,9 +478,7 @@ if ($f == 'posts') {
                 $tiktok_url       = Wo_Secure($_POST['url_link']);
                 $tiktok_url       = 'https://www.tiktok.com/oembed?url=' . $tiktok_url;
                 $api_request      = @file_get_contents($tiktok_url);
-                $url_content      = '';
-                $import_url_image = '';
-                $url_title        = '';
+                $url_content   	  = $import_url_image = $url_title = '';
                 if (!empty($api_request)) {
                     $json_decode = json_decode($api_request);
                     $url_title   = $json_decode->author_name;
@@ -468,8 +486,7 @@ if ($f == 'posts') {
                 }
             }
         }
-        $post_text = '';
-        $post_map  = '';
+        $post_text = $post_map  = '';
         if (!empty($_POST['postText']) && !ctype_space($_POST['postText'])) {
             $post_text = $_POST['postText'];
         }
@@ -483,11 +500,7 @@ if ($f == 'posts') {
         if (!isset($_FILES['postPhotos']['name'])) {
             $album_name = '';
         }
-        $traveling = '';
-        $watching  = '';
-        $playing   = '';
-        $listening = '';
-        $feeling   = '';
+        $traveling = $watching = $playing = $listening = $feeling = '';
         if (!empty($_POST['feeling_type'])) {
             $array_types = array(
                 'feelings',
@@ -533,6 +546,7 @@ if ($f == 'posts') {
                 $new_string = pathinfo($_FILES['postPhotos']['name'][$i]);
                 if (!in_array(strtolower($new_string['extension']), $allowed)) {
                     $errors[] = $error_icon . $wo['lang']['please_check_details'];
+					sendErrorResponse(400, $errors, '');
                 }
             }
         }
@@ -541,10 +555,12 @@ if ($f == 'posts') {
                 foreach ($_POST['answer'] as $key => $value) {
                     if (empty($value) || ctype_space($value)) {
                         $errors = 'Answer #' . ($key + 1) . ' is empty.';
+						sendErrorResponse(400, $errors, '');
                     }
                 }
             } else {
                 $errors = 'Please write the question.';
+				sendErrorResponse(400, $errors, '');
             }
         }
         if (empty($errors) && $invalid_file == false) {
@@ -609,9 +625,11 @@ if ($f == 'posts') {
                         $post_data['postSticker'] = $_POST['postSticker'];
                     } else {
                         $errors = $wo['lang']['file_not_supported'];
+						sendErrorResponse(400, $errors, '');
                     }
                 } else {
                     $errors = $wo['lang']['file_not_supported'];
+					sendErrorResponse(400, $errors, '');
                 }
             } else if (empty($_FILES['postPhotos']) && preg_match_all('/https?:\/\/(?:[^\s]+)\.(?:png|jpg|gif|jpeg)/', $post_data['postText'], $matches)) {
                 if (!empty($matches[0][0]) && Wo_IsUrl($matches[0][0])) {
@@ -807,6 +825,7 @@ if ($f == 'posts') {
         } else {
             if (empty($errors)) {
                 $errors = str_replace('&#039;', "'", $wo['lang']['type_something_to_post']);
+				sendErrorResponse(400, $errors, '');
             }
             $data = array(
                 'status' => 400,
@@ -818,19 +837,12 @@ if ($f == 'posts') {
                     $errors       = $wo['lang']['question_can_not_empty'];
                     $invalid_file = false;
                 }
-                header("Content-type: application/json");
-                echo json_encode(array(
-                    'status' => 400,
-                    'errors' => $errors,
-                    'invalid_file' => $invalid_file
-                ));
-                exit();
+                sendErrorResponse(400, $errors, '');
             }
         }
         header("Content-type: application/json");
         echo json_encode($data);
         exit();
-///*/ ahilespelid ///*/
     }
     if ($s == 'send_notify' && Wo_CheckMainSession($hash_id) === true) {
         if (!empty($_POST['post_id']) && is_numeric($_POST['post_id']) && $_POST['post_id'] > 0) {
@@ -989,12 +1001,7 @@ if ($f == 'posts') {
                 }
             }
         } else if (!empty($_GET['filter_by_more']) && !empty($_GET['after_post_id'])) {
-            $page_id  = 0;
-            $group_id = 0;
-            $user_id  = 0;
-            $story_id = 0;
-            $event_id = 0;
-            $ad_id    = 0;
+            $page_id  = $group_id = $user_id  = $story_id = $event_id = $ad_id = 0;
             if (!empty($_GET['page_id']) && $_GET['page_id'] > 0) {
                 $page_id = Wo_Secure($_GET['page_id']);
             }
@@ -1579,8 +1586,7 @@ if ($f == 'posts') {
     }
     if ($s == 'register_reply') {
         if (!empty($_POST['comment_id']) && isset($_POST['text']) && Wo_CheckMainSession($hash_id) === true) {
-            $html    = '';
-            $page_id = '';
+            $html    = $page_id = '';
             if (!empty($_POST['page_id'])) {
                 $page_id = $_POST['page_id'];
             }
