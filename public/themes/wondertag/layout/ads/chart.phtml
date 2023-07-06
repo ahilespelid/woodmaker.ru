@@ -20,29 +20,24 @@
 
 $categories = "";
 $views = "";
+$clicks = "";
 $spend = "";
 
-if( $wo['ad_data']['bidding'] == "views" ){
-    foreach ($wo["views"] as $key => $value) {
-        $categories .= '"' . $value["DateOnly"] . '", ';
-        $views .= $value["ADviews"] . ', ';
-        $spend .= number_format($value["Spend"], 2) . ', ';
-    }
+foreach ($wo["views"] as $key => $value) {
+    $categories .= '"' . $value["DateOnly"] . '", ';
+    $views .= $value["ADviews"] . ', ';
+    $spend .= number_format($value["Spend"], 2) . ', ';
 }
 
-if( $wo['ad_data']['bidding'] == "clicks" ){
-    foreach ($wo["clicks"] as $key => $value) {
-        $categories .= '"' . $value["DateOnly"] . '", ';
-        $views .= $value["ADClicks"] . ', ';
-        $spend .= number_format($value["Spend"], 2) . ', ';
-    }
+foreach ($wo["clicks"] as $key => $value) {
+    $categories .= '"' . $value["DateOnly"] . '", ';
+    $clicks .= $value["ADClicks"] . ', ';
+    $spend .= number_format($value["Spend"], 2) . ', ';
 }
 
 
 $title = "";
 ?>
-
-<?php if( $wo['ad_data']['bidding'] == "views" ){ $title = "Views"; }else{ $title = "Clicks"; }?>
 
 <script>
    $(function () {
@@ -54,7 +49,7 @@ $title = "";
             type: 'column'
         },
         title: {
-            text: 'Monthly <?php echo $title;?>'
+            text: 'Monthly Views/Clicks'
         },
         xAxis: {
             categories: [ <?php echo $categories; ?> ],
@@ -84,8 +79,11 @@ $title = "";
             }
         },
         series: [{
-            name: '<?php echo $title;?>',
+            name: 'Views',
             data: [ <?php echo $views; ?> ]
+        },{
+            name: 'Clicks',
+            data: [ <?php echo $clicks; ?> ]
         },
         {
             name: 'Spent',

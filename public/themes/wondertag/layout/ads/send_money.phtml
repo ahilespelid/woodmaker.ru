@@ -97,6 +97,10 @@
 
           $("#send-money-form-alert").html(alert_msg);
           $("#send-money-form").resetForm();
+		  setTimeout(function () {
+          	$('#send_money_modal').modal('hide');
+          	$('#send-money-form').find('.disable_btn').removeAttr('disabled');
+          },2000);
         } 
 
         else if (data['message']) {
@@ -106,6 +110,7 @@
           }).prepend('<i class="fa fa-info-circle"></i> ');
 
           $("#send-money-form-alert").html(alert_msg);
+		  $('#send-money-form').find('.disable_btn').removeAttr("disabled");
         } 
 		$('#send-money-form').find('.disable_btn').removeAttr("disabled");
       }
