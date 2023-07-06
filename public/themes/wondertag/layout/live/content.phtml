@@ -39,6 +39,10 @@
 } ?>
 
 <script>
+<?php if ($wo['config']['agora_live_video'] == 1 && $wo['config']['amazone_s3_2'] == 1 && $wo['config']['live_video_save'] == 1) { ?>
+	console.error("Creating a live stream that cloud recording is not enabled.");
+<?php } ?>
+  
 window.onbeforeunload = function() {
 	DeleteLive();
 }

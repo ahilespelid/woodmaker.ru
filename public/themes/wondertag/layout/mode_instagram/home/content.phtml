@@ -476,17 +476,17 @@ $(function () {
     var color;
 	var quote;
     if (hrs < 12) {
-        greet = '<?php echo $wo['lang']['good_morning']?>, <?php if (!empty($wo['user']['first_name'])) { ?><?php echo $wo['user']['first_name']?><?php } else {?><?php echo $wo['user']['name']?><?php } ?>';
+        greet = "<?php echo $wo['lang']['good_morning']?>" + ', <?php if (!empty($wo['user']['first_name'])) { ?><?php echo $wo['user']['first_name']?><?php } else {?><?php echo $wo['user']['name']?><?php } ?>';
         color = 'morning';
-		quote = '<?php echo $wo['lang']['good_morning_quote']?>';
+		quote = "<?php echo $wo['lang']['good_morning_quote']?>";
     } else if (hrs >= 12 && hrs <= 18) {
-        greet = '<?php echo $wo['lang']['good_afternoon']?>, <?php if (!empty($wo['user']['first_name'])) { ?><?php echo $wo['user']['first_name']?><?php } else {?><?php echo $wo['user']['name']?><?php } ?>';
+        greet = "<?php echo $wo['lang']['good_afternoon']?>" + ', <?php if (!empty($wo['user']['first_name'])) { ?><?php echo $wo['user']['first_name']?><?php } else {?><?php echo $wo['user']['name']?><?php } ?>';
         color = 'noon';
-		quote = '<?php echo $wo['lang']['good_afternoon_quote']?>';
+		quote = "<?php echo $wo['lang']['good_afternoon_quote']?>";
     } else if (hrs >= 18 && hrs <= 24) {
-        greet = '<?php echo $wo['lang']['good_evening']?>, <?php if (!empty($wo['user']['first_name'])) { ?><?php echo $wo['user']['first_name']?><?php } else {?><?php echo $wo['user']['name']?><?php } ?>';
+        greet = "<?php echo $wo['lang']['good_evening']?>" + ', <?php if (!empty($wo['user']['first_name'])) { ?><?php echo $wo['user']['first_name']?><?php } else {?><?php echo $wo['user']['name']?><?php } ?>';
         color = 'evening';
-		quote = '<?php echo $wo['lang']['good_evening_quote']?>';
+		quote = "<?php echo $wo['lang']['good_evening_quote']?>";
     }
     if (is_day_enabled != 1) {
 		$('.greetalert').addClass(color);

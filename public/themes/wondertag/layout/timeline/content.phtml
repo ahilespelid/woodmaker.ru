@@ -98,6 +98,12 @@ if (mysqli_query($wo['sqlConnect'], "DESCRIBE `wondertage_settings`" )) {
 										<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path fill="currentColor" d="M23 18V6c0-1.1-.9-2-2-2H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2zM8.9 12.98l2.1 2.53 3.1-3.99c.2-.26.6-.26.8.01l3.51 4.68c.25.33.01.8-.4.8H6.02c-.42 0-.65-.48-.39-.81L8.12 13c.19-.26.57-.27.78-.02z"></path></svg> <?php echo $wo['lang']['cover']?>
 										<input type="file" name="cover" accept="image/x-png, image/jpeg" onchange="Wo_UpdateProfileCover();">
 									</span>
+									<?php if ($wo['config']['ai_user_system'] == 1) { ?>
+										<span class="btn btn-file btn-mat" onclick="openAiUserModel('cover')">
+											<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path fill="currentColor" d="M6 18H18V6H6V18ZM14 20H10V22H8V20H5C4.44772 20 4 19.5523 4 19V16H2V14H4V10H2V8H4V5C4 4.44772 4.44772 4 5 4H8V2H10V4H14V2H16V4H19C19.5523 4 20 4.44772 20 5V8H22V10H20V14H22V16H20V19C20 19.5523 19.5523 20 19 20H16V22H14V20ZM8 8H16V16H8V8Z"></path></svg> AI
+										</span>
+										<input type="hidden" name="ai_post" value="off" id="isAiCover">
+									<?php } ?>
 									<span class="btn btn-file btn-mat btn-sm tag_prof_repos_hide" onclick="Wo_StartRepositioner();" title="<?php echo $wo['lang']['drag_to_re']?>">
 										<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path fill="currentColor" d="M13,6V11H18V7.75L22.25,12L18,16.25V13H13V18H16.25L12,22.25L7.75,18H11V13H6V16.25L1.75,12L6,7.75V11H11V6H7.75L12,1.75L16.25,6H13Z"></path></svg>
 									</span>
@@ -160,6 +166,14 @@ if (mysqli_query($wo['sqlConnect'], "DESCRIBE `wondertage_settings`" )) {
 												<input type="file" name="avatar" accept="image/x-png, image/jpeg" onchange="Wo_UpdateProfileAvatar();">
 											</a>
 										</li>
+										<?php if ($wo['config']['ai_user_system'] == 1) { ?>
+											<li>
+												<a class="btn-file pointer" onclick="openAiUserModel()">
+													<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="currentColor" class="hover_path" d="M14 20H10V22H8V20H5C4.44772 20 4 19.5523 4 19V16H2V14H4V10H2V8H4V5C4 4.44772 4.44772 4 5 4H8V2H10V4H14V2H16V4H19C19.5523 4 20 4.44772 20 5V8H22V10H20V14H22V16H20V19C20 19.5523 19.5523 20 19 20H16V22H14V20ZM7 7V11H11V7H7Z"></path><path fill="currentColor" d="M6 18H18V6H6V18ZM14 20H10V22H8V20H5C4.44772 20 4 19.5523 4 19V16H2V14H4V10H2V8H4V5C4 4.44772 4.44772 4 5 4H8V2H10V4H14V2H16V4H19C19.5523 4 20 4.44772 20 5V8H22V10H20V14H22V16H20V19C20 19.5523 19.5523 20 19 20H16V22H14V20ZM8 8H16V16H8V8Z"></path></svg> <?php echo $wo['lang']['generate_using_ai']; ?>
+													<input type="hidden" name="ai_post" value="off" id="isAiAvatar">
+												</a>
+											</li>
+										<?php } ?>
 										<?php if ($wo['user_profile']['avatar_org'] != $wo['userDefaultAvatar'] && $wo['user_profile']['avatar_org'] != $wo['userDefaultFAvatar']) {?>
 											<li>
 												<a class="pointer" onclick="OpenCropModal()">
@@ -209,18 +223,18 @@ if (mysqli_query($wo['sqlConnect'], "DESCRIBE `wondertage_settings`" )) {
 								<h6><?php echo $wo['lang']['open_to']; ?></h6>
 								<?php if ($wo['user_profile']['is_open_to_work'] == 0) { ?>
 									<label>
-										<input type="radio" value="finding_a_job" onchange="OpenToModal(this)">
+										<input type="radio" value="finding_a_job" onclick="OpenToModal('#finding_a_job_modal')">
 										<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><path fill="currentColor" d="M20,6H16V4A2,2 0 0,0 14,2H10C8.89,2 8,2.89 8,4V6H4C2.89,6 2,6.89 2,8V19A2,2 0 0,0 4,21H20A2,2 0 0,0 22,19V8A2,2 0 0,0 20,6M10,4H14V6H10V4M12,9A2.5,2.5 0 0,1 14.5,11.5A2.5,2.5 0 0,1 12,14A2.5,2.5 0 0,1 9.5,11.5A2.5,2.5 0 0,1 12,9M17,19H7V17.75C7,16.37 9.24,15.25 12,15.25C14.76,15.25 17,16.37 17,17.75V19Z"></path></svg> <?php echo $wo['lang']['finding_a_job']; ?>
 									</label>
 								<?php } ?>
 								<?php if ($wo['user_profile']['is_providing_service'] == 0) { ?>
 									<label>
-										<input type="radio" value="providing_services" onchange="OpenToModal(this)">
+										<input type="radio" value="providing_services" onclick="OpenToModal('#providing_services_modal')">
 										<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><path fill="currentColor" d="M11,13.5V21.5H3V13.5H11M12,2L17.5,11H6.5L12,2M17.5,13C20,13 22,15 22,17.5C22,20 20,22 17.5,22C15,22 13,20 13,17.5C13,15 15,13 17.5,13Z"></path></svg> <?php echo $wo['lang']['providing_services']; ?>
 									</label>
 								<?php } ?>
 								<label>
-									<input type="radio" value="hiring" onchange="OpenToModal(this)">
+									<input type="radio" value="hiring" onclick="OpenToModal('#create_hiring_modal')">
 									<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><path fill="currentColor" d="M8,3A2,2 0 0,0 6,5V9A2,2 0 0,1 4,11H3V13H4A2,2 0 0,1 6,15V19A2,2 0 0,0 8,21H10V19H8V14A2,2 0 0,0 6,12A2,2 0 0,0 8,10V5H10V3M16,3A2,2 0 0,1 18,5V9A2,2 0 0,0 20,11H21V13H20A2,2 0 0,0 18,15V19A2,2 0 0,1 16,21H14V19H16V14A2,2 0 0,1 18,12A2,2 0 0,1 16,10V5H14V3H16Z"></path></svg> <?php echo $wo['lang']['hiring']; ?>
 								</label>
 							</div>
@@ -1540,6 +1554,8 @@ body {background: url(<?php echo Wo_GetMedia($wo['user_profile']['background_ima
 		echo Wo_LoadPage('modals/report-user');
 	}
 ?>
+
+<?php if ($wo['config']['ai_user_system'] == 1) { echo Wo_LoadPage('timeline/ai_user');} ?>
 
 <script>
 function Wo_OpenReportBox() {

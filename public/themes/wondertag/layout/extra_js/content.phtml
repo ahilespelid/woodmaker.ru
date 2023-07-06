@@ -1426,14 +1426,14 @@ function Wo_GetPaymentLink(type,price,type2 = 'pro',type3 = 'show') {
     }
     $.get(Wo_Ajax_Requests_File() + '?f=wallet&s=pay'+link, function (data) {
       $('#pay_modal_wallet_btn').html("<?php echo $wo['lang']['pay']; ?> <?php echo Wo_GetCurrency($wo['config']['currency']);?>"+price);
-      $('#pay_modal_wallet_btn').removeAttr('disabled');
-          if (data.status == 200) {
+		  if (data.status == 200) {
             $('.pay_modal_wallet_alert').html("<div class='alert alert-success'><?php echo $wo['lang']['payment_successfully_done']; ?></div>");
             setTimeout( function (){
               location.href = data.url;
             } ,3000);
           }
           else{
+			$('#pay_modal_wallet_btn').removeAttr('disabled');
             $('.pay_modal_wallet_alert').html("<div class='alert alert-danger'>"+data.message+"</div>");
           }
       });
@@ -1474,20 +1474,19 @@ function Wo_RegisterCommentLike(comment_id) {
 
 <?php if ($wo['config']['website_mode'] == 'linkedin') { ?>
 function OpenToModal(self){
-  if ($(self).val() == 'finding_a_job') {
+  $('#finding_a_job_modal').modal('hide');
+  $('#providing_services_modal').modal('hide');
+  $('#create_hiring_modal').modal('hide');
+
+  if (self == '#finding_a_job_modal') {
     $('#finding_a_job_modal').modal('show');
   }
-  else if($(self).val() == 'providing_services'){
+  else if(self == '#providing_services_modal'){
     $('#providing_services_modal').modal('show');
     $('#providing_services_input').tagsinput({});
   }
-  else if($(self).val() == 'hiring'){
+  else if(self == '#create_hiring_modal'){
     $('#create_hiring_modal').modal('show');
-  }
-  else{
-    $('#finding_a_job_modal').modal('hide');
-    $('#providing_services_modal').modal('hide');
-    $('#create_hiring_modal').modal('hide');
   }
 }
 <?php } ?>
@@ -1688,5 +1687,22 @@ function Wo_OpenBannedMenu(type = 'notification'){
 function AddYandexResult(target,self,result_co) {
   $(target).val($(self).text());
   $(result_co).html('');
+}
+
+const loadImageFromUrl = url => fetch(url)
+                            .then(response => response.blob())
+                            .then(blob => new Promise((resolve, reject) => {
+                            const reader = new FileReader()
+                            reader.onloadend = () => resolve(reader.result)
+                            reader.onerror = reject
+                            reader.readAsDataURL(blob)
+                           }));
+function imageDataToFile(dataurl, filename) {
+   var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+   bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+   while(n--){
+   u8arr[n] = bstr.charCodeAt(n);
+   }
+  return new File([u8arr], filename, {type:mime});
 }
 </script>

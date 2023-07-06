@@ -94,6 +94,52 @@ $wo['user_setting'] = '';
 if (!empty($_GET['user'])) {
     $wo['user_setting'] = 'user=' . $_GET['user']. '&';
 }
+
+$wo['googleQR'] = '';
+$wo['authyQR'] = '';
+$wo['methodCount'] = 0;
+$wo['factor_used'] = $wo['lang']['two_factor'];
+
+if ($wo['setting_page'] == 'two-factor') {
+	if ($wo['setting']['two_factor_method'] == 'google') {
+        $wo['factor_used'] = $wo['lang']['google_authenticator'];
+    }
+
+    if ($wo['setting']['two_factor_method'] == 'authy') {
+        $wo['factor_used'] = $wo['lang']['authy_app'];
+    }
+
+    if ($wo['config']['two_factor'] == 1) {
+        $wo['methodCount'] += 1;
+    }
+
+    if ($wo['config']['google_authenticator'] == '1') {
+        $wo['methodCount'] += 1;
+        require_once 'assets/libraries/google_auth/vendor/autoload.php';
+        if (empty($wo['setting']['google_secret'])) {
+            $google2fa = new \PragmaRX\Google2FA\Google2FA();
+            $wo['setting']['google_secret'] = $google2fa->generateSecretKey();
+            $db->where('user_id',$wo['setting']['user_id'])->update(T_USERS,['google_secret' => $wo['setting']['google_secret']]);
+        }
+
+        $google2fa = new \PragmaRX\Google2FA\Google2FA();
+          
+        $text = $google2fa->getQRCodeUrl(
+	        $wo['config']['siteTitle'],
+	        $wo['setting']['username'],
+	        $wo['setting']['google_secret']
+        );
+            
+        $wo['googleQR'] = 'https://chart.googleapis.com/chart?cht=qr&chs=300x300&chl='.$text;
+    }
+
+    if ($wo['config']['authy_settings'] == '1') {
+        $wo['methodCount'] += 1;
+        $wo['countries_codes'] = getCountriesCodes();
+        
+    }
+}
+
 if ($wo['setting_page'] == 'invitation_links') {
 	$wo['available_links'] = Wo_GetAvailableLinks($wo['setting']['user_id']);
 	if ($wo['config']['user_links_limit'] > 0) {

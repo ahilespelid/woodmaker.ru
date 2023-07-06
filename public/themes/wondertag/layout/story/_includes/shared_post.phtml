@@ -181,6 +181,9 @@
 					</div>
 					<div class="valign tag_post_hdr_sub">
 						<span class="time"><a class="ajax-time" href="<?php echo $wo['story']['url'];?>" target="_blank"><?php echo Wo_Time_Elapsed_String($wo['story']['time']); ?></a></span>
+						<?php if ($wo['story']['ai_post'] == 1) { ?>
+							<span class="middot">·</span><span class="time" title="<?php echo $wo['lang']['content_generated_ai'];?>"><?php echo $wo['lang']['ai'];?></span>
+						<?php } ?>
 					</div>
 				</div>
 			</div>
@@ -559,7 +562,7 @@
 			<?php if ($wo['config']['live_video'] == 1 && !empty($wo['story']['stream_name'])) { ?>
 				<div class="valign tag_post_full_img">
 					<?php if ($wo['story']['is_still_live']) { ?>
-						<div class="embed-responsive embed-responsive-4by3">
+						<div class="embed-responsive embed-responsive-4by3" id="post_live_video_<?php echo($current_post['id']) ?>">
 							<iframe src="https://viewer.millicast.com/v2?streamId=<?php echo($wo['config']['live_account_id']) ?>/<?php echo($wo['story']['stream_name']) ?>" class="embed-responsive-item"></iframe>
 							<div class="wow_liv_counter tag_post_liv_count"><span id="live_word_<?php echo($wo['story']['id']) ?>"><?php echo $wo['lang']['live']; ?></span> <span id="live_count_<?php echo($wo['story']['id']) ?>"> <?php echo $wo['story']['live_sub_users']; ?></span></div>
 						</div>
@@ -585,7 +588,7 @@
 						<div id="live_post_ended_<?php echo($wo['story']['id']) ?>" class="valign tag_post_liv_ended"></div>
 					<?php } else { ?>
 						<div class="valign tag_post_full_img">
-							<div class="embed-responsive embed-responsive-4by3">
+							<div class="embed-responsive embed-responsive-4by3" id="post_live_video_<?php echo($current_post['id']) ?>">
 								<iframe src="https://viewer.millicast.com/v2?streamId=<?php echo($wo['config']['live_account_id']) ?>/<?php echo($wo['story']['stream_name']) ?>" class="embed-responsive-item"></iframe>
 							</div>
 						</div>
