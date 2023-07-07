@@ -105,8 +105,8 @@ button, input, optgroup, select, textarea {color: inherit;}
 .u_divider:before, .u_divider:after {content: '';height: 1px;background: rgba(0, 0, 0, 0.1);flex-grow: 1;}
 .u_divider:before {margin-right: 15px;}
 .u_divider:after {margin-left: 15px;}
-.social_btns {margin: 0 -5px;justify-content: center;}
-.social_btns .btn {border: 0;padding: 0px;margin: 0 5px;}
+.social_btns {margin: 0 -5px;justify-content: center;flex-wrap: wrap;}
+.social_btns .btn {border: 0;padding: 0px;margin: 5px;}
 .social_btns .btn svg {width: 32px;height: 32px;}
 .g-signin2 > div {margin: 10px auto 0;}
 .wow_forgot_choice {margin: -25px 0 0;}
