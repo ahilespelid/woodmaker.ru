@@ -1,6 +1,6 @@
 <?php
 	function Tag_version () {
-		echo '2.6.3';
+		echo '2.7.1';
 	}
 ?>
 <?php 
@@ -11,8 +11,6 @@ if (mysqli_query($wo['sqlConnect'], "DESCRIBE `wondertage_settings`" )) {
 		$wondertage_settings[$value->name] = $value->value;
 	}
 }
-
-///*/ pa($wo); ///*/
 ?>
 
 <!DOCTYPE html>
@@ -108,7 +106,6 @@ if (mysqli_query($wo['sqlConnect'], "DESCRIBE `wondertage_settings`" )) {
 			<meta name="twitter:description" content="<?php echo $wo['description'];?>" />
 			<meta name="twitter:image" content="<?php echo $wo['user_profile']['avatar']; ?>" />
 			<script src="<?php echo $wo['config']['theme_url'];?>/javascript/circle-progress.min.js"></script>
-
 			<?php if ($wo['user_profile']['share_my_data'] == 0) { ?>
 				<meta name="robots" content="noindex,nofollow">
 				<meta name="googlebot" content="noindex">
@@ -196,7 +193,7 @@ if (mysqli_query($wo['sqlConnect'], "DESCRIBE `wondertage_settings`" )) {
 		<link rel="shortcut icon" type="image/png" href="<?php echo $wo['config']['theme_url'];?>/img/icon.png"/>
 		<link rel="stylesheet" href="<?php echo $wo['config']['theme_url'];?>/stylesheet/general-style-plugins.css<?php echo $wo['update_cache']; ?>?version=<?php echo Tag_version(); ?>">
 		
-		<?php if ($wo['page'] == 'create_blog' || $wo['page'] == 'edit-blog') { ?>
+		<?php if ($wo['page'] == 'create_blog' || $wo['page'] == 'edit-blog' || $wo['page'] == 'create-ai-blog') { ?>
 			<script src="<?php echo $wo['config']['theme_url'];?>/javascript/tinymce/js/tinymce/tinymce.min.js"></script>
 		<?php } ?>
 
@@ -492,6 +489,10 @@ if (mysqli_query($wo['sqlConnect'], "DESCRIBE `wondertage_settings`" )) {
 		<?php } ?>
 		
 		<script crossorigin="anonymous" src="<?php echo $wo['config']['theme_url'];?>/javascript/sdk.js"></script>
+		
+		<?php if ($wo['config']['braintree_payment'] == '1') { ?>
+			<script src="https://js.braintreegateway.com/web/dropin/1.36.0/js/dropin.js"></script>
+		<?php } ?>
 		
 		<script src="<?php echo $wo['config']['theme_url'];?>/javascript/socket.io.js"></script>
 	
@@ -958,6 +959,12 @@ if (mysqli_query($wo['sqlConnect'], "DESCRIBE `wondertage_settings`" )) {
 		<?php } ?>
 
 		<?php echo Wo_LoadPage('modals/site-alerts'); ?>
+		
+		<?php if ($wo['loggedin'] == true) {?>
+			<?php if ($wo['config']['website_mode'] == 'linkedin') { echo Wo_LoadPage('modals/create_hiring'); } ?>
+
+			<?php if ($wo['config']['images_credit_system'] == 1 || $wo['config']['text_credit_system'] == 1) { echo Wo_LoadPage('modals/ai_credits');} ?>
+		<?php } ?>
     
 		<?php if ($wo['config']['reCaptcha'] == 1) { ?>
 			<script type="text/javascript" src='https://www.google.com/recaptcha/api.js'></script>
@@ -1675,6 +1682,5 @@ if (mysqli_query($wo['sqlConnect'], "DESCRIBE `wondertage_settings`" )) {
     
 			<a href="<?php echo $wo['config']['site_url'].'/checkout';?>" data-ajax="?link1=checkout" id="load_checkout" style="display: none;"></a>
 		<?php } ?>
-		
-	<!--/body>
-</html-->
+	</body>
+</html>

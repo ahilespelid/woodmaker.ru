@@ -16,9 +16,11 @@
 						<input name="confirm_code" type="text" autocomplete="off" placeholder=" " autofocus required>
 						<span><?php echo $wo['lang']['confirmation_code']?></span>
 					</label>
+					<?php if (!in_array($wo['two_factor_method'], ['authy','google'])) { ?>
 					<div class="valign send_again">
 						<p id="countDownDateTimer" class="hidden"></p>&nbsp;&nbsp;<a type="button" onclick="Wo_ResendTwoCode()" class="btn btn-main-rev btn-mat" id="resendCode"><?php echo $wo['lang']['send_again']?></a>
 					</div>
+					<?php } ?>
 					<button type="submit" class="btn btn-main btn-mat tag_wel_btn"><?php echo $wo['lang']['confirm']?></button>
 				</form>
 			</div>

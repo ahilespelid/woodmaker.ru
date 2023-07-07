@@ -348,6 +348,9 @@ initClientAndJoinChannel(agoraAppId, token, channelName, uid);
   width: 100%;
   height: 100%;
 }
+#full-screen-video video {
+	object-fit: contain !important;
+}
 
 #lower-video-bar {
   height: 20vh;
@@ -364,8 +367,15 @@ initClientAndJoinChannel(agoraAppId, token, channelName, uid);
 
 #local-video {
   z-index: 1;
-  height: 100%;
-  max-width: 100%;
+  width: 100%;
+    max-width: 200px;
+    aspect-ratio: 0.7;
+}
+
+@media (max-width: 500px) {
+#local-video {
+    max-width: 100px;
+}
 }
 
 .remote-video {

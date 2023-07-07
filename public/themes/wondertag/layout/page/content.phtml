@@ -719,9 +719,20 @@ $(document).ready(function() {
 	         $('form.create-offer-form').find('.disable_btn').removeAttr("disabled");
 	        }
 	    });
+		
+		$(".time1").flatpickr({
+			enableTime: true,
+			noCalendar: true,
+			dateFormat: "H:i",
+		});
+		
+		$(".date1").flatpickr({
+			dateFormat: "Y-m-d",
+			altInput: true,
+			altFormat: "F j, Y",
+			minDate: new Date().fp_incr(1),
+		});
 
-		$( ".date1" ).datepicker({ dateFormat: 'yy-mm-dd', minDate: '+1day',prevText: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M15.41,16.58L10.83,12L15.41,7.41L14,6L8,12L14,18L15.41,16.58Z" /></svg>',nextText: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z" /></svg>'});
-      $( ".time1" ).timepicker();
 });
 	function OpenCreateJobModal() {
 		$('#create-job-modal').modal('show');

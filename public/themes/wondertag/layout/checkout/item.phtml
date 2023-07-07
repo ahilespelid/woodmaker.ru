@@ -10,7 +10,7 @@
 		<p><a href="<?php echo $wo['product']['user_data']['url'];?>" data-ajax="?link1=timeline&u=<?php echo $wo['product']['user_data']['username'];?>"><?php echo $wo['product']['user_data']['name'];?></a></p>
         <div class="price-wrap">
 			<div class="quantity">
-				Qty <div class="ch_qty_toggle">
+				<?php echo $wo['lang']['qty']; ?> <div class="ch_qty_toggle">
 					<div class="value-button" onclick="decreaseValueMax<?php echo $wo['product']['id'];?>()">
 						<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"><path fill="currentColor" d="M19,13H5V11H19V13Z"></path></svg>
 					</div>

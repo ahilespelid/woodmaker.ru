@@ -415,7 +415,7 @@ function Wo_intervalUpdates(force_update = 0, loop = 0) {
         Wo_NotifyMe(data.icon, decodeHtml(data.title), decodeHtml(data.notification_text), data.url);
       }
       if(data.notifications != current_notification_number) {
-        if (data.notifications_sound == 0 && current_notification_number) {
+        if (data.notifications_sound == 0) {
            document.getElementById('notification-sound').play();
         }
         current_notification_number = data.notifications;
@@ -3671,6 +3671,12 @@ function Wo_progressIconLoader(e){e.each(function(){return progress_icon_elem=$(
             );
         });
 });
+
+function FileListItems (files) {
+  var b = new ClipboardEvent("").clipboardData || new DataTransfer()
+  for (var i = 0, len = files.length; i<len; i++) b.items.add(files[i])
+  return b.files
+}
 
 /*!
  * In Viewport

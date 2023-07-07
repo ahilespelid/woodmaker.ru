@@ -12,7 +12,7 @@
         <h4><a href="<?php echo $wo['order']->product['url'] ?>" data-ajax="?link1=post&id=<?php echo $wo['order']->product['seo_id']?>"><?php echo $wo['order']->product['name'];?></a></h4>
         <div class="price-wrap">
 			<div class="quantity">
-				Qty <?php echo $wo['order']->units ?>
+				<?php echo $wo['lang']['qty']; ?> <?php echo $wo['order']->units ?>
 			</div>
 		</div>
     </div>

@@ -1107,6 +1107,7 @@ function Wo_GetGroupMessages(group_id, group_name) {
 		group_id: group_id
 	}, function (data) {
 		if(data.status == 200) {
+			$('#user-avatar-right img').attr('src', $('#messages-group-'+group_id).find('img').attr('src')).removeClass('hidden');
 			$('.send-button').css('background-color', '<?php echo $wo['config']['btn_background_color'];?>');
 			$('.tag_msg_select_clr').css('color', '<?php echo $wo['config']['btn_background_color'];?>');
 			$('#video-button').empty();

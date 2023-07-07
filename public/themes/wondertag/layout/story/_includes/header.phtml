@@ -168,6 +168,9 @@
 				</div>
 				<div class="valign tag_post_hdr_sub">
 					<span class="time"><a class="ajax-time" href="<?php echo $wo['story']['url'];?>" target="_blank" title="<?php echo date('c',$wo['story']['time']); ?>"><?php echo Wo_Time_Elapsed_String($wo['story']['time']); ?></a></span>
+					<?php if ($wo['story']['ai_post'] == 1) { ?>
+						<span class="middot">·</span><span class="time" title="<?php echo $wo['lang']['content_generated_ai'];?>"><?php echo $wo['lang']['ai'];?></span>
+					<?php } ?>
 					<?php if(!empty($wo['story']['postMap'])) { ?>
 						<?php if(!empty($wo['story']['postSoundCloud']) || 
 							!empty($wo['story']['postVine']) || 
@@ -613,7 +616,10 @@
 				</div>
 				<div class="valign tag_post_hdr_sub">
 					<span class="time"><a class="ajax-time" href="<?php echo $wo['story']['url'];?>" target="_blank" title="<?php echo date('c',$wo['story']['time']); ?>"><?php echo Wo_Time_Elapsed_String($wo['story']['time']); ?></a></span>
-					<?php if (strlen($wo['story']['postText']) >= 2 && ($wo['config']['google_translate'] == 1 || $wo['config']['yandex_translate'] == 1)): ?>
+					<?php if ($wo['story']['ai_post'] == 1) { ?>
+						<span class="middot">·</span><span class="time" title="<?php echo $wo['lang']['content_generated_ai'];?>"><?php echo $wo['lang']['ai'];?></span>
+					<?php } ?>
+					<?php if (!empty($wo['story']['postText']) && strlen($wo['story']['postText']) >= 2 && ($wo['config']['google_translate'] == 1 || $wo['config']['yandex_translate'] == 1)): ?>
 						<span class="middot">·</span><span onclick="Wo_Translate($(this).attr('id'),$(this).attr('data-language'))" title="<?php echo $wo['lang']['translate'];?>" class="pointer time" id="<?php echo $wo['story']['id']; ?>" data-language="<?php echo DetermineUserLang(); ?>" data-trans-btn="<?php echo $wo['story']['id']; ?>"><?php echo $wo['lang']['translate'];?></span>
 					<?php endif ?>
 					<?php if(!empty($wo['story']['postMap'])) { ?>
@@ -948,7 +954,11 @@
 										<?php echo $wo['lang']['save_post'];?>
 									<?php } ?>
 								</b>
-								<p><?php echo $wo['lang']['save_post_tx'];?></p>
+								<?php if($wo['story']['is_post_saved'] != true) { ?>
+									<p><?php echo $wo['lang']['save_post_tx'];?></p>
+								<?php }else{ ?>
+									<p><?php echo $wo['lang']['unsave_post_tx'];?></p>
+								<?php } ?>
 							</div>
 						</a>
 					</li>

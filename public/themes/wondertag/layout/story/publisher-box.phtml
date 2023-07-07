@@ -350,19 +350,32 @@ if (!empty($_GET['url'])) {
 					
 					<div class="valign pub-footer-upper">
 						<span class="btn btn-file tag_pub_box_btns">
-							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M19,10a1,1,0,0,0-1,1v3.38L16.52,12.9a2.79,2.79,0,0,0-3.93,0l-.7.71L9.41,11.12a2.79,2.79,0,0,0-3.93,0L4,12.61V7A1,1,0,0,1,5,6h8a1,1,0,0,0,0-2H5A3,3,0,0,0,2,7V19.22A2.79,2.79,0,0,0,4.78,22H17.22a2.88,2.88,0,0,0,.8-.12h0a2.74,2.74,0,0,0,2-2.65V11A1,1,0,0,0,19,10ZM5,20a1,1,0,0,1-1-1V15.43l2.89-2.89a.78.78,0,0,1,1.1,0L15.46,20Zm13-1a1,1,0,0,1-.18.54L13.3,15l.71-.7a.77.77,0,0,1,1.1,0L18,17.21ZM21,4H20V3a1,1,0,0,0-2,0V4H17a1,1,0,0,0,0,2h1V7a1,1,0,0,0,2,0V6h1a1,1,0,0,0,0-2Z"/></svg> <span><?php echo $wo['lang']['upload_images']; ?></span>
+							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M5 11.1005L7 9.1005L12.5 14.6005L16 11.1005L19 14.1005V5H5V11.1005ZM5 13.9289V19H8.1005L11.0858 16.0147L7 11.9289L5 13.9289ZM10.9289 19H19V16.9289L16 13.9289L10.9289 19ZM4 3H20C20.5523 3 21 3.44772 21 4V20C21 20.5523 20.5523 21 20 21H4C3.44772 21 3 20.5523 3 20V4C3 3.44772 3.44772 3 4 3ZM15.5 10C14.6716 10 14 9.32843 14 8.5C14 7.67157 14.6716 7 15.5 7C16.3284 7 17 7.67157 17 8.5C17 9.32843 16.3284 10 15.5 10Z"/></svg> <span><?php echo $wo['lang']['upload_images']; ?></span>
 							<input type="file" id="publisher-photos" accept="image/x-png, image/gif, image/jpeg" name="postPhotos[]" multiple="multiple">
 						</span>
-						<?php if ($wo['config']['video_upload'] == 1) { ?>
-							<span class="btn btn-file tag_pub_box_btns">
-								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M21.53,7.15a1,1,0,0,0-1,0L17,8.89A3,3,0,0,0,14,6H5A3,3,0,0,0,2,9v6a3,3,0,0,0,3,3h9a3,3,0,0,0,3-2.89l3.56,1.78A1,1,0,0,0,21,17a1,1,0,0,0,.53-.15A1,1,0,0,0,22,16V8A1,1,0,0,0,21.53,7.15ZM15,15a1,1,0,0,1-1,1H5a1,1,0,0,1-1-1V9A1,1,0,0,1,5,8h9a1,1,0,0,1,1,1Zm5-.62-3-1.5V11.12l3-1.5Z"/></svg> <span><?php echo $wo['lang']['upload_video']; ?></span>
-								<input type="file" id="publisher-video" name="postVideo" accept="video/*">
-							</span>
+						<?php if ($wo['config']['website_mode'] != 'askfm') { ?>
+							<?php if ($wo['config']['ai_post_system'] == 1 && time() < 1691331060) { ?>
+								<span class="btn btn-file tag_pub_box_btns" onclick="openPostModel()">
+									<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M20 22H4C3.44772 22 3 21.5523 3 21V3C3 2.44772 3.44772 2 4 2H20C20.5523 2 21 2.44772 21 3V21C21 21.5523 20.5523 22 20 22ZM19 20V4H5V20H19ZM7 6H11V10H7V6ZM7 12H17V14H7V12ZM7 16H17V18H7V16ZM13 7H17V9H13V7Z"/></svg> <?php echo $wo['lang']['generate_ai_post']; ?>
+								</span>
+							<?php } ?>
+							<?php if ($wo['config']['video_upload'] == 1) { ?>
+								<span class="btn btn-file tag_pub_box_btns">
+									<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M21.53,7.15a1,1,0,0,0-1,0L17,8.89A3,3,0,0,0,14,6H5A3,3,0,0,0,2,9v6a3,3,0,0,0,3,3h9a3,3,0,0,0,3-2.89l3.56,1.78A1,1,0,0,0,21,17a1,1,0,0,0,.53-.15A1,1,0,0,0,22,16V8A1,1,0,0,0,21.53,7.15ZM15,15a1,1,0,0,1-1,1H5a1,1,0,0,1-1-1V9A1,1,0,0,1,5,8h9a1,1,0,0,1,1,1Zm5-.62-3-1.5V11.12l3-1.5Z"/></svg> <span><?php echo $wo['lang']['upload_video']; ?></span>
+									<input type="file" id="publisher-video" name="postVideo" accept="video/*">
+								</span>
+							<?php } ?>
 						<?php } ?>
 						<?php if ($wo['config']['website_mode'] == 'linkedin' && empty($wo['page_profile']) && ($wo['page'] == 'timeline' || $wo['page'] == 'home')) { ?>
 							<span class="btn btn-file tag_pub_box_btns btngif" onclick="OpenLinkedinJobModal()">
 								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path fill="none" d="M0 0h24v24H0z"/><path d="M7 5V2a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v3h4a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h4zM4 16v3h16v-3H4zm0-2h16V7H4v7zM9 3v2h6V3H9zm2 8h2v2h-2v-2z"/></svg> <span><?php echo $wo['lang']['create_job']; ?></span>
 							</span>
+						<?php } else { ?>
+							<?php if ($wo['config']['ai_image_system'] == 1 && time() < 1691331060) { ?>
+								<span class="btn btn-file tag_pub_box_btns" onclick="openAIModel()">
+									<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M19,10a1,1,0,0,0-1,1v3.38L16.52,12.9a2.79,2.79,0,0,0-3.93,0l-.7.71L9.41,11.12a2.79,2.79,0,0,0-3.93,0L4,12.61V7A1,1,0,0,1,5,6h8a1,1,0,0,0,0-2H5A3,3,0,0,0,2,7V19.22A2.79,2.79,0,0,0,4.78,22H17.22a2.88,2.88,0,0,0,.8-.12h0a2.74,2.74,0,0,0,2-2.65V11A1,1,0,0,0,19,10ZM5,20a1,1,0,0,1-1-1V15.43l2.89-2.89a.78.78,0,0,1,1.1,0L15.46,20Zm13-1a1,1,0,0,1-.18.54L13.3,15l.71-.7a.77.77,0,0,1,1.1,0L18,17.21ZM21,4H20V3a1,1,0,0,0-2,0V4H17a1,1,0,0,0,0,2h1V7a1,1,0,0,0,2,0V6h1a1,1,0,0,0,0-2Z"/></svg> <span><?php echo $wo['lang']['generate_ai_image']; ?></span>
+								</span>
+							<?php } ?>
 						<?php } ?>
 						<?php if ($wo['config']['stickers'] == 1): ?>
 							<span class="btn btn-file tag_pub_box_btns btngif" onclick="$('.pub-footer-upper').toggleClass('tag_pub_btns_col_smal');$('.gif-form').slideToggle(200);Tag_GetTrendStickers()">
@@ -432,6 +445,9 @@ if (!empty($_GET['url'])) {
 				<?php } ?>
 				<input type="hidden" name="hash_id" value="<?php echo Wo_CreateSession();?>">
 				<input type="hidden" name="postRecord" value="" id="postRecord">
+				<?php if ($wo['config']['ai_post_system'] == 1 || $wo['config']['ai_image_system'] == 1) { ?>
+					<input type="hidden" name="ai_post" value="off" id="isAiPost">
+				<?php } ?>
 				<input type="hidden" name="postSticker" value="" id="postSticker" onchange="alert(this.value)">
 			</form>
 		</div>
@@ -441,6 +457,8 @@ if (!empty($_GET['url'])) {
 <div id="hidden_inputbox"></div>
 <?php echo Wo_LoadPage('products/create'); ?>
 
+<?php if ($wo['config']['ai_post_system'] == 1) { echo Wo_LoadPage('modals/ai_post');} ?>
+<?php if ($wo['config']['ai_image_system'] == 1) { echo Wo_LoadPage('modals/ai_images');} ?>
 <?php if ($wo['config']['website_mode'] == 'linkedin') { ?>
 	<div class="modal fade sun_modal" id="create_hiring_modal" role="dialog">
 		<div class="modal-dialog modal-lg wow_mat_mdl">
@@ -575,6 +593,9 @@ if (!empty($_GET['url'])) {
 <?php } ?>
 
 <script type="text/javascript">
+var imgArray = [];
+var aiImages = [];
+
 
 <?php if ($wo['config']['website_mode'] == 'linkedin' && empty($wo['page_profile']) && ($wo['page'] == 'timeline' || $wo['page'] == 'home')) { ?>
 	function OpenLinkedinJobModal(){
@@ -769,7 +790,7 @@ jQuery(document).click(function(event){
         jQuery('.wow_pub_privacy').removeClass('showMenu');
     }
 });
-var imgArray = [];
+
 var deleted_images = [];
 function DeleteImageById(name,id) {
 	$('#image_to_'+id).remove();
@@ -879,7 +900,7 @@ $(function () {
 		trigger: "@" 
 	});
 	<?php if ($wo['config']['maxCharacters'] != 10000) { ?>
-		$('.postText').limit("<?php echo $wo['config']['maxCharacters']?>", '#charsLeft');
+		$('.postText').limit("<?php echo $wo['config']['maxCharacters'] - 10;?>", '#charsLeft');
 	<?php } ?>
 
 	$('.poll-form-open').click(function () {
@@ -1148,7 +1169,7 @@ $(function () {
 				$('#postSticker').html('');
 				$('select').prop('selectedIndex', 1);
 				<?php if ($wo['config']['maxCharacters'] != 10000) { ?>
-					$('#charsLeft').text("<?php echo $wo['config']['maxCharacters']?>");
+					$('#charsLeft').text("<?php echo $wo['config']['maxCharacters'] - 10;?>");
 				<?php } ?>
 				<?php if (!empty($url)) { ?>
 					window.close();
@@ -1192,7 +1213,7 @@ $(function () {
 				$('#postSticker').html('');
 				$('select').prop('selectedIndex', 1);
 				<?php if ($wo['config']['maxCharacters'] != 10000) { ?>
-					$('#charsLeft').text("<?php echo $wo['config']['maxCharacters']?>");
+					$('#charsLeft').text("<?php echo $wo['config']['maxCharacters'] - 10;?>");
 				<?php } ?>
 				$("body").snackbar({
 					message: "<?php echo $wo['lang']['ffmpeg_file_text']; ?>"
@@ -1328,9 +1349,15 @@ $(function () {
 						img_content = '<div class="thumb_select"><span class="small_text" id="total_imgs">'+img_arr_pos+' of '+total_images+'</span><span class="next_thumb" id="thumb_prev"><svg xmlns="http://www.w3.org/2000/svg" height="22" viewBox="0 0 24 24" width="22"><path fill="currentColor" d="M14.71 6.71c-.39-.39-1.02-.39-1.41 0L8.71 11.3c-.39.39-.39 1.02 0 1.41l4.59 4.59c.39.39 1.02.39 1.41 0 .39-.39.39-1.02 0-1.41L10.83 12l3.88-3.88c.39-.39.38-1.03 0-1.41z"/></svg></span><span class="prev_thumb" id="thumb_next"><svg xmlns="http://www.w3.org/2000/svg" height="22" viewBox="0 0 24 24" width="22"><path fill="currentColor" d="M9.29 6.71c-.39.39-.39 1.02 0 1.41L13.17 12l-3.88 3.88c-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0l4.59-4.59c.39-.39.39-1.02 0-1.41L10.7 6.7c-.38-.38-1.02-.38-1.41.01z"/></svg></span></div>';
 					}
 					var content = '<div class="extracted_url"><span class="btn btn-mat thumb-image-delete-btn" onclick="Wo_RemoveFetchedUrl();"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"><path fill="currentColor" d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"></path></svg></span>'+ inc_image +'<div class="extracted_content"><input class="url-input" type="text" name="url_title" value="'+data.title+'" dir="auto"><textarea onkeyup="textAreaAdjust(this, 70)" class="url-input-textarea url-input" name="url_content" placeholder="<?php echo $wo['lang']['description']?>" dir="auto">' + data.content + '</textarea><input type="hidden" id="url_image" name="url_image" value="'+ input_image +'"><input type="hidden" id="url_link" name="url_link" value="'+data.url+'"><div class="clear"></div>' + img_content;
+					if (data.tweet && data.tweet == 'yes') {
+						var content = '<div class="extracted_url"><span class="btn btn-mat thumb-image-delete-btn" onclick="Wo_RemoveFetchedUrl();"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"><path fill="currentColor" d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"></path></svg></span>'+ inc_image +'<div class="extracted_content"><input class="url-input hidden" type="text" name="url_title" value="'+data.title+'" dir="auto"><textarea onkeyup="textAreaAdjust(this, 70)" class="url-input-textarea url-input hidden" name="url_content" placeholder="<?php echo $wo['lang']['description']?>" dir="auto">' + data.content + '</textarea><input type="hidden" id="url_image" name="url_image" value="'+ input_image +'"><input type="hidden" id="url_link" name="url_link" value="'+data.url+'"><div class="clear"></div>' + img_content+data.content;
+					}
 					if (data.mp4 && data.mp4 == 'yes') {
 						var content = '<div class="extracted_url"><span class="btn btn-mat thumb-image-delete-btn" onclick="Wo_RemoveFetchedUrl();"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"><path fill="currentColor" d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"></path></svg></span>'+data.content+'<div class="clear"><input type="hidden" id="url_link" name="url_link" value="'+data.url+'"><input class="url-input hidden" type="text" name="url_title" value="mp4" dir="auto"></div>';
-					}else{
+					}
+					if (data.facebook && data.facebook == 'yes') {
+					}
+					else{
 						$("#results").html(content); 
 						$("#results").fadeIn(); 
 					}

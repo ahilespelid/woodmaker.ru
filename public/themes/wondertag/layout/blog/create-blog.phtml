@@ -32,6 +32,12 @@
 			</div>
 		</div>
 		<div class="tag_cr_blog_side tag_scroll">
+			<?php if ($wo['config']['ai_blog_system'] == 1) { ?>
+				<div class="mb-3">
+					<button class="btn btn-main btn-mat btn-block" type="button" onclick="openAIBlog()"><?php echo $wo['lang']['generate_using_ai']; ?></button>
+				</div>
+			<?php } ?>
+						
 			<?php if($wo['config']['reCaptcha'] == 1) {?>
 				<div class="g-recaptcha" data-sitekey="<?php echo $wo['config']['reCaptchaKey']?>"></div><br>
 			<?php } ?>
@@ -64,8 +70,13 @@
 		<input type="file" class="hidden" id="thumbnail" name="thumbnail" accept="image/*">
 		<input type="hidden" name="hash_id" value="<?php echo Wo_CreateSession();?>">
 		<input name="image" type="file" id="upload" class="hidden">
+		<?php if ($wo['config']['ai_blog_system'] == 1) { ?>
+		  	<input type="hidden" name="ai_post" value="off" id="isAiPost">
+		<?php } ?>
 	</form>
 </div>
+
+<?php if ($wo['config']['ai_blog_system'] == 1) { echo Wo_LoadPage('modals/ai_blog'); } ?>
 <div class="modal fade" id="cropImage" role="dialog">
 	<div class="modal-dialog wow_mat_mdl modal-md">
 		<div class="modal-content">
