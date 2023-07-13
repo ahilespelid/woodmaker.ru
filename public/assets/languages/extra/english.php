@@ -1,7 +1,7 @@
 <?php
 $wo['countries_name'] = array(
     '0' => 'Select Country',
-    '1' => 'United States',
+    '1' => 'Russian Federation',
     '2' => 'Canada',
     '3' => 'Afghanistan',
     '4' => 'Albania',
@@ -178,7 +178,7 @@ $wo['countries_name'] = array(
     '176' => 'Qatar',
     '177' => 'Reunion',
     '178' => 'Romania',
-    '179' => 'Russian Federation',
+    '179' => 'United States',
     '180' => 'Rwanda',
     '181' => 'Saint Kitts and Nevis',
     '182' => 'Saint Lucia',
