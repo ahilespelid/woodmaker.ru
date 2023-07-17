@@ -6,13 +6,13 @@
 		<div class="row">
 			<div class="col-lg-6">
 				<label class="tag_field">
-					<input id="first_name" name="first_name" type="text" placeholder=" " value="<?php echo $wo['setting']['first_name']?>"> 
+					<input id="first_name" name="first_name" type="text" placeholder=" " value="<?php echo $wo['setting']['first_name']?>" required oninvalid="this.setCustomValidity('<?php echo $wo['lang']['wm_feild_required']; ?>')"> 
 					<span><?php echo $wo['lang']['first_name']; ?></span>
 				</label>
 			</div>
 			<div class="col-lg-6">
 				<label class="tag_field">
-					<input id="last_name" name="last_name" type="text" placeholder=" " value="<?php echo $wo['setting']['last_name']?>"> 
+					<input id="last_name" name="last_name" type="text" placeholder=" " value="<?php echo $wo['setting']['last_name']?>" required oninvalid="this.setCustomValidity('<?php echo $wo['lang']['wm_feild_required']; ?>')"> 
 					<span><?php echo $wo['lang']['last_name']; ?></span>
 				</label>
 			</div>

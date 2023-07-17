@@ -375,19 +375,6 @@ body #onesignal-bell-container.onesignal-reset .onesignal-bell-launcher {right: 
     float: left;
 }
 
-.ai_alert_images label span.ai_image_abs:before {
-    right: auto;
-    left: 8px;
-}
-.ai_alert_images label span.ai_image_abs:after {
-    right: auto;
-    left: 12px;
-}
-.ai_alert_images label {
-    right: auto;
-    left: 0;
-}
-
 
 
 @media (min-width: 834px) {

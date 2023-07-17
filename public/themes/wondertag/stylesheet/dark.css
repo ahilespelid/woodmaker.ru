@@ -313,7 +313,7 @@ pre {color: #d5d5d5;background-color: #292929;border-color: #4e4e4e;}
 .file-form .valign, .poll-form, .music-form .valign, .wo_shared_doc_file {border-color: #434343;}
 .post .post-heading .meta .time a, .user-ad-container .post-advertisement .meta .time a, .post .post-heading .meta .time, .user-ad-container .post-advertisement .meta .time {color: #b9b9b9;}
 .wow_dontd_posts, .post-map, .post-fetched-url, .wo_post_fetch_offer {background: rgb(255 255 255 / 0.06);}
-.tag_post_react_btn svg, .tag_post_react_btn .inline_post_emoji, .tag_post_react_btn .inline_post_count_emoji, .tag_post_actions .stat-item .icoo, .tag_post_foot_acticon svg, .tag_post_foot_acticon svg.feather, #like-button > svg {background-color: rgb(255 255 255 / 0.08);}
+.tag_post_react_btn svg, .tag_post_react_btn .inline_post_emoji, .tag_post_react_btn .inline_post_count_emoji, .tag_post_actions .stat-item .icoo, .tag_post_foot_acticon svg, .tag_post_foot_acticon svg.feather {background-color: rgb(255 255 255 / 0.08);}
 .reaction:hover {background-color: rgb(255 255 255 / 6%);}
 .post .post-footer {border-top-color: #393939;}
 .wo_comment_combo > .valign {background-color: rgb(255 255 255 / 0.08);}
@@ -494,20 +494,6 @@ body .flatpickr-calendar.hasTime .flatpickr-time {
 
 .tag_post_actions .stat-item > svg, .tag_post_actions .stat-item > .active-like > svg {
 	background-color: rgb(255 255 255 / 0.08) !important;
-}
-
-.ai_alert_balance {
-    background-color: rgb(79 205 225 / 20%);
-}
-.ai_alert_images label > span.ai_image_abs, .ai_alert_images .thumb-image-delete > span {
-    border-color: #3c5c77;
-}
-.ai_alert_images label input:checked+span.ai_image_abs {
-	border-color: #4fcde1;
-}
-.ai_alert_images label > span.ai_image_abs:before {
-    background: #3c5c77;
-    box-shadow: 0 0 0 10px #3c5c77;
 }
 
 
