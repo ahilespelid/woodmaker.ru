@@ -47,11 +47,19 @@ if ($f == "insert-event") {
                 }
             }
         }
+		if (!empty($_POST['event-organizer-link'])) {
+			if (filter_var($_POST['event-organizer-link'], FILTER_VALIDATE_URL) === FALSE) {
+				$error = $error_icon . $wo['lang']['event_organizer_link'].': '.$wo['lang']['please_enter_valid_url'];
+			}
+		}
         if (empty($error)) {
             $registration_data = array(
-                'name' => Wo_Secure($_POST['event-name'],1),
+                'name' => Wo_Secure($_POST['event-name']),
                 'location' => Wo_Secure($_POST['event-locat']),
-                'description' => Wo_Secure($_POST['event-description'],1),
+                'description' => Wo_Secure($_POST['event-description']),
+				'event_organizer_name' => Wo_Secure($_POST['event-organizer-name']),
+				'event_organizer_link' => Wo_Secure($_POST['event-organizer-link']),
+				'event_organizer_contact' => Wo_Secure($_POST['event-organizer-contact']),
                 'start_date' => Wo_Secure($_POST['event-start-date']),
                 'start_time' => Wo_Secure($_POST['event-start-time']),
                 'end_date' => Wo_Secure($_POST['event-end-date']),

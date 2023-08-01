@@ -1355,6 +1355,7 @@ if ($f == 'posts') {
                 $data = array(
                     'status' => 200,
                     'like_lang' => $wo['lang']['like'],
+					'reactions_count' => Rx_GetPostReactionsCount($_GET['post_id']),
                     'reactions' => Wo_GetPostReactions($_GET['post_id'])
                 );
             }
@@ -1394,6 +1395,7 @@ if ($f == 'posts') {
             if (Wo_AddReactions($_GET['post_id'], $_GET['reaction']) == 'reacted') {
                 $data = array(
                     'status' => 200,
+					'reactions_count' => Rx_GetPostReactionsCount($_GET['post_id']),
                     'reactions' => Wo_GetPostReactions($_GET['post_id']),
                     'like_lang' => $wo['lang']['liked']
                 );
@@ -1710,12 +1712,12 @@ if ($f == 'posts') {
             if (!empty($_GET['comment_id']) && is_numeric($_GET['comment_id']) && $_GET['comment_id'] > 0) {
                 $offset = Wo_Secure($_GET['comment_id']);
             }
-            $comments = Wo_GetPostComments($_GET['post_id'], 50, $offset);
+            $comments = Wo_GetPostComments($_GET['post_id'], 10, $offset);
             foreach ($comments as $wo['comment']) {
                 $html .= Wo_LoadPage('comment/content');
             }
             $no_more = 0;
-            if (count($comments) < 50) {
+            if (count($comments) < 10) {
                 $no_more = 1;
             }
             $data = array(
@@ -1764,14 +1766,27 @@ if ($f == 'posts') {
     }
     if ($s == 'load_more_replies') {
         if (!empty($_GET['comment_id'])) {
-            $html = '';
-            foreach (Wo_GetCommentReplies($_GET['comment_id'], Wo_CountCommentReplies($_GET['comment_id'])) as $wo['reply']) {
-                $html .= Wo_LoadPage('comment/replies-content');
-            }
-            $data = array(
-                'status' => 200,
-                'html' => $html
-            );
+			if (isset($_GET['reply_id']) && !empty($_GET['reply_id'])) {
+				$html = '';
+				/////get remaining replies
+				///$comments_num = Wo_CountCommentReplies($comment_id) ;
+				foreach (Wo_GetCommentReplies($_GET['comment_id'], "10", "ASC", $_GET['reply_id'] ) as $wo['reply']) {
+					$html .= Wo_LoadPage('comment/replies-content');
+				}
+				$data = array(
+					'status' => 200,
+					'html' => $html
+				);
+			} else {
+				$html = '';
+				foreach (Wo_GetCommentReplies($_GET['comment_id'], "10") as $wo['reply']) {
+					$html .= Wo_LoadPage('comment/replies-content');
+				}
+				$data = array(
+					'status' => 200,
+					'html' => $html
+				);
+			}
         }
         header("Content-type: application/json");
         echo json_encode($data);
@@ -2334,6 +2349,20 @@ if ($f == 'posts') {
             'processing' => 0
         ));
         header("Content-type: application/json");
+        echo json_encode($data);
+        exit();
+    }
+	if ($s == 'register_view' && isset($_POST['post_id']) && !empty($_POST['post_id']) && is_numeric($_POST['post_id'])) {
+        
+        $post_id = Wo_Secure($_POST['post_id']);
+        $sql_query  = mysqli_query($sqlConnect, "UPDATE `Wo_Posts` SET `post_views` = `post_views` + 1 WHERE `id` = '$post_id'");
+        
+		$data    = array(
+            'status' => 200,
+			'id' => $post_id
+        );
+		
+		header("Content-type: application/json");
         echo json_encode($data);
         exit();
     }

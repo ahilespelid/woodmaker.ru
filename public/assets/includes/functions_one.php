@@ -3155,10 +3155,98 @@ function Wo_GetNotifications($data = array()) {
         }
     }
     if (empty($data['delete_fromDB'])) {
-        mysqli_multi_query($sqlConnect, " DELETE FROM " . T_NOTIFICATION . " WHERE `time` < " . (time() - (60 * 60 * 24 * 5)) . " AND `seen` <> 0");
+        //mysqli_multi_query($sqlConnect, " DELETE FROM " . T_NOTIFICATION . " WHERE `time` < " . (time() - (60 * 60 * 24 * 5)) . " AND `seen` <> 0");
     }
     return $get;
 }
+
+function Wo_GetMoreNotifications($data = array()) {
+    global $wo, $sqlConnect;
+    if ($wo['loggedin'] == false) {
+        return false;
+    }
+    $get = array();
+    if (!isset($data['account_id']) or empty($data['account_id'])) {
+        $data['account_id'] = $wo['user']['user_id'];
+    }
+    if (!is_numeric($data['account_id']) or $data['account_id'] < 1) {
+        return false;
+    }
+    if ($data['account_id'] == $wo['user']['user_id']) {
+        $account = $wo['user'];
+    } else {
+        $data['account_id'] = $data['account_id'];
+        $account            = Wo_UserData($data['account_id']);
+    }
+    if ($account['user_id'] != $wo['user']['user_id']) {
+        return false;
+    }
+    if (empty($data['limit'])) {
+        $data['limit'] = 15;
+    }
+	$query_one = " SELECT * FROM " . T_NOTIFICATION . " WHERE `recipient_id` = " . $account['user_id'];
+	if (isset($data['unread']) && $data['unread'] == true) {
+		$query_one .= " AND `seen` = 0";
+	}
+	if (isset($data['type_2']) && !empty($data['type_2'])) {
+		if ($data['type_2'] == 'popunder') {
+			$timepopunder = time() - 60;
+			$query_one .= ' AND `seen_pop` = 0 AND `time` >= ' . $timepopunder;
+		}
+	}
+	if (isset($data['remove_notification']) && !empty($data['remove_notification'])) {
+		foreach ($data['remove_notification'] as $key => $remove_notification) {
+			$query_one .= ' AND `type` <> "$remove_notification"';
+		}
+	}
+	if (isset($data['offset']) && is_numeric($data['offset']) && $data['offset'] > 0) {
+		$offset = Wo_Secure($data['offset']);
+		$query_one .= " AND `id` < $offset ";
+	}
+	$query_one .= " ORDER BY `id` DESC LIMIT " . $data['limit'];
+
+    if (isset($data['all']) && $data['all'] == true) {
+        $query_one = "SELECT * FROM " . T_NOTIFICATION . " WHERE `recipient_id` = " . $account['user_id'] . " AND `seen` = 0 ORDER BY `id` DESC LIMIT 20";
+    }
+    $sql_query_one = mysqli_query($sqlConnect, $query_one);
+    if ($sql_query_one) {
+        if (mysqli_num_rows($sql_query_one) > 0) {
+            while ($sql_fetch_one = mysqli_fetch_assoc($sql_query_one)) {
+                if (!empty($sql_fetch_one['page_id']) && empty($sql_fetch_one['notifier_id'])) {
+                    $sql_fetch_one['notifier']        = Wo_PageData($sql_fetch_one['page_id']);
+                    $sql_fetch_one['notifier']['url'] = Wo_SeoLink('index.php?link1=timeline&u=' . $sql_fetch_one['notifier']['page_name']);
+                } else {
+                    if (!empty($sql_fetch_one['notifier_id'])) {
+                        $sql_fetch_one['notifier']        = Wo_UserData($sql_fetch_one['notifier_id']);
+                        $sql_fetch_one['notifier']['url'] = Wo_SeoLink('index.php?link1=timeline&u=' . $sql_fetch_one['notifier']['username']);
+                    }
+                }
+                // if (preg_match_all('/^index\.php\?link1=post&id=(.*)$/i', $sql_fetch_one['url'],$matches)) {
+                //     if (!empty($matches[1][0]) && is_numeric($matches[1][0])) {
+                //         $post = Wo_PostData($matches[1][0]);
+                //         $sql_fetch_one['url']      = $post['url'];
+                //         $sql_fetch_one['ajax_url']      = '?link1=post&id='.$post['seo_id'];
+                //     }
+                // }
+                // else{
+                //     $cutted_url                = substr($sql_fetch_one['url'], 9);
+                //     $sql_fetch_one['url']      = Wo_SeoLink($sql_fetch_one['url']);
+                //     $sql_fetch_one['ajax_url'] = $cutted_url;
+                // }
+                $cutted_url                = substr($sql_fetch_one['url'], 9);
+                $sql_fetch_one['url']      = Wo_SeoLink($sql_fetch_one['url']);
+                $sql_fetch_one['ajax_url'] = $cutted_url;
+                $get[]                     = $sql_fetch_one;
+            }
+        }
+    }
+    if (empty($data['delete_fromDB'])) {
+        //mysqli_multi_query($sqlConnect, " DELETE FROM " . T_NOTIFICATION . " WHERE `time` < " . (time() - (60 * 60 * 24 * 5)) . " AND `seen` <> 0");
+    }
+    return $get;
+}
+
+
 function Wo_CountNotifications($data = array()) {
     global $wo, $sqlConnect;
     if ($wo['loggedin'] == false) {
@@ -4634,7 +4722,7 @@ function Wo_Markup($text, $link = true, $hashtag = true, $mention = true, $post_
                     $match_user   = Wo_UserData($match);
                     $match_search = '@[' . $match . ']';
                     if (isset($match_user['user_id'])) {
-                        $match_replace = '<span class="user-popover" data-id="' . $match_user['id'] . '" data-type="' . $match_user['type'] . '"><a href="' . Wo_SeoLink('index.php?link1=timeline&u=' . $match_user['username']) . '" class="hash" data-ajax="?link1=timeline&u=' . $match_user['username'] . '">' . $match_user['name'] . '</a></span>';
+                        $match_replace = '<span class="user-popover" data-id="' . $match_user['id'] . '" data-type="' . $match_user['type'] . '"><a href="' . Wo_SeoLink('index.php?link1=timeline&u=' . $match_user['username']) . '" class="hash" data-ajax="?link1=timeline&u=' . $match_user['username'] . '">' .explode(' ', $match_user['name'])[0] . '</a></span>';
                         $text          = str_replace($match_search, $match_replace, $text);
                     } else {
                         $match_replace = '';
@@ -5674,7 +5762,9 @@ function Wo_PostData($post_id, $placement = '', $limited = '', $comments_limit =
             return false;
         }
     }
-    $story['limit_comments']   = 3;
+	///Comment Limited by renux
+    $story['limit_comments']   = 2;
+	///Comment Limited by renux---END
     $story['limited_comments'] = false;
     if ($limited == 'not_limited') {
         $story['limit_comments']   = 10000;

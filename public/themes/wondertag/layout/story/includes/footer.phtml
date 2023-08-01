@@ -165,7 +165,7 @@ if (mysqli_query($wo['sqlConnect'], "DESCRIBE `wondertage_settings`" )) {
 				<div class="valign wo_comment_combo">
 					<?php if ($wo['loggedin'] == true) { ?>
 						<img class="avatar" src="<?php echo $wo['user']['avatar'];?>"/>
-						<div class="charsLeft-post"><span id="charsLeft_<?php echo $wo['story']['id']; ?>" data_num="<?php if ($wo['config']['maxCharacters'] != 10000) { echo $wo['config']['maxCharacters']; } ?>"><?php if ($wo['config']['maxCharacters'] != 10000) { /*echo $wo['config']['maxCharacters']; **/} ?></span></div>
+						<div class="charsLeft-post" style="display:none"><span id="charsLeft_<?php echo $wo['story']['id']; ?>" data_num="<?php if ($wo['config']['maxCharacters'] != 10000) { echo $wo['config']['maxCharacters']; } ?>"><?php if ($wo['config']['maxCharacters'] != 10000) { /*echo $wo['config']['maxCharacters']; **/} ?></span></div>
 					<?php } ?>
 					<div class="valign remove_combo_on_click wo_comment_combo_<?php echo $wo['story']['id']; ?>" onclick="Wo_ShowCommentCombo(<?php echo $wo['story']['id']; ?>);">
 						<textarea class="auto-resize_<?php echo $wo['story']['id']; ?> form-control comment-textarea textarea tag_com_write_tarea<?php echo $wo['story']['id']; ?>" placeholder="<?php echo TextForMode('write_comment');?>" type="text" onkeyup="Wo_LiveComment(this.value,event,<?php echo $wo['story']['id']; ?>);Wo_RegisterComment(this.value,<?php echo $wo['story']['id']; ?>,<?php echo $wo['story']['publisher']['user_id']; ?>, event, <?php echo (!empty($wo['story']['publisher']['page_id'])) ? $wo['story']['publisher']['page_id'] : '0'; ?>);" onkeydown="textAreaAdjustTag(this,'comm');" dir="auto" rows="1" oninput="count_char(this,<?php echo $wo['story']['id']; ?>)"></textarea>

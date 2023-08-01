@@ -1,3 +1,8 @@
+<style>
+.required-field {
+  color: red;
+}
+</style>
 <div class="container">
 	<div class="valign tag_startup">
 		<div class="wow_content p20">
@@ -22,12 +27,12 @@
 						<br>
 						<form class="setting-general-form form-horizontal" method="post">
 							<label class="tag_field">
-								<input name="first_name" type="text" placeholder=" " value="<?php echo $wo['user']['first_name']?>">
-								<span><?php echo $wo['lang']['first_name']; ?></span>
+								<input id="first_name" name="first_name" type="text" placeholder="" value="<?php echo $wo['user']['first_name']?>" required oninvalid="this.setCustomValidity('<?php echo $wo['lang']['wm_feild_required']; ?>')">
+								<span><?php echo $wo['lang']['first_name']; ?> <span class="required-field">*</span></span>
 							</label>
 							<label class="tag_field">
-								<input name="last_name" type="text" placeholder=" " value="<?php echo $wo['user']['last_name']?>">
-								<span><?php echo $wo['lang']['last_name']; ?></span>
+								<input id="last_name" name="last_name" type="text" placeholder="" value="<?php echo $wo['user']['last_name']?>" required oninvalid="this.setCustomValidity('<?php echo $wo['lang']['wm_feild_required']; ?>')">
+								<span><?php echo $wo['lang']['last_name']; ?> <span class="required-field">*</span></span>
 							</label>
 							<label class="tag_field">
 								<select id="country" name="country">
@@ -80,8 +85,25 @@ $(function() {
 		nextText: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z" /></svg>'
 	});
 });
+
 function Wo_SubmitInfoForm() {
-	$("form.setting-general-form").submit();
+	var firstName = $("#first_name").val();
+    var lastName = $("#last_name").val();
+	
+	if (firstName === "" || lastName === "") {
+	  if (firstName === "") {
+		$("#first_name").focus();
+		$("#first_name")[0].setCustomValidity("<?php echo $wo['lang']['wm_feild_required']; ?>");
+		$("#first_name")[0].reportValidity();
+	  } else if (lastName === "") {
+		$("#last_name").focus();
+		$("#last_name")[0].setCustomValidity("<?php echo $wo['lang']['wm_feild_required']; ?>");
+		$("#last_name")[0].reportValidity();
+	  }
+	} else {	
+		// Proceed with form submission if all fields are filled
+		$("form.setting-general-form").submit();
+	}
 }
 $(function () {
 	$('form.setting-general-form').ajaxForm({

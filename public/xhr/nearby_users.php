@@ -26,6 +26,8 @@ if ($f == 'nearby_users' && $wo['config']['find_friends'] == 1) {
                 $user_info['name'] = $wo['UsersList']['user_data']['name'];
                 $user_info['lng'] = $wo['UsersList']['user_data']['lng'];
                 $user_info['lat'] = $wo['UsersList']['user_data']['lat'];
+                $user_info['avatar'] = $wo['UsersList']['user_data']['avatar'];
+                $user_info['url'] = $wo['UsersList']['user_data']['url'];
                 $users_info[] = $user_info;
 
                 $html .= Wo_LoadPage('friends_nearby/includes/user-list');

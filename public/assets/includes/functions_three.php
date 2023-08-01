@@ -1752,6 +1752,10 @@ function Wo_GetArticle($id = 0) {
                     $fetched_data['reaction'] = Wo_GetPostReactionsTypes($post->id);
                 }
             }
+			$post = $db->where('blog_id', $fetched_data['id'])->getOne(T_POSTS);
+			if (!empty($post)) {
+				$fetched_data['blog_post_id'] = $post->id;
+			}
         }
         return $fetched_data;
     }

@@ -25,6 +25,7 @@ $wo['description'] = $article['description'];
 $wo['keywords']    = $article['tags'];
 $wo['page']        = 'read-blog';
 $wo['article']     = $article;
+$wo['blog_post_id']= $article['blog_post_id'];
 $wo['author']      = $article['author'];
 $wo['title']       = $article['title'];
 $wo['content']     = Wo_LoadPage('blog/read-blog');

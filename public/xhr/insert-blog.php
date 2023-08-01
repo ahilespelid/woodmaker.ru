@@ -23,7 +23,7 @@ if ($f == "insert-blog") {
             if (!in_array($_POST['blog_category'], array_keys($wo['blog_categories']))) {
                 $error = $error_icon . $wo['lang']['error_found'];
             }
-            if ($wo['config']['reCaptcha'] == 1) {
+            if ($wo['config']['reCaptcha'] == 9) {
                 if (empty($_POST['g-recaptcha-response'])) {
                     $error = $error_icon . $wo['lang']['please_check_details'];
                 } else {
