@@ -14,6 +14,7 @@ if (mysqli_query($wo['sqlConnect'], "DESCRIBE `wondertage_settings`" )) {
 		$wondertage_settings[$value->name] = $value->value;
 	}
 }
+//pa($wo['page']);
 ?>
 
 <div class="page-margin profile wo_user_profile" data-page="timeline" data-id="<?php echo $wo['user_profile']['user_id'];?>">

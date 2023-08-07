@@ -27,7 +27,7 @@
 					foreach ($langs as $key => $wo['langs']) {
 						if ($wo['config'][$wo['langs']] == 1) {
 						$language = $wo['langs'];
-						$languages_name = ucfirst($wo['langs']);
+                        $languages_name = ("russian" == $wo['langs']) ? "Русский" : ucfirst($wo['langs']);
 						$link = ($wo['config']['seoLink'] == 1) ? '?lang=' . $language: '?&lang=' . $language;
 			?>
 				<li><a href="<?php echo $link;?>" rel="nofollow"><?php echo $languages_name;?></a></li>

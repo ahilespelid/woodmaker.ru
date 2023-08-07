@@ -1170,7 +1170,8 @@ if (empty($wo['content'])) {
     } else {
         include('sources/404.php');
     }
-}
+} 
+
 echo Wo_Loadpage('container');
 mysqli_close($sqlConnect);
 unset($wo);
