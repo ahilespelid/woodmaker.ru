@@ -17,11 +17,11 @@ document.querySelectorAll('.auto-resize').forEach(el => {
 
 //For placeholder on post-create modal
 $(document).on('input', '#post-textarea textarea', function () {
-  if ($('#post-textarea textarea').val()) {
-    $('.post-textarea-placeholder').hide();
-  } else {
-    $('.post-textarea-placeholder').show();
-  }
+    if ($('#post-textarea textarea').val()) {
+        $('.post-textarea-placeholder').hide();
+    } else {
+        $('.post-textarea-placeholder').show();
+    }
 });
 
 // Static Dropdown
@@ -1522,6 +1522,13 @@ function Wo_AddEmo(code, input) {
   } else {
     inputTag.val(inputVal + ' ' + code);
   }
+
+    if (inputTag.val()) {
+        $('.post-textarea-placeholder').hide();
+    } else {
+        $('.post-textarea-placeholder').show();
+    }
+
   inputTag.keyup();
 }
 

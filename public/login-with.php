@@ -24,11 +24,16 @@ $types = array(
     'OkRu',
     'TikTok'
 );
+if(!empty($_GET['state']) && !empty($_GET['code'])) {
+    $_GET['provider'] = $_GET['state'];
+}
+//
+/*/ 
 if (!empty($_GET['state']) && $_GET['state'] == 'OkRu' && !empty($_GET['code'])) {
     $_GET['provider'] = 'OkRu';
-}
+} ///*/
 if (isset($_GET['provider']) && in_array($_GET['provider'], $types)) {
-    $provider = Wo_Secure($_GET['provider']);
+    $provider = Wo_Secure($_GET['provider']);                                 
 }
 if (!empty($provider)) {
     if (!empty($_COOKIE['provider'])) {
@@ -43,20 +48,34 @@ else if(!empty($_COOKIE['provider']) && in_array($_COOKIE['provider'], $types)){
     
     $provider = Wo_Secure($_COOKIE['provider']);
 }
-if (!empty($provider) && $provider != 'OkRu') {
-    require_once('assets/libraries/social-login/config.php');
-    require_once('assets/libraries/social-login/vendor/autoload.php');
-}
-else if($provider == 'OkRu'){
-    if (empty($_GET['code'])) {
+
+if('OkRu' == $provider){
+    if(empty($_GET['code'])) {
         header("Location: https://connect.ok.ru/oauth/authorize?client_id=".$wo['config']['OkAppId']."&scope=VALUABLE_ACCESS&response_type=code&redirect_uri=".$wo['config']['site_url']."/login-with.php&layout=w&state=OkRu");
         exit();
     }
     require_once('assets/libraries/odnoklassniki_sdk.php');
+}elseif('Vkontakte' == $provider){//pa($wo['config']); exit;
+    if(empty($_GET['code'])){
+        $param = [
+            'client_id'     => $wo['config']['VkontakteAppId'],
+            'redirect_uri'  => $wo['config']['site_url'].'/login-with.php', 
+            'scope'         => 'home_phone,mobile_phone,email', 
+            'response_type' => 'code', 
+            'state'         => 'Vkontakte']; 
+        $url = 'https://oauth.vk.com/authorize?'.urldecode(http_build_query($param));
+        header("Location: $url");
+        exit();
+    }
+}
+if(!empty($provider)){
+    require_once('assets/libraries/social-login/config.php');
+    require_once('assets/libraries/social-login/vendor/autoload.php');   
 }
 
 use Hybridauth\Hybridauth;
 use Hybridauth\HttpClient;
+
 if (isset($provider) && in_array($provider, $types)) {
     try {
         if ($provider == 'OkRu') {
@@ -121,6 +140,53 @@ if (isset($provider) && in_array($provider, $types)) {
             } else {
                 header("Location: " . $_TK->getRedirect());
                 exit();
+            }
+        }
+        else if($provider == 'Vkontakte'){
+            //pa($_REQUEST);
+            try{
+                if(!empty($_GET['code'])){
+                $param = [
+                    'client_id'     => $wo['config']['VkontakteAppId'], 
+                    'client_secret' => $wo['config']['VkontakteAppKey'], 
+                    'redirect_uri'  => $wo['config']['site_url'].'/login-with.php',
+                    'code'          => $_GET['code'], 
+                    'state'         => 'Vkontakte'];
+                $url = 'https://oauth.vk.com/access_token?'.urldecode(http_build_query($param));
+                // Получение access_token
+                $data = file_get_contents($url);
+                $data = json_decode($data, true);
+                }
+                if(!empty($data['access_token'])){
+                    // Получили email
+                    $email = $data['email'];
+                    // Получим данные пользователя
+                    $params = [
+                        'v'            => '5.131',
+                        'uids'         => $data['user_id'],
+                        'access_token' => $data['access_token'],
+                        'fields'       => 'photo_max_orig,city'];
+             
+                    $info = file_get_contents('https://api.vk.com/method/users.get?' . urldecode(http_build_query($params)));
+                    $info = json_decode($info, true);    
+
+                }                            
+                if(!empty($info['response'][0])){
+                    $user_profile = (object) [
+                        'identifier'        => $info['response'][0]['id'],
+                        'displayName'       => $info['response'][0]['first_name'],
+                        'firstName'         => $info['response'][0]['first_name'],
+                        'email'             => $email,
+                        'profileURL'        => '',
+                        'lastName'          => $info['response'][0]['last_name'],
+                        'photoURL'          => $info['response'][0]['photo_max_orig'],
+                        'description'       => '',
+                        'gender'            => '',
+                    ];
+                }
+            }catch(\Exception $e){
+                    echo "Error: ".$e->getMessage();
+                    exit();
             }
         }
         else{
@@ -311,6 +377,7 @@ if (isset($provider) && in_array($provider, $types)) {
         }
     }
     catch (Exception $e) {
+        echo $e->getFile().': '.$e->getLine().'<br>';
         echo $e->getMessage();
         echo " <b><a href='" . Wo_SeoLink('index.php?link1=welcome') . "'>Try again<a></b>";
     }

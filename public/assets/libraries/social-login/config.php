@@ -3,6 +3,7 @@ $site_url_login = $config['site_url'];
 if(substr($site_url_login, -1) == '/') {
     $site_url_login = substr($site_url_login, 0, -1);
 }
+
 $LoginWithConfig = array(
     'callback' => $site_url_login . '/login-with.php?provider=' . $provider,
 
@@ -52,4 +53,5 @@ $LoginWithConfig = array(
 		),
     ),
 );
+//pa($LoginWithConfig);
 ?>
