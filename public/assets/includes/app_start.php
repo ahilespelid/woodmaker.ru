@@ -7,7 +7,6 @@ error_reporting(0);
 @set_time_limit(0);
 require_once "config.php";
 require_once "assets/libraries/DB/vendor/autoload.php";
-var_export(["ok"]);
 
 if(!function_exists('pa')){
     function pa($a,$br=0,$mes='',$t='pre'):bool{$backtrace = debug_backtrace(); $fileinfo = '';$sbr='';
