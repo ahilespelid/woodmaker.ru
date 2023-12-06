@@ -11,6 +11,7 @@
 require_once('assets/init.php');
 $provider = "";
 $types = array(
+    'Yandex',
     'Google',
     'Facebook',
     'Twitter',
@@ -24,6 +25,8 @@ $types = array(
     'OkRu',
     'TikTok'
 );
+
+if('YandexCode' == $_GET['state']){echo '<script>window.location.href = window.location.href.replace("YandexCode","Yandex").replace("#access_token","&code");</script>';}
 if(!empty($_GET['state']) && !empty($_GET['code'])) {
     $_GET['provider'] = $_GET['state'];
 }
@@ -31,10 +34,14 @@ if(!empty($_GET['state']) && !empty($_GET['code'])) {
 /*/ 
 if (!empty($_GET['state']) && $_GET['state'] == 'OkRu' && !empty($_GET['code'])) {
     $_GET['provider'] = 'OkRu';
-} ///*/
+} ///*/  
+//pa($_REQUEST);
+
+
 if (isset($_GET['provider']) && in_array($_GET['provider'], $types)) {
     $provider = Wo_Secure($_GET['provider']);                                 
 }
+
 if (!empty($provider)) {
     if (!empty($_COOKIE['provider'])) {
         $_COOKIE['provider'] = '';
@@ -49,7 +56,7 @@ else if(!empty($_COOKIE['provider']) && in_array($_COOKIE['provider'], $types)){
     $provider = Wo_Secure($_COOKIE['provider']);
 }
 
-if('OkRu' == $provider){
+if('OkRu' == $provider){ 
     if(empty($_GET['code'])) {
         header("Location: https://connect.ok.ru/oauth/authorize?client_id=".$wo['config']['OkAppId']."&scope=VALUABLE_ACCESS&response_type=code&redirect_uri=".$wo['config']['site_url']."/login-with.php&layout=w&state=OkRu");
         exit();
@@ -67,6 +74,15 @@ if('OkRu' == $provider){
         header("Location: $url");
         exit();
     }
+}elseif('Yandex' == $provider){//pa($wo['config']); exit;
+    if(empty($_GET['code'])){
+        $param = [
+            'response_type' => 'token', 
+            'client_id'     => $wo['config']['YandexAppId']]; 
+        $url = 'https://oauth.yandex.ru/authorize?'.urldecode(http_build_query($param));
+        header("Location: $url");
+        exit();
+    }
 }
 if(!empty($provider)){
     require_once('assets/libraries/social-login/config.php');
@@ -78,24 +94,30 @@ use Hybridauth\HttpClient;
 
 if (isset($provider) && in_array($provider, $types)) {
     try {
-        if ($provider == 'OkRu') {
+        if($provider == 'OkRu'){
             OdnoklassnikiSDK::SetOkInfo();
-            if (!is_null(OdnoklassnikiSDK::getCode())){
+            //pa(OdnoklassnikiSDK::changeCodeToToken(OdnoklassnikiSDK::getCode()));
+            //pa(OdnoklassnikiSDK::getCode());
+            //pa(OdnoklassnikiSDK::makeRequest("users.getCurrentUser", null));
+            //pa("SELECT `user_id` FROM " . T_USERS . " WHERE `email` = '{$user_profile->identifier}'");
+            if(!is_null(OdnoklassnikiSDK::getCode())){
                 if(OdnoklassnikiSDK::changeCodeToToken(OdnoklassnikiSDK::getCode())){
                     $current_user = OdnoklassnikiSDK::makeRequest("users.getCurrentUser", null);
-                    if (!empty($current_user)) {
+                    if(!empty($current_user)){
                         $user_profile = ToObject($current_user);
                         $user_profile->identifier = $user_profile->uid;
+                        $user_profile->firstName = $user_profile->first_name;
                         $user_profile->lastName = $user_profile->last_name;
-                        if (!empty($user_profile->pic_3)) {
-                            $user_profile->photoURL = $user_profile->pic_3;
-                        }
-                        else if (!empty($user_profile->pic_2)) {
-                            $user_profile->photoURL = $user_profile->pic_2;
-                        }
-                        else if (!empty($user_profile->pic_1)) {
-                            $user_profile->photoURL = $user_profile->pic_1;
-                        }
+                        $imgOk = (!empty($user_profile->pic_3)) ? $user_profile->pic_3 : ((!empty($user_profile->pic_2)) ? $user_profile->pic_2 : ((!empty($user_profile->pic_1)) ? $user_profile->pic_1 : 'https://woodmaker.ru/upload/photos/n-avatar.jpg'));
+                        $user_profile->photoURL = (str_contains($imgOk, 'api.ok.ru/img/stub/user/male')) ? 'https://woodmaker.ru/upload/photos/n-avatar.jpg' : $imgOk;
+                        
+                        $query = mysqli_query($sqlConnect, $sql = "SELECT username FROM " . T_USERS . " WHERE `okru`='$user_profile->identifier' ORDER BY user_id DESC LIMIT 1;");
+                        if(Wo_UserExists($user_id = $query->fetch_array()['username']) === true){
+                            Wo_SetLoginWithSessionFromUsername($user_id); header("Location: " . $config['site_url']); exit;}
+                        
+                        //pa($user_profile);exit;
+                        //pa((new ReflectionClass('OdnoklassnikiSDK'))->getMethods());exit;
+                        //pa($user_id);exit;
                     }
                     else{
                         echo " <b><a href='" . Wo_SeoLink('index.php?link1=welcome') . "'>Try again<a></b>";
@@ -129,6 +151,11 @@ if (isset($provider) && in_array($provider, $types)) {
                     $user_profile->photoURL = $user_profile->avatar_larger;
                     $user_profile->description = '';
                     $user_profile->gender = '';
+
+                    //$query = mysqli_query($sqlConnect, $sql = "SELECT username FROM " . T_USERS . " WHERE `tiktok`='$user_profile->identifier' ORDER BY user_id DESC LIMIT 1;");
+                    //if(Wo_UserExists($user_id = $query->fetch_array()['username']) === true){
+                    //    Wo_SetLoginWithSessionFromUsername($user_id); header("Location: " . $config['site_url']); exit;}
+
                     // Your logic to manage the User info
                     //$videos = $_TK->getUserVideoPages();
                     // Your logic to manage the Video info
@@ -179,10 +206,47 @@ if (isset($provider) && in_array($provider, $types)) {
                         'email'             => $email,
                         'profileURL'        => '',
                         'lastName'          => $info['response'][0]['last_name'],
-                        'photoURL'          => $info['response'][0]['photo_max_orig'],
+                        'photoURL'          => (empty($info['response'][0]['photo_max_orig'])) ? 'https://woodmaker.ru/upload/photos/n-avatar.jpg' : $info['response'][0]['photo_max_orig'],
                         'description'       => '',
                         'gender'            => '',
                     ];
+
+                        $query = mysqli_query($sqlConnect, $sql = "SELECT username FROM " . T_USERS . " WHERE `vk`='$user_profile->identifier' ORDER BY user_id DESC LIMIT 1;");
+                        if(Wo_UserExists($user_id = $query->fetch_array()['username']) === true){
+                            Wo_SetLoginWithSessionFromUsername($user_id); header("Location: " . $config['site_url']); exit;}
+                 }               
+            }catch(\Exception $e){
+                    echo "Error: ".$e->getMessage();
+                    exit();
+            }
+        }
+        else if($provider == 'Yandex'){//pa($_REQUEST); exit;
+            try{
+                if(!empty($_GET['code'])){
+                $param = [
+                    'oauth_token'   => $_GET['code'], 
+                    'format'        => 'json'];
+                $url = 'https://login.yandex.ru/info?'.urldecode(http_build_query($param));
+                // Получение access_token
+                $data = file_get_contents($url);
+                $data = json_decode($data, true);
+                }//pa($data); exit;
+
+                if(!empty($data['id'])){
+                    $user_profile = (object) [
+                        'identifier'        => $data['id'],
+                        'displayName'       => $data['display_name'],
+                        'firstName'         => $data['first_name'],
+                        'email'             => (empty($data['default_email'])) ? '' : $data['default_email'],
+                        'profileURL'        => '',
+                        'lastName'          => $data['last_name'],
+                        'photoURL'          => (1 == $data['is_avatar_empty']) ? 'https://woodmaker.ru/upload/photos/n-avatar.jpg' : 'https://avatars.yandex.net/get-yapic/'.$data['default_avatar_id'].'/islands-200',
+                        'description'       => '',
+                        'gender'            => '',
+                    ];
+                    $query = mysqli_query($sqlConnect, $sql = "SELECT username FROM " . T_USERS . " WHERE `ya`='$user_profile->identifier' ORDER BY user_id DESC LIMIT 1;");
+                    if(Wo_UserExists($user_id = $query->fetch_array()['username']) === true){
+                        Wo_SetLoginWithSessionFromUsername($user_id); header("Location: " . $config['site_url']); exit;}
                 }
             }catch(\Exception $e){
                     echo "Error: ".$e->getMessage();
@@ -196,9 +260,12 @@ if (isset($provider) && in_array($provider, $types)) {
             $tokens = $authProvider->getAccessToken();
             $user_profile = $authProvider->getUserProfile();
         }
-            
+        //pa($user_profile);exit;    
         if ($user_profile && isset($user_profile->identifier)) {
-            $name = $user_profile->firstName;
+            //$name = $user_profile->firstName;
+            $user_email = (empty($user_profile->email)) ? '' : $user_profile->email;
+//
+/*/            
             if ($provider == 'Google') {
                 $notfound_email     = 'go_';
                 $notfound_email_com = '@google.com';
@@ -214,6 +281,9 @@ if (isset($provider) && in_array($provider, $types)) {
             } else if ($provider == 'Vkontakte') {
                 $notfound_email     = 'vk_';
                 $notfound_email_com = '@vk.com';
+            } else if ($provider == 'Yandex') {
+                $notfound_email     = 'ya_';
+                $notfound_email_com = '@ya.ru';
             } else if ($provider == 'Instagram') {
                 $notfound_email     = 'in_';
                 $notfound_email_com = '@instagram.com';
@@ -247,14 +317,25 @@ if (isset($provider) && in_array($provider, $types)) {
                     exit("Your E-mail is not verfied on Discord.");
                 }
             }
+
             if (Wo_EmailExists($user_email) === true) {
                 Wo_SetLoginWithSession($user_email);
                 header("Location: " . $config['site_url']);
                 exit();
-            } else {
+            }
+///*/            
+
                 $str          = md5(microtime());
                 $id           = substr($str, 0, 9);
                 $user_uniq_id = (Wo_UserExists($id) === false) ? $id : 'u_' . $id;
+
+            if (Wo_UserExists($user_uniq_id) === true) {
+                //Wo_SetLoginWithSession($user_email);
+                Wo_SetLoginWithSessionFromUsername($user_uniq_id);
+                header("Location: " . $config['site_url']);
+                exit();
+            }
+             else {
                 $social_url   = substr($user_profile->profileURL, strrpos($user_profile->profileURL, '/') + 1);
                 $imported_image = Wo_ImportImageFromLogin($user_profile->photoURL, 1);
                 if (empty($imported_image)) {
@@ -266,7 +347,7 @@ if (isset($provider) && in_array($provider, $types)) {
                     'email' => Wo_Secure($user_email, 0),
                     'password' => Wo_Secure(md5($password), 0),
                     'email_code' => Wo_Secure(md5(rand(1111, 9999) . time()), 0),
-                    'first_name' => Wo_Secure($name),
+                    'first_name' => Wo_Secure($user_profile->firstName),
                     'last_name' => Wo_Secure($user_profile->lastName),
                     'avatar' => Wo_Secure($imported_image),
                     'src' => Wo_Secure($provider),
@@ -301,8 +382,8 @@ if (isset($provider) && in_array($provider, $types)) {
                     $re_data['linkedIn'] = Wo_Secure($social_url);
                 }
                 if ($provider == 'Vkontakte') {
-                    $re_data['about'] = Wo_Secure($user_profile->description);
-                    $re_data['vk']    = Wo_Secure($social_url);
+                    //$re_data['about'] = Wo_Secure($user_profile->description);
+                    $re_data['social_login'] = 1; $re_data['vk'] = Wo_Secure($user_profile->identifier);
                 }
                 if ($provider == 'Instagram') {
                     $re_data['instagram']   = Wo_Secure($user_profile->username);
@@ -320,7 +401,10 @@ if (isset($provider) && in_array($provider, $types)) {
                     $re_data['mailru']   = Wo_Secure($social_url);
                 }
                 if ($provider == 'OkRu') {
-                    $re_data['okru']   = Wo_Secure($user_profile->uid);
+                    $re_data['social_login'] = 1; $re_data['okru']   = Wo_Secure($user_profile->identifier);
+                }
+                if ($provider == 'Yandex') {
+                    $re_data['social_login'] = 1; $re_data['ya']   = Wo_Secure($user_profile->identifier);
                 }
                 if (!empty($_SESSION['ref']) && $wo['config']['affiliate_type'] == 0) {
                     $ref_user_id = Wo_UserIdFromUsername($_SESSION['ref']);
@@ -335,8 +419,9 @@ if (isset($provider) && in_array($provider, $types)) {
                 }
                 $wo['config']['user_registration'] = 1;
                 if (Wo_RegisterUser($re_data) === true) {
-                    Wo_SetLoginWithSession($user_email);
-                    $user_id = Wo_UserIdFromEmail($user_email);
+                    Wo_SetLoginWithSessionFromUsername($user_uniq_id);
+                    //$user_id = Wo_UserIdFromEmail($user_email);
+                    $user_id = Wo_UserIdFromUsername($user_uniq_id);
                     if (!empty($re_data['referrer']) && is_numeric($wo['config']['affiliate_level']) && $wo['config']['affiliate_level'] > 1) {
                         AddNewRef($re_data['referrer'],$user_id,$wo['config']['amount_ref']);
                     }
@@ -376,7 +461,7 @@ if (isset($provider) && in_array($provider, $types)) {
             }
         }
     }
-    catch (Exception $e) {
+    catch (Exception $e) { pa($e);
         echo $e->getFile().': '.$e->getLine().'<br>';
         echo $e->getMessage();
         echo " <b><a href='" . Wo_SeoLink('index.php?link1=welcome') . "'>Try again<a></b>";

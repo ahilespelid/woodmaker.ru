@@ -97,6 +97,11 @@ if ($f == 'status') {
                                     echo json_encode($data);
                                     exit();
                                 }
+                            } else {
+                                $data  = array(
+                                    'message' => $error_icon . $wo['lang']['file_not_supported'],
+                                    'status' => 500
+                                );
                             }
                             if (empty($_FILES["cover"]) && $wo['config']['ffmpeg_system'] == 'on') {
                                 $ffmpeg_b         = $wo['config']['ffmpeg_binary_file'];
@@ -166,6 +171,11 @@ if ($f == 'status') {
                                     $upload_s3                    = Wo_UploadToS3($last_file);
                                     $upload_s3                    = Wo_UploadToS3($media['filename']);
                                     $thumb                        = $last_file;
+                                } else {
+                                    $data  = array(
+                                        'message' => $error_icon . $wo['lang']['file_not_supported'],
+                                        'status' => 500
+                                    );
                                 }
                             }
                         }

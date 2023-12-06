@@ -9,9 +9,15 @@ if ($f == "search") {
             $data['html'] .= Wo_LoadPage('messages/messages-recipients-list');
         }
     }
-    if ($s == 'normal' && isset($_GET['query'])) {
-        foreach (Wo_GetSearch($_GET['query']) as $wo['result']) {
-            $data['html'] .= Wo_LoadPage('header/search');
+    if ($s == 'normal' && isset($_GET['query']) || isset($_GET['name'])) {
+        if($_GET["p"] == "chat") {
+            foreach (Wo_GetSearch($_GET['query'], true) as $wo['part']) {
+                $data['html'] .= Wo_LoadPage('chat/chat-part-list');
+            }
+        } else {
+            foreach (Wo_GetSearch($_GET['query']) as $wo['result']) {
+                $data['html'] .= Wo_LoadPage('header/search');
+            }
         }
     }
     if ($s == 'hash' && isset($_GET['query'])) {

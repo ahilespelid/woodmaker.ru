@@ -182,13 +182,21 @@ if ($f == 'groups') {
                         $Update_data = array(
                             'active' => '1'
                         );
+                        $img              = Wo_GroupData($_POST['group_id']);
+                        $_SESSION['file'] = $img['cover_org'];
                         if (Wo_UpdateGroupData($_POST['group_id'], $Update_data)) {
                             $userdata2 = Wo_GroupData($_POST['group_id']);
                             $data      = array(
                                 'status' => 200,
                                 'message' => $success_icon . $wo['lang']['setting_updated'],
-                                'cover' => $userdata2['cover'],
-                                'avatar' => $userdata2['avatar']
+                                'img' => $img['cover'],
+                                'cover_or' => $img['cover_org'],
+                                'cover_full' => Wo_GetMedia($img['cover_full']),
+                                'session' => $_SESSION['file'],
+                                'avatar' => $userdata2['avatar'],
+                                'avatar_or' => $img['avatar_org'],
+                                'avatar_full' => Wo_GetMedia($img['avatar_full']) . '?cache=' . rand(11, 22),
+                                'avatar_full_or' => $img['avatar_full'],
                             );
                         }
                     }

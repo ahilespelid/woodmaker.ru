@@ -133,6 +133,7 @@ if ($f == "update_profile_setting") {
                         }
                     }
                     if (!empty($field_data)) {
+                        var_dump($field_data);
                         $insert = Wo_UpdateUserCustomData($_POST['user_id'], $field_data);
                     }
                     if (empty($errors)) {

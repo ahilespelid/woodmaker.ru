@@ -27,7 +27,7 @@ if ($f == 'login') {
         $password = $_POST['password'];
         $result   = Wo_Login($username, $password);
         if ($result === false) {
-            $errors[] = $error_icon . $wo['lang']['incorrect_username_or_password_label'];
+            $errors[] = $error_icon . $wo['lang']['incorrect_email_or_password_label'];
             if ($wo['config']['prevent_system'] == 1) {
                 WoAddBadLoginLog();
             }

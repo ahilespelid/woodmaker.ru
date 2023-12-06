@@ -15,7 +15,7 @@ if ($f == 'invite_user') {
             'from_name' => $wo['config']['siteName'],
             'to_email' => $email,
             'to_name' => '',
-            'subject' => 'invitation request',
+            'subject' => $wo['lang']['invitation_request'],
             'charSet' => 'utf-8',
             'message_body' => $message,
             'is_html' => true

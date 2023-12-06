@@ -43,7 +43,10 @@ else{
 			<?php }?>
 		</div>
 		<div class="notification-text">
-			<div class="ajax-time"></div>
+            <div class="d-flex">
+			    <div class="ajax-time"></div>
+                <span class="ajax-time"><?php echo $wo['lang']['time_ago']; ?></span>
+            </div>
             <span class="truncate"><?php echo $name; ?></span>
 			<div class="header-message truncate"><?php echo Wo_UserStatus($wo['recipient']['user_id'],$wo['recipient']['lastseen']); ?></div>
 		</div>

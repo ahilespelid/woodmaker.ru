@@ -31,6 +31,7 @@ a, a:focus, a:hover {color: #c5c5c5;}
 .tag_steps li div {background: #434343;}
 .tag_steps li div:before {border-left-color: #212121;}
 .tag_steps li div:after {border-left-color: #434343;}
+.post-textarea-placeholder p:first-child {color: #fff}
 .tag_field > input, .tag_field > textarea, .tag_field > select, .tag_field > .dropdown.bootstrap-select, .tag_field > .bootstrap-tagsinput, .wow_fcov_image, .select_radio_btn_innr .sr_btn_lab_innr, .tag_slide_upload_img .upload-product-image, .shar_modl_chose_pgrp input {border-bottom-color: rgb(255 255 255 / 42%);color: rgb(255 255 255 / 87%);background-color: #373737;}
 .tag_field > input:hover, .tag_field > textarea:hover, .tag_field > select:hover, .tag_field > .dropdown.bootstrap-select:hover, .tag_field > .bootstrap-tagsinput:hover, .select_radio_btn_innr .sr_btn_lab_innr:hover {border-bottom-color: rgb(255 255 255 / 87%);background-color: #434343;}
 .tag_field > input + span, .tag_field > textarea + span, .tag_field > select + span, .tag_field > .dropdown.bootstrap-select + span {color: rgb(255 255 255 / 60%);}
@@ -57,6 +58,10 @@ body .bbcode-textarea {border-color: #484848;}
 .verified-color svg path:last-child {fill: #fff;}
 body .tag_field > .dropdown.bootstrap-select .bs-actionsbox .btn-light, body .tag_field > .dropdown.bootstrap-select .bs-actionsbox .btn-light:hover {background-color: #3f3f3f;border-color: #2f2f2f;}
 .modal-header .close {color: #fff;}
+.modal-header {border-bottom: 1px solid #4a4e51;}
+.cover_prompt_label {border: 1px dashed #fff;}
+/*Dropdown*/
+.themes_dropdown_body li:hover {background-color: #646464; transition: .3s}
 
 /*404*/
 .tag_404_innr p {color: rgb(255 255 255 / 60%);}
@@ -188,6 +193,9 @@ pre {color: #d5d5d5;background-color: #292929;border-color: #4e4e4e;}
 .tag_navbar_top_side_all_sec a {box-shadow: 0 0 0 1px rgb(255 255 255 / 10%);}
 .tag_navbar_top_side_all_sec a:hover {background: rgb(255 255 255 / 0.05);}
 .tag_navbar_top_side_all_sec a svg {color: #8e9196;}
+.sec_text {color: #ff585a !important;}
+.ajax-time {color: #ff585a !important;}
+body .sidebar .wo_sidebar_pages .card {background-color: var(--header-background);}
 
 /*Home*/
 .greetalert > .btn {color: #d1d1d1;}
@@ -200,7 +208,11 @@ pre {color: #d5d5d5;background-color: #292929;border-color: #4e4e4e;}
 .tag_stories_on_home .tag_stories_mobi .status-list li a, .tag_stories_on_home .tag_stories_mobi .status-list li.story_empty p, .tag_stories_on_home .tag_stories_mobi .status-list li.story_empty span b {background: rgb(255 255 255 / 5%);}
 .featured-users-innr .tag_pro_users > div a {box-shadow: 0 0 0 1px rgb(255 255 255 / 10%);}
 .tag_post_status.online {box-shadow: 0 0 0 2px #212121;}
-
+.list-group-item:first-child {background-color: var(--header-background);}
+.main-color {color: #fff !important}
+.sec_text {color: #e0e0e0 !important}
+.sec_text a {color: #e8e8e8 !important}
+.ajax-time {color: #dbdbdb !important}
 /*Jobs*/
 .tag_nearby_places {background-color: #2d3b2d;box-shadow: none;}
 .tag_job_jumbo > div.dropdown > .btn, .tag_job_jumbo > div.search-bar input {border-color: #434343;}
@@ -493,7 +505,7 @@ body .flatpickr-calendar.hasTime .flatpickr-time {
 }
 
 .tag_post_actions .stat-item > svg, .tag_post_actions .stat-item > .active-like > svg {
-	background-color: rgb(255 255 255 / 0.08) !important;
+	/* background-color: rgb(255 255 255 / 0.08) !important; */
 }
 
 

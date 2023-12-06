@@ -1,4 +1,5 @@
 <?php $fields = Wo_GetWelcomeFileds(); ?>
+<?php Wo_Redirect('/') ?>
 <?php if (Wo_IsMobile() == false) { ?>
 <svg viewBox="0 0 909 721" version="1.1" class="tag_auth_effect"><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><g transform="translate(-1744.000000, -1065.000000)" fill="<?php echo $wo['config']['btn_background_color'];?>"><path d="M1954.43919,1792.6682 C1992.31638,1797.09936 2029.78299,1794.70896 2067.01008,1789.73436 C2120.30732,1782.61259 2173.62738,1775.58582 2226.69271,1767.39996 C2260.60085,1762.17074 2294.7713,1756.87312 2327.56171,1748.10961 C2372.16427,1736.19945 2413.88127,1718.36841 2451.75847,1693.72343 C2486.62465,1671.0318 2516.57893,1644.33085 2541.29434,1613.05053 C2563.39792,1585.08407 2579.7228,1554.51441 2591.52734,1521.52015 C2605.34684,1482.89004 2611.12175,1443.30225 2609.82154,1402.9544 C2608.74943,1369.81193 2601.56786,1336.95448 2589.34512,1305.18772 C2567.23773,1247.74609 2531.29564,1197.68846 2481.13487,1156.39053 C2449.00978,1129.9556 2412.8852,1108.35086 2372.457,1092.43138 C2337.29048,1078.58306 2300.84656,1069.59534 2263.61946,1064.1875 C2233.99594,1059.88176 2203.84778,1060.52401 2173.81367,1062.68258 C2137.97042,1065.25919 2103.56046,1072.62418 2070.51913,1083.86549 C2018.80343,1101.46471 1973.74846,1128.28727 1935.14892,1163.71372 C1904.17957,1192.12861 1879.84053,1224.76184 1858.39846,1259.15081 C1848.63167,1274.82708 1842.33591,1292.27808 1834.48522,1308.93102 C1823.53608,1332.13949 1812.37023,1355.27576 1801.75184,1378.60964 C1791.84819,1400.35119 1782.14603,1422.18015 1773.07116,1444.21812 C1761.57836,1472.14277 1750.1578,1500.07883 1743.786,1529.592 C1737.76778,1557.47105 1736.1216,1585.54771 1740.3834,1613.74598 C1744.73265,1642.5447 1755.98213,1669.59528 1773.50077,1694.5861 C1800.94966,1733.75965 1839.22985,1761.07245 1886.84342,1778.21564 C1908.63146,1786.06327 1931.35474,1790.1676 1954.43919,1792.6682" transform="translate(2174.000000, 1428.000000) rotate(205.000000) translate(-2174.000000, -1428.000000) "></path></g></g></svg>
 <?php } ?>
@@ -11,7 +12,7 @@
 			<div class="wow_content tag_auth_box tag_auth_box_auto">
 				<div class="valign tag_auth_animation d-none"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 367.805 367.805" xml:space="preserve"> <g> <path style="fill:#3BB54A;" d="M183.903,0.001c101.566,0,183.902,82.336,183.902,183.902s-82.336,183.902-183.902,183.902 S0.001,285.469,0.001,183.903l0,0C-0.288,82.625,81.579,0.29,182.856,0.001C183.205,0,183.554,0,183.903,0.001z"/> <polygon style="fill:#fff;" points="285.78,133.225 155.168,263.837 82.025,191.217 111.805,161.96 155.168,204.801 256.001,103.968"/> </g></svg><?php echo $wo['lang']['welcome_'] ?></div>
 				<form id="register" method="post">
-					<p class="title"><?php echo $wo['lang']['sign_up']?></p>
+					<p class="title"><?php echo $wo['lang']['create_account']?></p>
 					<div class="errors"></div>
 					<?php if ($wo['config']['auto_username'] == 1) { ?>
 						<label class="tag_field">
@@ -40,7 +41,7 @@
 					<?php } ?>
 					<label class="tag_field">
 						<input name="password" type="password" id="password" autocomplete="off" placeholder=" " required>
-						<span><?php echo $wo['lang']['password']?></span>
+						<span><?php echo $wo['lang']['password']?> <img id="viewPassword" src="/no-view.svg" width="20" style="float:right;"></span>
 					</label>
 					<?php if ($wo['config']['password_complexity_system'] == 1) { ?>
 						<ul class="list-unstyled helper-text">
@@ -51,10 +52,10 @@
 						</ul>
 					<?php } ?>
 					<label class="tag_field">
-						<input name="confirm_password" type="password" autocomplete="off" placeholder=" " required>
+						<input name="confirm_password" type="password" id="confirm_password" autocomplete="off" placeholder=" " required>
 						<span><?php echo $wo['lang']['confirm_password']?></span>
 					</label>
-					<?php 
+					<?php
 						if (!empty($fields) && count($fields) > 0) {
 							foreach ($fields as $key => $wo['field']) {
 								echo Wo_LoadPage('welcome/fields');
@@ -63,7 +64,9 @@
 					?>
 					<label class="tag_field">
 						<select name="gender" id="gender">
-							<?php foreach ($wo['genders'] as $key => $gender) { ?>
+							<?php
+                                $sorted_arr = array_reverse($wo['genders']);
+                                foreach ($sorted_arr as $key => $gender) { ?>
 								<option value="<?php echo($key) ?>"><?php echo $gender; ?></option>
 							<?php } ?>
 						</select>
@@ -89,10 +92,10 @@
 					<div class="round-check">
 						<input type="checkbox" name="accept_terms" id="accept_terms" onchange="activateButton(this)">
 						<label for="accept_terms"> 
-							<?php echo $wo['lang']['terms_agreement'] ?> <a href="<?php echo Wo_SeoLink('index.php?link1=terms&type=terms');?>"><?php echo $wo['lang']['terms_of_use'] ?></a> & <a href="<?php echo Wo_SeoLink('index.php?link1=terms&type=privacy-policy');?>"><?php echo $wo['lang']['privacy_policy'] ?></a>
+							<?php echo $wo['lang']['terms_agreement'] ?> <a href="<?php echo Wo_SeoLink('index.php?link1=terms&type=terms');?>"><?php echo $wo['lang']['terms_of_use'] ?></a> <?php echo $wo['lang']['and'] ?> <a href="<?php echo Wo_SeoLink('index.php?link1=terms&type=privacy-policy');?>"><?php echo $wo['lang']['privacy_policy'] ?></a>
 						</label>
 					</div>
-					<button type="submit" class="btn btn-main btn-mat tag_wel_btn" id="sign_submit" disabled><?php echo $wo['lang']['lets_go']?></button>
+					<button type="submit" class="btn btn-main btn-mat tag_wel_btn" id="sign_submit" disabled><?php echo $wo['lang']['sign_up']?></button>
 					<?php if (isset($_GET['invite']) && (Wo_IsAdminInvitationExists($_GET['invite']) || Wo_IsUserInvitationExists($_GET['invite']))): ?>
 						<input type="text" class="hidden" value="<?php echo $_GET['invite']; ?>" name="invited">
 					<?php endif; ?>
@@ -257,4 +260,19 @@ function activateButton(element) {
 	}
 })();
 <?php } ?>
+///*/ показать пароль ///*/
+const l = console.log;
+$(document).ready(() => {
+    $('input#password').click(() => {
+         var src = ($('img#viewPassword').attr('src') === '/view.svg')
+            ? '/no-view.svg'
+            : '/view.svg';
+         var type = ($('input#password').attr('type') === 'password')
+            ? 'text'
+            : 'password';   
+         $('img#viewPassword').attr('src', src); $('input#password').attr('type', type); $('input#confirm_password').attr('type', type);
+         return false;
+    });
+});
+///*/ --------------------- ///*/
 </script>

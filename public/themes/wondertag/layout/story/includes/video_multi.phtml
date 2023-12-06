@@ -1,0 +1,20 @@
+<?php
+if($wo['story']['postVideo'] != null) { ?>
+    <?php $postVideo = unserialize(base64_decode($wo['story']['postVideo']));
+        $postVideoThumb = unserialize(base64_decode($wo['story']['postVideoThumb']));
+        $postVideoCount = count((array)$postVideo);
+    ?>
+
+    <?php if($postVideoCount == 1) {
+        echo Wo_LoadPage("players/video");
+    } elseif($postVideoCount == 2) {
+        echo Wo_LoadPage("players/video_2");
+    } elseif($postVideoCount == 3) {
+        echo Wo_LoadPage("players/video_3");
+    } elseif ($postVideoCount == 4) {
+        echo Wo_LoadPage("players/video_4");
+    } elseif ($postVideoCount >= 5) {
+        echo Wo_LoadPage("players/video_5-10");
+    }?>
+
+<?php } ?>

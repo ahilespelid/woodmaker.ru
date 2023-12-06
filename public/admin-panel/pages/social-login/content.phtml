@@ -136,6 +136,18 @@
                         <hr>
 
                         <div class="float-left">
+                            <label for="YandexLogin" class="main-label">Yandex Login</label>
+                            <br><small class="admin-info">Enable the ability for users to login to your site using their Yandex account.</small>
+                        </div>
+                        <div class="form-group float-right switcher">
+                            <input type="hidden" name="YandexLogin" value="0" />
+                            <input type="checkbox" name="YandexLogin" id="chck-YandexLogin" value="1" <?php echo ($wo['config']['YandexLogin'] == 1) ? 'checked': '';?>>
+                            <label for="chck-YandexLogin" class="check-trail"><span class="check-handler"></span></label>
+                        </div>
+                        <div class="clearfix"></div>
+                        <hr>
+
+                        <div class="float-left">
                             <label for="OkLogin" class="main-label">ok.ru Login</label>
                             <br><small class="admin-info">Enable the ability for users to login to your site using their ok.ru account.</small>
                         </div>
@@ -297,6 +309,23 @@
                         </div>
                         <hr>
 
+                        <label class="form-label main-label" style="background: #005CF1; color: #fff; margin-bottom: 12px;">yandex.ru Configuration</label>
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <input type="text" id="YandexAppId" name="YandexAppId" class="form-control" value="<?php echo $wo['config']['YandexAppId']?>" placeholder="Application ID">
+                            </div>
+                        </div>
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <input type="text" id="YandexAppKey" name="YandexAppKey" class="form-control" value="<?php echo $wo['config']['YandexAppKey']?>" placeholder="Application Public Key">
+                            </div>
+                        </div>
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <input type="text" id="YandexAppSecretkey" name="YandexAppSecretkey" class="form-control" value="<?php echo $wo['config']['YandexAppSecretkey']?>" placeholder="Application Secret Key">
+                            </div>
+                        </div>
+                        
                         <label class="form-label main-label" style="background: #005CF1; color: #fff; margin-bottom: 12px;">ok.ru Configuration</label>
                         <div class="form-group form-float">
                             <div class="form-line">

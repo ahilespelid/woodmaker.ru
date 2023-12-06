@@ -45,9 +45,9 @@ body.tag_header_top_p .tag_live_sidebar {top: 56px;box-shadow: 0 0 10px rgba(0, 
 /*Sidebar*/
 .tag_navbar_top_side {max-height: 100%;bottom: 0;height: calc(100% - 56px);position: fixed;left: 0;top: 56px;width: 250px;z-index: 99;display: -webkit-box;display: -webkit-flex;display: -ms-flexbox;display: flex;flex-direction: column;border-right: 1px solid #dcdcdc;background: var(--body-bg);}
 .tag_navbar_top_side .sidebar_innr, .tag_navbar_top_side_all .sidebar_innr {display: -webkit-box;display: -webkit-flex;display: -ms-flexbox;display: flex;flex-direction: column;height: 100%;overflow-y: auto;overscroll-behavior-y: contain;padding: 8px;}
-.tag_navbar_top_side .sidebar_innr > .btn {line-height: 40px;min-height: 45px;margin-top: 4px;padding: 8px;text-align: inherit;border-radius: 8px;}
+.tag_navbar_top_side .sidebar_innr > .btn {line-height: 24px;min-height: 45px;margin-top: 4px;padding: 8px;text-align: inherit;border-radius: 8px;}
 .tag_navbar_top_side .sidebar_innr > .btn:hover {background: rgb(0 0 0 / 0.04);}
-.tag_navbar_top_side .sidebar_innr > .btn svg {margin: 0;width: 40px;height: 40px;background: #fff;border-radius: 50%;padding: 9px;}
+.tag_navbar_top_side .sidebar_innr > .btn svg {margin: 0;min-width: 40px;height: 40px;background: #fff;border-radius: 50%;padding: 9px;}
 .tag_navbar_top_side .sidebar_innr > .btn span {padding: 0 10px;}
 .tag_navbar_top_side .sidebar_innr > .btn.home svg {background: #ff9800;background: linear-gradient(145deg, #ffb74d 0%, #ff9800 100%);}
 .tag_navbar_top_side .sidebar_innr > .btn.albums svg {background: #4CAF50;background: linear-gradient(145deg, #A5D6A7 0%, #4CAF50 100%);}

@@ -93,7 +93,7 @@ button, input, optgroup, select, textarea {color: inherit;}
 .tag_auth_box_auto, .tag_auth_box_auto+.tag_wel_register {margin-left: auto;margin-right: auto;}
 .tag_auth_animation {font-size: 18px;position: absolute;top: 0;right: 0;bottom: 0;left: 0;width: 100%;height: 100%;background-color: white;z-index: 1;border-radius: 10px;justify-content: center;flex-direction: column;}
 .tag_auth_animation svg {width: 50px;height: 50px;margin: 0 0 15px;}
-.tag_auth_box > form > p.title, .regest_frst_step > p.title, .regest_sec_step > p.title {font-size: 17px;margin: 0 0 20px;font-family: 'Readex Pro', sans-serif;}
+.tag_auth_box > form > p.title, .regest_frst_step > p.title, .regest_sec_step > p.title {font-size: 17px;font-weight: 600;margin: 0 0 20px;font-family: 'Readex Pro', sans-serif;}
 .tag_auth_box .errors {margin: 0 0 15px;color: #F44336;font-size: 15px;}
 .tag_auth_box .errors i {display: none;}
 .tag_auth_box .errors:empty {margin: 0;}
@@ -111,6 +111,7 @@ button, input, optgroup, select, textarea {color: inherit;}
 .g-signin2 > div {margin: 10px auto 0;}
 .wow_forgot_choice {margin: -25px 0 0;}
 .wow_forgot_choice .btn {margin: 25px 0 0;}
+#sign_submit {font-weight: 600;}
 
 /*Checkbox*/
 .round-check, .round-check input+label {position:relative;display:inline-block}

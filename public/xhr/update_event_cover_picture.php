@@ -5,7 +5,9 @@ if ($f == 'update_event_cover_picture') {
             $img  = Wo_EventData($_POST['event_id']);
             $data = array(
                 'status' => 200,
-                'img' => $img['cover']
+                'img' => $img['cover'],
+                'cover_full' => $img['cover_full'],
+                'cover_or' => $img['cover_org']
             );
         }
     }

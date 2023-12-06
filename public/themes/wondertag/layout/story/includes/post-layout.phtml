@@ -1,8 +1,9 @@
 <?php 
 $post_shared_from = array();
 $current_post = $wo['current_post'] = $wo['story'];
+$nothing_in_post = !empty($wo['story']['postMap']) && empty($wo['story']['postVine']) && empty($wo['story']['postSoundCloud']) && empty($wo['story']['postVimeo']) && empty($wo['story']['postDailymotion']) && empty($wo['story']['postYoutube']) && empty($wo['story']['postPlaytube']) && empty($wo['story']['postDeepsound']) && empty($wo['story']['postFile']) && ($wo['config']['google_map'] == 1 || $wo['config']['yandex_map'] == 1);
  ?>
-<div class="post-container">
+<div class="post-container" id="post-<?php echo $wo['story']['id']; ?>" data-post-id="<?php echo $wo['story']['id'];?>">
 	<div class="post<?php echo (!empty($wo['story']['post_is_promoted'])) ? ' boosted': '';?>" id="post-<?php echo $wo['story']['id']; ?>" data-post-id="<?php echo $wo['story']['id'];?>" <?php if( isset( $wo['story']['LastTotal'] ) ) { echo 'data-post-total="'.$wo['story']['LastTotal'].'"'; }?> <?php if( isset( $wo['story']['ids'] ) ) { echo 'data-post-ids="'.$wo['story']['ids'].'"'; }?> <?php if( isset( $wo['story']['dt'] ) ) { echo 'data-post-dt="'.$wo['story']['dt'].'"'; }?> data-post-type="<?php if (!empty($wo['story']['parent_id'])) { echo('share'); } ?>">
 		<?php if (!empty($wo['story']['post_is_promoted'])) { ?>
 			<div class="promoted-icon"><?php echo $wo['lang']['promoted'];?> <?php echo $wo['lang']['post'];?></div>
@@ -79,14 +80,14 @@ $current_post = $wo['current_post'] = $wo['story'];
 
 					<?php include 'embed.phtml'; ?>
 					
-					<?php if(!empty($wo['story']['postMap']) && empty($wo['story']['postVine']) && empty($wo['story']['postSoundCloud']) && empty($wo['story']['postVimeo']) && empty($wo['story']['postDailymotion']) && empty($wo['story']['postYoutube']) && empty($wo['story']['postPlaytube']) && empty($wo['story']['postDeepsound']) && empty($wo['story']['postFile']) && ($wo['config']['google_map'] == 1 || $wo['config']['yandex_map'] == 1)) { ?>
+					<?php if($nothing_in_post) { ?>
 						<div class="post-map">
-							<div class="post-map-innr"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="currentColor" d="M18.364 17.364L12 23.728l-6.364-6.364a9 9 0 1 1 12.728 0zM12 15a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm0-2a2 2 0 1 1 0-4 2 2 0 0 1 0 4z"/></svg><?php echo $wo['story']['postMap'];?></div>
+							<div class="post-map-innr" onclick="openMapModal('<?php echo $wo['story']['postMap'];?>');"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="currentColor" d="M18.364 17.364L12 23.728l-6.364-6.364a9 9 0 1 1 12.728 0zM12 15a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm0-2a2 2 0 1 1 0-4 2 2 0 0 1 0 4z"/></svg><?php echo $wo['story']['postMap'];?></div>
 							<?php if ($wo['config']['google_map'] == 1) { ?>
 								<img src="https://maps.googleapis.com/maps/api/staticmap?center=<?php echo $wo['story']['postMap'];?>&zoom=13&size=600x250&maptype=roadmap&markers=color:red%7C<?php echo $wo['story']['postMap'];?>&key=<?php echo $wo['config']['google_map_api'];?>" width="100%">
 							<?php } ?>
 							<?php if ($wo['config']['yandex_map'] == 1) { ?>
-								<div id="place_<?php echo($wo['story']['id']) ?>" <?php echo($wo['config']['yandex_map'] == 1 ? 'class="yandex_ads_map"' : '') ?>></div>
+								<div <?php if(Wo_IsMobile()) {?> onclick="openMapModal('<?php echo $wo['story']['postMap'];?>');" <?php }?> id="place_<?php echo($wo['story']['id']) ?>" <?php echo($wo['config']['yandex_map'] == 1 ? 'class="yandex_ads_map"' : '') ?>></div>
 								<script type="text/javascript">
 									<?php if (!empty($wo['story']['postMap'])) { ?>
 										setTimeout(function () {
@@ -96,9 +97,21 @@ $current_post = $wo['current_post'] = $wo['story'];
 												  center: res.geoObjects.get(0).geometry.getCoordinates(),
 												  zoom : 10
 											  });
-											  myMap.geoObjects.add(new ymaps.Placemark(res.geoObjects.get(0).geometry.getCoordinates(), {
-												  balloonContent: ''
-											  }));
+                                            myMap.controls.remove('geolocationControl'); 
+                                            myMap.controls.remove('searchControl'); 
+                                            myMap.controls.remove('trafficControl'); 
+                                            myMap.controls.remove('typeSelector'); 
+                                            myMap.controls.remove('fullscreenControl');
+                                            myMap.controls.remove('rulerControl'); 
+                                            myMap.behaviors.disable(['scrollZoom']); 
+                                            <?php if(Wo_IsMobile()) { ?>
+                                                myMap.controls.remove('zoomControl');
+                                                myMap.behaviors.disable(['scrollZoom', 'drag']); 
+                                            <?php }?>
+                                            
+                                            myMap.geoObjects.add(new ymaps.Placemark(res.geoObjects.get(0).geometry.getCoordinates(), {
+                                                balloonContent: ''
+                                            }));
 										  });
 										},1000);
 									<?php } ?>
@@ -123,277 +136,288 @@ $current_post = $wo['current_post'] = $wo['story'];
 						}
 					?>
 
-					<?php if(!empty($wo['story']['postFile'])) { ?>
-						<div class="valign tag_post_full_img bold wo_shared_doc_file 
-						<?php 
-							$media2['filename'] = Wo_GetMedia($wo['story']['postFile']);
-							$file_extension = substr(strrchr($media2['filename'], '.'), 1);
-							$file_extension = strtolower($file_extension);
-							if ($file_extension == 'jpg' || $file_extension == 'jpeg' || $file_extension == 'png' || $file_extension == 'gif') {
-						?>
-							rx-pinch-zoom-<?php echo $wo['story']['id'] ; ?> " data-pinch-zoom-id="<?php echo $wo['story']['id'] ; ?>"
-							
-						<?php
-							} else {
-								echo '"';
-							}
-						?>
-						>
-							<?php
-							$media = array(
-								'type' => 'post',
-								'storyId' => $wo['story']['id'],
-								'filename' => $wo['story']['postFile'],
-								'name' => $wo['story']['postFileName'],
-								'postFileThumb' => $wo['story']['postFileThumb'],
-							);
-							echo Wo_DisplaySharedFile($media, '', $wo['story']['cache']);
-							?>
-						</div>
-					<?php } ?>
+                    <?php
+                    $postVideo = unserialize(base64_decode($wo['story']['postVideo']));
+                    if(count((array) $postVideo) > 1) {
+                        echo Wo_LoadPage("story/includes/video_multi");
+                    } else { ?>
 
-					<?php if (Wo_IsUrl($wo['story']['postSticker'])): ?>
-						<div class="tag_post_full_stick">
-							<?php if (strpos('.mp4', $wo['story']['postSticker'])) { ?>
-								<video autoplay loop><source src="<?php echo $wo['story']['postSticker']; ?>" type="video/mp4"></video>
-							<?php } else { ?>
-								<img src="<?php echo $wo['story']['postSticker']; ?>" alt="GIF">
-							<?php } ?>
-						</div>
-					<?php endif; ?>
+                        <?php if(!empty($wo['story']['postFile'])) { ?>
+                            <div class="valign tag_post_full_img bold wo_shared_doc_file
+                            <?php
+                            $media2['filename'] = Wo_GetMedia($wo['story']['postFile']);
+                            $file_extension = substr(strrchr($media2['filename'], '.'), 1);
+                            $file_extension = strtolower($file_extension);
+                            if ($file_extension == 'jpg' || $file_extension == 'jpeg' || $file_extension == 'png' || $file_extension == 'gif') {
+                            ?>
+                                rx-pinch-zoom-<?php echo $wo['story']['id'] ; ?> " data-pinch-zoom-id="<?php echo $wo['story']['id'] ; ?>"
 
-					<?php if (Wo_IsUrl($wo['story']['postPhoto'])): ?>
-						<div class="valign tag_post_full_img">
-							<img src="<?php echo $wo['story']['postPhoto']; ?>" alt="Picture">
-						</div>
-					<?php endif; ?>
+                                <?php
+                                } else {
+                                    echo '"';
+                                }
+                                ?>
+                            >
+                                <div class="tag_lbox_blur_img">
+                                    <div class="tag_lbox_blur_img_innr">
+                                        <img src="<?php echo $wo['story']['postFile'] ?>" alt="">
+                                    </div>
+                                </div>
+                                <?php
+                                $media = array(
+                                    'type' => 'post',
+                                    'storyId' => $wo['story']['id'],
+                                    'filename' => $wo['story']['postFile'],
+                                    'name' => $wo['story']['postFileName'],
+                                    'postFileThumb' => $wo['story']['postFileThumb'],
+                                );
+                                echo Wo_DisplaySharedFile($media, '', $wo['story']['cache']);
+                                ?>
+                            </div>
+                        <?php } } ?>
 
-					<?php if(!empty($wo['story']['postRecord'])) { ?>
-						<div class="valign tag_post_full_img">
-							<?php  
-								$media = array(
-									'type' => 'post',
-									'storyId' => $wo['story']['id'],
-									'filename' => $wo['story']['postRecord'],
-									'name' => ''
-								);
-								echo  Wo_DisplaySharedFile($media,'record');
-							?>
-						</div>
-					<?php } ?>
-		
-					<?php if (!empty($wo['story']['stream_name']) && empty($wo['story']['agora_resource_id']) && !$wo['story']['is_still_live']) { ?>
-						<div class="valign tag_post_full_img">
-							<div class="embed-responsive embed-responsive-4by3">
-								<iframe src="https://viewer.millicast.com/v2?streamId=<?php echo($wo['config']['live_account_id']) ?>/<?php echo($wo['story']['stream_name']) ?>" class="embed-responsive-item"></iframe>
-							</div>
-						</div>
-					<?php } ?>
-					
-					<?php if ($wo['config']['live_video'] == 1 && !empty($wo['story']['stream_name'])) { ?>
-						<div class="valign tag_post_full_img">
-							<?php
-								if ($wo['config']['millicast_live_video'] == 1) {
-								if ($wo['story']['is_still_live']) {
-							?>
-								<div class="embed-responsive embed-responsive-4by3">
-									<iframe src="https://viewer.millicast.com/v2?streamId=<?php echo($wo['config']['live_account_id']) ?>/<?php echo($wo['story']['stream_name']) ?>" class="embed-responsive-item"></iframe>
-									<div class="wow_liv_counter tag_post_liv_count"><span id="live_word_<?php echo($wo['story']['id']) ?>"><?php echo $wo['lang']['live']; ?></span> <span id="live_count_<?php echo($wo['story']['id']) ?>"> <?php echo $wo['story']['live_sub_users']; ?></span></div>
-								</div>
-								<?php if ($wo['page'] != 'story') { ?>
-									<a href="<?php echo $wo['story']['url'];?>" target="_blank" class="live_link_style live_link_<?php echo($wo['story']['id']) ?>"></a>
-								<?php } ?>
-								<div class="pointer tag_hide_liv_comm" onclick="$('#live_post_comments_<?php echo($wo['story']['id']) ?>').toggleClass('hidden');"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M2.808 1.393l19.799 19.8-1.415 1.414-3.608-3.608L6.455 19 2 22.5V4c0-.17.042-.329.116-.469l-.723-.723 1.415-1.415zM21 3a1 1 0 0 1 1 1v13.785L7.214 3H21z"/></svg></div>
-								<?php if ( $wo['story']['comments_status'] == 1) { ?>
-									<div id="live_post_comments_<?php echo($wo['story']['id']) ?>" class="wow_liv_comments_feed tag_post_live_comms">
-										<?php if (!empty($wo['story']['get_post_comments'])) { 
-											$count = 0;
-											for ($i=count($wo['story']['get_post_comments'])-1; $i >= 0 ; $i--){ 
-												$wo['comment'] = $wo['story']['get_post_comments'][$i];
-												if (!empty($wo['comment']['text'])) { 
-													echo Wo_LoadPage('story/includes/live_comment');
-													$count = $count + 1;
-													if ($count == 3) {
-														break;
-													}
-												}
-											}
-										}
-										?>
-									</div>
-								<?php } ?>
-								<div id="live_post_ended_<?php echo($wo['story']['id']) ?>" class="valign tag_post_liv_ended"></div>
-							<?php } ?>
-							<?php }
-								elseif ($wo['config']['agora_live_video'] == 1) {
-								if ($wo['story']['is_still_live']) {
-							?>
-								<div class="embed-responsive embed-responsive-4by3" id="post_live_video_<?php echo($wo['story']['id']) ?>">
-									<div class="wow_liv_counter tag_post_liv_count"><span id="live_word_<?php echo($wo['story']['id']) ?>"><?php echo $wo['lang']['live']; ?></span> <span id="live_count_<?php echo($wo['story']['id']) ?>"> <?php echo $wo['story']['live_sub_users']; ?></span></div>
-								</div>
-								<?php if ($wo['page'] != 'story') { ?>
-									<a href="<?php echo $wo['story']['url'];?>" target="_blank" class="live_link_style live_link_<?php echo($wo['story']['id']) ?>"></a>
-								<?php } ?>
-								<div class="pointer tag_hide_liv_comm" onclick="$('#live_post_comments_<?php echo($wo['story']['id']) ?>').toggleClass('hidden');"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M2.808 1.393l19.799 19.8-1.415 1.414-3.608-3.608L6.455 19 2 22.5V4c0-.17.042-.329.116-.469l-.723-.723 1.415-1.415zM21 3a1 1 0 0 1 1 1v13.785L7.214 3H21z"/></svg></div>
-								<?php if ( $wo['story']['comments_status'] == 1) { ?>
-									<div id="live_post_comments_<?php echo($wo['story']['id']) ?>" class="wow_liv_comments_feed">
-										<?php if (!empty($wo['story']['get_post_comments'])) { 
-											$count = 0;
-											for ($i=count($wo['story']['get_post_comments'])-1; $i >= 0 ; $i--){ 
-												$wo['comment'] = $wo['story']['get_post_comments'][$i];
-												if (!empty($wo['comment']['text'])) { 
-													echo Wo_LoadPage('story/includes/live_comment');
-													$count = $count + 1;
-													if ($count == 3) {
-														break;
-													}
-												}
-											}
-										}
-										?>
-									</div>
-								<?php } ?>
-								<div id="live_post_ended_<?php echo($wo['story']['id']) ?>" class="valign tag_post_liv_ended"></div>
-							<?php } } ?>
-						</div>
-					<?php } ?>
+                    <?php if (Wo_IsUrl($wo['story']['postSticker'])): ?>
+                        <div class="tag_post_full_stick">
+                            <?php if (strpos('.mp4', $wo['story']['postSticker'])) { ?>
+                                <video autoplay loop><source src="<?php echo $wo['story']['postSticker']; ?>" type="video/mp4"></video>
+                            <?php } else { ?>
+                                <img src="<?php echo $wo['story']['postSticker']; ?>" alt="GIF">
+                            <?php } ?>
+                        </div>
+                    <?php endif; ?>
 
-					<div class="valign tag_post_full_albm"><?php include 'photo_album.phtml'; ?><?php include 'photo_multi.phtml'; ?></div>
+                    <?php if (Wo_IsUrl($wo['story']['postPhoto'])): ?>
+                        <div class="valign tag_post_full_img">
+                            <img src="<?php echo $wo['story']['postPhoto']; ?>" alt="Picture">
+                        </div>
+                    <?php endif; ?>
 
-					<?php if ($wo['story']['poll_id'] == 1) { ?>
-						<?php if(!empty($wo['story']['postFile'])) { ?>
-							<br><?php echo Wo_LoadPage('story/entries/options'); ?>
-						<?php } else { ?>
-							<?php echo Wo_LoadPage('story/entries/options'); ?>
-						<?php } ?>
-					<?php } ?>
-				<?php } ?>
-				<div class="clear"></div>
+                    <?php if(!empty($wo['story']['postRecord'])) { ?>
+                        <div class="valign tag_post_full_img">
+                            <?php
+                            $media = array(
+                                'type' => 'post',
+                                'storyId' => $wo['story']['id'],
+                                'filename' => $wo['story']['postRecord'],
+                                'name' => ''
+                            );
+                            echo  Wo_DisplaySharedFile($media,'record');
+                            ?>
+                        </div>
+                    <?php } ?>
 
-				<?php include 'footer.phtml'; ?>
+                    <?php if (!empty($wo['story']['stream_name']) && empty($wo['story']['agora_resource_id']) && !$wo['story']['is_still_live']) { ?>
+                        <div class="valign tag_post_full_img">
+                            <div class="embed-responsive embed-responsive-4by3">
+                                <iframe src="https://viewer.millicast.com/v2?streamId=<?php echo($wo['config']['live_account_id']) ?>/<?php echo($wo['story']['stream_name']) ?>" class="embed-responsive-item"></iframe>
+                            </div>
+                        </div>
+                    <?php } ?>
 
-				<?php 
-					if ($wo['loggedin'] == true) {
-						echo Wo_LoadPage('modals/edit-post');
-						echo Wo_LoadPage('modals/delete-post');
-					}
-				?>
-			</div>
-		</div>
+                    <?php if ($wo['config']['live_video'] == 1 && !empty($wo['story']['stream_name'])) { ?>
+                        <div class="valign tag_post_full_img">
+                            <?php
+                            if ($wo['config']['millicast_live_video'] == 1) {
+                                if ($wo['story']['is_still_live']) {
+                                    ?>
+                                    <div class="embed-responsive embed-responsive-4by3">
+                                        <iframe src="https://viewer.millicast.com/v2?streamId=<?php echo($wo['config']['live_account_id']) ?>/<?php echo($wo['story']['stream_name']) ?>" class="embed-responsive-item"></iframe>
+                                        <div class="wow_liv_counter tag_post_liv_count"><span id="live_word_<?php echo($wo['story']['id']) ?>"><?php echo $wo['lang']['live']; ?></span> <span id="live_count_<?php echo($wo['story']['id']) ?>"> <?php echo $wo['story']['live_sub_users']; ?></span></div>
+                                    </div>
+                                    <?php if ($wo['page'] != 'story') { ?>
+                                        <a href="<?php echo $wo['story']['url'];?>" target="_blank" class="live_link_style live_link_<?php echo($wo['story']['id']) ?>"></a>
+                                    <?php } ?>
+                                    <div class="pointer tag_hide_liv_comm" onclick="$('#live_post_comments_<?php echo($wo['story']['id']) ?>').toggleClass('hidden');"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M2.808 1.393l19.799 19.8-1.415 1.414-3.608-3.608L6.455 19 2 22.5V4c0-.17.042-.329.116-.469l-.723-.723 1.415-1.415zM21 3a1 1 0 0 1 1 1v13.785L7.214 3H21z"/></svg></div>
+                                    <?php if ( $wo['story']['comments_status'] == 1) { ?>
+                                        <div id="live_post_comments_<?php echo($wo['story']['id']) ?>" class="wow_liv_comments_feed tag_post_live_comms">
+                                            <?php if (!empty($wo['story']['get_post_comments'])) {
+                                                $count = 0;
+                                                for ($i=count($wo['story']['get_post_comments'])-1; $i >= 0 ; $i--){
+                                                    $wo['comment'] = $wo['story']['get_post_comments'][$i];
+                                                    if (!empty($wo['comment']['text'])) {
+                                                        echo Wo_LoadPage('story/includes/live_comment');
+                                                        $count = $count + 1;
+                                                        if ($count == 3) {
+                                                            break;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            ?>
+                                        </div>
+                                    <?php } ?>
+                                    <div id="live_post_ended_<?php echo($wo['story']['id']) ?>" class="valign tag_post_liv_ended"></div>
+                                <?php } ?>
+                            <?php }
+                            elseif ($wo['config']['agora_live_video'] == 1) {
+                                if ($wo['story']['is_still_live']) {
+                                    ?>
+                                    <div class="embed-responsive embed-responsive-4by3" id="post_live_video_<?php echo($wo['story']['id']) ?>">
+                                        <div class="wow_liv_counter tag_post_liv_count"><span id="live_word_<?php echo($wo['story']['id']) ?>"><?php echo $wo['lang']['live']; ?></span> <span id="live_count_<?php echo($wo['story']['id']) ?>"> <?php echo $wo['story']['live_sub_users']; ?></span></div>
+                                    </div>
+                                    <?php if ($wo['page'] != 'story') { ?>
+                                        <a href="<?php echo $wo['story']['url'];?>" target="_blank" class="live_link_style live_link_<?php echo($wo['story']['id']) ?>"></a>
+                                    <?php } ?>
+                                    <div class="pointer tag_hide_liv_comm" onclick="$('#live_post_comments_<?php echo($wo['story']['id']) ?>').toggleClass('hidden');"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M2.808 1.393l19.799 19.8-1.415 1.414-3.608-3.608L6.455 19 2 22.5V4c0-.17.042-.329.116-.469l-.723-.723 1.415-1.415zM21 3a1 1 0 0 1 1 1v13.785L7.214 3H21z"/></svg></div>
+                                    <?php if ( $wo['story']['comments_status'] == 1) { ?>
+                                        <div id="live_post_comments_<?php echo($wo['story']['id']) ?>" class="wow_liv_comments_feed">
+                                            <?php if (!empty($wo['story']['get_post_comments'])) {
+                                                $count = 0;
+                                                for ($i=count($wo['story']['get_post_comments'])-1; $i >= 0 ; $i--){
+                                                    $wo['comment'] = $wo['story']['get_post_comments'][$i];
+                                                    if (!empty($wo['comment']['text'])) {
+                                                        echo Wo_LoadPage('story/includes/live_comment');
+                                                        $count = $count + 1;
+                                                        if ($count == 3) {
+                                                            break;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            ?>
+                                        </div>
+                                    <?php } ?>
+                                    <div id="live_post_ended_<?php echo($wo['story']['id']) ?>" class="valign tag_post_liv_ended"></div>
+                                <?php } } ?>
+                        </div>
+                    <?php } ?>
 
-		<script type="text/javascript">
-		<?php 
-		if(!empty($wo['story']['postFile'])) {
-			$media2['filename'] = Wo_GetMedia($wo['story']['postFile']);
-			$file_extension = substr(strrchr($media2['filename'], '.'), 1);
-			$file_extension = strtolower($file_extension);
-			if ($file_extension == 'jpg' || $file_extension == 'jpeg' || $file_extension == 'png' || $file_extension == 'gif') {
-		?>
-		var myIdContainer<?php echo $wo['story']['id'] ; ?> = $(".rx-pinch-zoom-<?php echo $wo['story']['id'] ; ?>");
-		var cur_pinch<?php echo $wo['story']['id'] ; ?> = $(".rx-pinch-zoom-<?php echo $wo['story']['id'] ; ?>").attr("data-pinch-zoom-id");
-		myIdContainer<?php echo $wo['story']['id'] ; ?>.hammer({
-				touchAction: 'pan-y',
-                recognizers: [
-                    [Hammer.Pinch, { enable: true }],
-                    [Hammer.Swipe,{ direction: Hammer.DIRECTION_HORIZONTAL }]
-                ]
-		}).on('pinchstart', function(){
-				console.log("Hello world!");
-				Wo_OpenLightBox(cur_pinch<?php echo $wo['story']['id'] ; ?>);
-		});
-		<?php
-			}
-		}
-		?>
-		$(".tag_post_prods_slide:nth-child(1)").addClass('active');
+                    <div class="valign tag_post_full_albm"><?php include 'photo_album.phtml'; ?><?php include 'photo_multi.phtml'; ?></div>
 
-		document.querySelectorAll('.auto-resize_<?php echo $wo['story']['id']; ?>').forEach(el => {
-			el.style.height = el.setAttribute('style', 'height: ' + el.scrollHeight + 'px');
-			el.classList.add('auto');
-			el.addEventListener('input', e => {
-				el.style.height = 'auto';
-				el.style.height = (el.scrollHeight) + 'px';
-			});
-		});
+                    <?php if ($wo['story']['poll_id'] == 1) { ?>
+                        <?php if(!empty($wo['story']['postFile'])) { ?>
+                            <br><?php echo Wo_LoadPage('story/entries/options'); ?>
+                        <?php } else { ?>
+                            <?php echo Wo_LoadPage('story/entries/options'); ?>
+                        <?php } ?>
+                    <?php } ?>
+                <?php } ?>
+                <div class="clear"></div>
 
-		<?php if ($wo['config']['audio_upload'] == 1) { ?>
-			$(document).on('keyup', '.tag_com_write_tarea<?php echo $wo['story']['id']; ?>', function() {
-				if ($.trim($(this).val()).length == 0) {
-					$('.tag_cht_rec<?php echo $wo['story']['id']; ?>').show();
-				} else {
-					$('.tag_cht_rec<?php echo $wo['story']['id']; ?>').hide();
-				}
-			});
-		<?php } ?>
+                <?php include 'footer.phtml'; ?>
 
-		$(function () {
-			<?php if (!empty($wo['story']['product_id'])): ?>
-				ReadMoreText("#post-<?php echo $wo['story']['id']; ?> .product-description-<?php echo $wo['story']['product_id']; ?>");
-			<?php endif; ?>
-			ReadMoreText("#post-<?php echo $wo['story']['id']; ?> .post-description p");
-			
-			$("#post-<?php echo $wo['story']['id']; ?> .textarea").triggeredAutocomplete({
-				hidden: '#hidden_inputbox_comment',
-				source: Wo_Ajax_Requests_File() + "?f=mention",
-				trigger: "@" 
-			});
-			$('[data-toggle="tooltip"]').tooltip();
-		});
+                <?php
+                if ($wo['loggedin'] == true) {
+                    echo Wo_LoadPage('modals/edit-post');
+                    echo Wo_LoadPage('modals/delete-post');
+                }
+                ?>
+            </div>
+        </div>
 
-		<?php if ($wo['config']['live_video'] == 1 && !empty($wo['story']['stream_name']) && $wo['story']['is_still_live'] && $wo['story']['comments_status'] == 1 && $wo['story']['live_ended'] == 0) { ?>
-			var post_live_<?php echo $wo['story']['id']; ?> = setInterval(function(){ 
-				data = {};
-				for (var i = 0; i < $('.live_comments').length; i++) {
-					if ($($('.live_comments')[i]).attr('live_comment_id')) {
-						data[i] = $($('.live_comments')[i]).attr('live_comment_id');
-					}
-				}
-				$.post(Wo_Ajax_Requests_File() + "?f=live&s=check_comments", {post_id: <?php echo $wo['story']['id']; ?>,ids:data,page:"<?php echo($wo['page']) ?>"}, function(data, textStatus, xhr) {
-					if (data.status == 200) {
-						if (data.still_live == 'offline') {
-							$('#live_post_comments_<?php echo $wo['story']['id']; ?>').remove();
-							$('.was_live_text_<?php echo $wo['story']['id']; ?>').html("&nbsp;<?php echo($wo['lang']['was_live']) ?>");
-							$('[id=post-<?php echo $wo['story']['id']; ?>]').find('.comment-textarea').attr('disabled');
-							return false;
-						}
-						$('#live_post_comments_<?php echo $wo['story']['id']; ?>').append(data.html);
-						$('#live_count_<?php echo $wo['story']['id']; ?>').html(data.count);
-						$('#live_word_<?php echo $wo['story']['id']; ?>').html(data.word);
-						var comments = $('#live_post_comments_<?php echo $wo['story']['id']; ?> .live_comments');
-						if (comments.length > 3) {
-							var i;
-							for (i = 0; i < comments.length; i++) {
-								if ($('#live_post_comments_<?php echo $wo['story']['id']; ?> .live_comments').length > 3) {
-									comments[i].remove();
-								}
-							}
-						}
-					}
-					else if(data.removed == 'yes'){
-						clearInterval(post_live_<?php echo $wo['story']['id']; ?>);
-						$('#live_count_<?php echo $wo['story']['id']; ?>').html(0);
-						$('#live_post_ended_<?php echo $wo['story']['id']; ?>').html("<div class='empty_state'><?php echo(str_replace('{{user}}', $wo['story']['publisher']['username'], $wo['lang']['stream_has_ended'])) ?></div>");
-						$('#live_post_comments_<?php echo $wo['story']['id']; ?>').remove();
-						$('.was_live_text_<?php echo $wo['story']['id']; ?>').html("&nbsp;<?php echo($wo['lang']['was_live']) ?>");
-						$('#post-<?php echo $wo['story']['id']; ?>').find('.comment-textarea').attr('disabled','true');
-						$('#post-comments-<?php echo $wo['story']['id']; ?>').remove();
-						return false;
-					}
-					else{
-						clearInterval(post_live_<?php echo $wo['story']['id']; ?>);
-						$('#live_count_<?php echo $wo['story']['id']; ?>').html(0);
-						$('#live_post_ended_<?php echo $wo['story']['id']; ?>').html("<div class='empty_state'><?php echo(str_replace('{{user}}', $wo['story']['publisher']['username'], $wo['lang']['stream_has_ended'])) ?></div>");
-						$('#live_post_comments_<?php echo $wo['story']['id']; ?>').remove();
-						$('.was_live_text_<?php echo $wo['story']['id']; ?>').html("&nbsp;<?php echo($wo['lang']['was_live']) ?>");
-						$('#post-<?php echo $wo['story']['id']; ?>').find('.comment-textarea').attr('disabled','true');
-						$('#post-comments-<?php echo $wo['story']['id']; ?>').remove();
-						return false;
-					}
-				});
-			}, 3000);
-		<?php } ?>
-		<?php if ($wo['config']['agora_live_video'] == 1 && !empty($wo['config']['agora_app_id']) && !empty($wo['story']['stream_name']) && $wo['story']['is_still_live']) { ?>
-			RunLiveAgora("<?php echo $wo['story']['stream_name']; ?>","post_live_video_<?php echo($wo['story']['id']) ?>","<?php echo($wo['story']['agora_token']) ?>");
-		<?php } ?>
-		</script>
-</div>
+        <script type="text/javascript">
+            $('.post_location_<?php echo $wo['story']['id']?>').text($('.post_location_<?php echo $wo['story']['id']?>').text().substr(0, 25) + "...");
+            <?php
+            if(!empty($wo['story']['postFile'])) {
+                $media2['filename'] = Wo_GetMedia($wo['story']['postFile']);
+                $file_extension = substr(strrchr($media2['filename'], '.'), 1);
+                $file_extension = strtolower($file_extension);
+            if ($file_extension == 'jpg' || $file_extension == 'jpeg' || $file_extension == 'png' || $file_extension == 'gif') {
+                ?>
+                var myIdContainer<?php echo $wo['story']['id'] ; ?> = $(".rx-pinch-zoom-<?php echo $wo['story']['id'] ; ?>");
+                var cur_pinch<?php echo $wo['story']['id'] ; ?> = $(".rx-pinch-zoom-<?php echo $wo['story']['id'] ; ?>").attr("data-pinch-zoom-id");
+                myIdContainer<?php echo $wo['story']['id'] ; ?>.hammer({
+                    touchAction: 'pan-y',
+                    recognizers: [
+                        [Hammer.Pinch, { enable: true }],
+                        [Hammer.Swipe,{ direction: Hammer.DIRECTION_HORIZONTAL }]
+                    ]
+                }).on('pinchstart', function(){
+                    Wo_OpenLightBox(cur_pinch<?php echo $wo['story']['id'] ; ?>, 'pinched');
+            });
+            <?php
+                }
+            }
+            ?>
+            $(".tag_post_prods_slide:nth-child(1)").addClass('active');
+
+            document.querySelectorAll('.auto-resize_<?php echo $wo['story']['id']; ?>').forEach(el => {
+                el.style.height = el.setAttribute('style', 'height: ' + el.scrollHeight + 'px');
+                el.classList.add('auto');
+                el.addEventListener('input', e => {
+                    el.style.height = 'auto';
+                    el.style.height = (el.scrollHeight) + 'px';
+                });
+            });
+
+            <?php if ($wo['config']['audio_upload'] == 1) { ?>
+            $(document).on('keyup', '.tag_com_write_tarea<?php echo $wo['story']['id']; ?>', function() {
+                if ($.trim($(this).val()).length == 0) {
+                    $('.tag_cht_rec<?php echo $wo['story']['id']; ?>').show();
+                } else {
+                    $('.tag_cht_rec<?php echo $wo['story']['id']; ?>').hide();
+                }
+            });
+            <?php } ?>
+
+            $(function () {
+                <?php if (!empty($wo['story']['product_id'])): ?>
+                ReadMoreText("#post-<?php echo $wo['story']['id']; ?> .product-description-<?php echo $wo['story']['product_id']; ?>");
+                <?php endif; ?>
+                ReadMoreText("#post-<?php echo $wo['story']['id']; ?> .post-description p");
+
+                $("#post-<?php echo $wo['story']['id']; ?> .textarea").triggeredAutocomplete({
+                    hidden: '#hidden_inputbox_comment',
+                    source: Wo_Ajax_Requests_File() + "?f=mention",
+                    trigger: "@"
+                });
+                $('[data-toggle="tooltip"]').tooltip();
+            });
+
+            <?php if ($wo['config']['live_video'] == 1 && !empty($wo['story']['stream_name']) && $wo['story']['is_still_live'] && $wo['story']['comments_status'] == 1 && $wo['story']['live_ended'] == 0) { ?>
+            var post_live_<?php echo $wo['story']['id']; ?> = setInterval(function(){
+                data = {};
+                for (var i = 0; i < $('.live_comments').length; i++) {
+                    if ($($('.live_comments')[i]).attr('live_comment_id')) {
+                        data[i] = $($('.live_comments')[i]).attr('live_comment_id');
+                    }
+                }
+                $.post(Wo_Ajax_Requests_File() + "?f=live&s=check_comments", {post_id: <?php echo $wo['story']['id']; ?>,ids:data,page:"<?php echo($wo['page']) ?>"}, function(data, textStatus, xhr) {
+                    if (data.status == 200) {
+                        if (data.still_live == 'offline') {
+                            $('#live_post_comments_<?php echo $wo['story']['id']; ?>').remove();
+                            $('.was_live_text_<?php echo $wo['story']['id']; ?>').html("&nbsp;<?php echo($wo['lang']['was_live']) ?>");
+                            $('[id=post-<?php echo $wo['story']['id']; ?>]').find('.comment-textarea').attr('disabled');
+                            return false;
+                        }
+                        $('#live_post_comments_<?php echo $wo['story']['id']; ?>').append(data.html);
+                        $('#live_count_<?php echo $wo['story']['id']; ?>').html(data.count);
+                        $('#live_word_<?php echo $wo['story']['id']; ?>').html(data.word);
+                        var comments = $('#live_post_comments_<?php echo $wo['story']['id']; ?> .live_comments');
+                        if (comments.length > 3) {
+                            var i;
+                            for (i = 0; i < comments.length; i++) {
+                                if ($('#live_post_comments_<?php echo $wo['story']['id']; ?> .live_comments').length > 3) {
+                                    comments[i].remove();
+                                }
+                            }
+                        }
+                    }
+                    else if(data.removed == 'yes'){
+                        clearInterval(post_live_<?php echo $wo['story']['id']; ?>);
+                        $('#live_count_<?php echo $wo['story']['id']; ?>').html(0);
+                        $('#live_post_ended_<?php echo $wo['story']['id']; ?>').html("<div class='empty_state'><?php echo(str_replace('{{user}}', $wo['story']['publisher']['username'], $wo['lang']['stream_has_ended'])) ?></div>");
+                        $('#live_post_comments_<?php echo $wo['story']['id']; ?>').remove();
+                        $('.was_live_text_<?php echo $wo['story']['id']; ?>').html("&nbsp;<?php echo($wo['lang']['was_live']) ?>");
+                        $('#post-<?php echo $wo['story']['id']; ?>').find('.comment-textarea').attr('disabled','true');
+                        $('#post-comments-<?php echo $wo['story']['id']; ?>').remove();
+                        return false;
+                    }
+                    else{
+                        clearInterval(post_live_<?php echo $wo['story']['id']; ?>);
+                        $('#live_count_<?php echo $wo['story']['id']; ?>').html(0);
+                        $('#live_post_ended_<?php echo $wo['story']['id']; ?>').html("<div class='empty_state'><?php echo(str_replace('{{user}}', $wo['story']['publisher']['username'], $wo['lang']['stream_has_ended'])) ?></div>");
+                        $('#live_post_comments_<?php echo $wo['story']['id']; ?>').remove();
+                        $('.was_live_text_<?php echo $wo['story']['id']; ?>').html("&nbsp;<?php echo($wo['lang']['was_live']) ?>");
+                        $('#post-<?php echo $wo['story']['id']; ?>').find('.comment-textarea').attr('disabled','true');
+                        $('#post-comments-<?php echo $wo['story']['id']; ?>').remove();
+                        return false;
+                    }
+                });
+            }, 3000);
+            <?php } ?>
+            <?php if ($wo['config']['agora_live_video'] == 1 && !empty($wo['config']['agora_app_id']) && !empty($wo['story']['stream_name']) && $wo['story']['is_still_live']) { ?>
+            RunLiveAgora("<?php echo $wo['story']['stream_name']; ?>","post_live_video_<?php echo($wo['story']['id']) ?>","<?php echo($wo['story']['agora_token']) ?>");
+            <?php } ?>
+        </script>
+    </div>

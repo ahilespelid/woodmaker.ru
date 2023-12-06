@@ -2974,7 +2974,12 @@ function Wo_UpdateEvent($id = 0, $update_data = array()) {
     $impload   = implode(', ', $update);
     $query_one = "UPDATE " . T_EVENTS . " SET {$impload} WHERE `id` = {$id} ";
     $query     = mysqli_query($sqlConnect, $query_one);
-    return $query;
+
+    if ($query) {
+        return 'true';
+    } else {
+        return 'false';
+    }
 }
 function Wo_EventGoingExists($event_id) {
     global $sqlConnect, $wo;
@@ -3538,6 +3543,7 @@ function Wo_EventData($id = false) {
         $fetched_data = mysqli_fetch_assoc($query);
         if (!empty($fetched_data)) {
             $fetched_data['user_data']       = Wo_UserData($fetched_data['poster_id']);
+            $fetched_data['cover_org']  = $fetched_data['cover'];
             $fetched_data['cover']           = Wo_GetMedia($fetched_data['cover']);
             $fetched_data['is_owner']        = Is_EventOwner($fetched_data['id']);
             $fetched_data['user_id']        = $fetched_data['poster_id'];
@@ -3548,6 +3554,9 @@ function Wo_EventData($id = false) {
             $fetched_data['end_edit_date']   = date($fetched_data['end_date']);
             $fetched_data['end_date']        = date($wo['config']['date_style'], strtotime($fetched_data['end_date']));
             $fetched_data['url']             = Wo_SeoLink("index.php?link1=show-event&eid=" . $fetched_data['id']);
+            $explode2                   = @end(explode('.', $fetched_data['cover']));
+            $explode3                   = @explode('.', $fetched_data['cover']);
+            $fetched_data['cover_full'] =  mb_substr($explode3[1], 3) . '_full.' . $explode2;
             return $fetched_data;
         }
     }
@@ -5016,6 +5025,21 @@ function Wo_UpdateCommentReply($id, $update_data = array()) {
     $query     = mysqli_query($sqlConnect, $query_one);
     return $query;
 }
+
+function Wo_GetUserById($id) {
+    global $sqlConnect, $wo;
+
+    $sql = "SELECT * FROM " . T_USERS . " WHERE `user_id` = {$id}";
+
+    $query = mysqli_query($sqlConnect, $sql);
+    if (mysqli_num_rows($query)) {
+        while ($fetched_data = mysqli_fetch_assoc($query)) {
+            $data[] = Wo_UserData($fetched_data['user_id']);
+        }
+    }
+    return $data;
+}
+
 function Wo_GetUsersByName($name = '', $friends = false, $limit = 25) {
     global $sqlConnect, $wo;
     if ($wo['loggedin'] == false || !$name) {
@@ -5027,17 +5051,34 @@ function Wo_GetUsersByName($name = '', $friends = false, $limit = 25) {
     $sub_sql     = "";
     $t_users     = T_USERS;
     $t_followers = T_FOLLOWERS;
-    if ($friends == true) {
-        $sub_sql = "
-        AND ( `user_id` IN (SELECT `follower_id` FROM $t_followers WHERE `follower_id` <> {$user}  AND `active` = '1')  OR
-        `user_id` IN (SELECT `following_id` FROM $t_followers WHERE  `following_id` <> {$user} AND `active` = '1'))";
-    }
+//    if ($friends == true) {
+//        $sub_sql = "
+//            AND ( `user_id` IN (SELECT `follower_id` FROM $t_followers WHERE `follower_id` <> {$user}  AND `active` = '1')  OR
+//            `user_id` IN (SELECT `following_id` FROM $t_followers WHERE  `following_id` <> {$user} AND `active` = '1'));
+//        ";
+//    }
     $limit_text = '';
     if (!empty($limit) && is_numeric($limit)) {
         $limit      = Wo_Secure($limit);
         $limit_text = 'LIMIT ' . $limit;
     }
-    $sql   = "SELECT `user_id` FROM " . T_USERS . " WHERE `user_id` <> {$user} AND `username`  LIKE '%$name%' {$sub_sql} $limit_text";
+    $sql = "SELECT `user_id` FROM " . T_USERS . " WHERE `user_id` <> {$user} AND ((`username` LIKE '%$name%') OR CONCAT( `first_name`,  ' ', `last_name` ) LIKE '%$name%')";
+
+    if($friends) {
+        $sql = "SELECT user_id FROM (
+          SELECT * FROM Wo_Users u WHERE u.user_id IN (
+            SELECT f1.following_id FROM Wo_Followers f1 INNER JOIN Wo_Followers f2 ON f1.following_id = f2.following_id
+              WHERE 
+              f1.follower_id = {$user} AND 
+              f2.follower_id = {$user} AND 
+              f1.following_id NOT IN (SELECT blocked FROM Wo_Blocks WHERE blocker = '{$user}') AND 
+              f1.following_id NOT IN (SELECT blocker FROM Wo_Blocks WHERE blocked = '{$user}') AND 
+              f1.active = 1 GROUP BY following_id)
+        ) s 
+        WHERE s.user_id <> {$user} AND 
+        ((s.username LIKE '%$name%') OR CONCAT( s.first_name,  ' ', s.last_name ) LIKE '%$name%');
+        ";
+    }
     $query = mysqli_query($sqlConnect, $sql);
     if (mysqli_num_rows($query)) {
         while ($fetched_data = mysqli_fetch_assoc($query)) {
@@ -5828,7 +5869,7 @@ function Wo_AddGChatPart($group_id = false, $user_id = false) {
         @mysqli_query($sqlConnect, "DELETE FROM " . T_GROUP_CHAT_USERS . " WHERE `user_id` = {$user} AND `group_id` = {$group}");
         $code = 0;
     } else {
-        @mysqli_query($sqlConnect, "INSERT INTO " . T_GROUP_CHAT_USERS . " (`id`,`user_id`,`group_id`,`last_seen`,`active`) VALUES (null,$user,$group,'0','0')");
+        @mysqli_query($sqlConnect, "INSERT INTO " . T_GROUP_CHAT_USERS . " (`id`,`user_id`,`group_id`,`last_seen`,`active`) VALUES (null,$user,$group,0,'0')");
         $code = 1;
     }
     return $code;
@@ -6807,7 +6848,7 @@ function Wo_TwoFactor($username = '', $id_or_u = 'user') {
                 'from_name' => $wo['config']['siteName'],
                 'to_email' => $getuser['email'],
                 'to_name' => $getuser['name'],
-                'subject' => 'Please verify that it’s you',
+                'subject' => $wo['lang']['please_verify_you'],
                 'charSet' => 'utf-8',
                 'message_body' => $message,
                 'is_html' => true
@@ -8791,5 +8832,22 @@ function AddNewRef($ref_id, $user_id, $amount) {
             cache($value, 'users', 'delete');
             //unset($parents[$key]);
         }
+    }
+}
+function fixLastVideoLink($postVideos) {
+    $lastVid = end($postVideos)['filename'];
+    $lastVidSep = explode("_video", $lastVid);
+    $lastVidConv = $lastVidSep[0] . '_video_240p_converted' . $lastVidSep[1];
+
+    $postVideos[array_key_last($postVideos)]['filename'] = $lastVidConv;
+
+    return $postVideos;
+}
+
+function Wo_CheckGender($gender, $male_var, $female_var) {
+    if($gender == 'female') {
+        return $female_var;
+    } else {
+        return $male_var;
     }
 }

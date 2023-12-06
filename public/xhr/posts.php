@@ -207,7 +207,7 @@ if ($f == 'posts') {
         }
         exit();
     }
-    if ($s == 'insert_new_post') {
+    if('insert_new_post' == $s){
         $media                = '';
         $mediaFilename        = '';
         $post_photo           = '';
@@ -225,145 +225,126 @@ if ($f == 'posts') {
         $blur                 = 0;
         $post_privacy         = 0;
         $wo['add_watermark']  = true;
-        if (Wo_CheckSession($hash_id) === false) {
-            return false;
-            die();
-        }
-        if ($wo['config']['who_upload'] == 'pro' && $wo['user']['is_pro'] == 0 && !Wo_IsAdmin() && (!empty($_FILES['postFile']) || !empty($_FILES['postVideo']) || !empty($_FILES['postMusic']) || !empty($_FILES['postPhotos']) || !empty($_POST['postRecord']))) {
-            $errors = $wo['lang']['please_upgrade_to_upload'];
+        
+        if(false === Wo_CheckSession($hash_id)){return false; die();}
+        if('pro' == $wo['config']['who_upload'] && 0 == $wo['user']['is_pro'] && !Wo_IsAdmin() && 
+          (!empty($_FILES['postFile']) || !empty($_FILES['postVideo']) || !empty($_FILES['postMusic']) || !empty($_FILES['postPhotos']) || !empty($_POST['postRecord']))){
             header("Content-type: application/json");
-            echo json_encode(array(
-                'status' => 400,
-                'errors' => $errors
-            ));
-            exit();
+            echo json_encode(['status' => 400, 'errors' => $errors = $wo['lang']['please_upgrade_to_upload']]); exit();
         }
-        if (!Wo_CheckIfUserCanPost($wo['config']['post_limit'])) {
-            $errors = $wo['lang']['limit_exceeded'];
+        if(!Wo_CheckIfUserCanPost($wo['config']['post_limit'])){
             header("Content-type: application/json");
-            echo json_encode(array(
-                'status' => 400,
-                'errors' => $errors
-            ));
-            exit();
+            echo json_encode(['status' => 400, 'errors' => $errors = $wo['lang']['limit_exceeded']]); exit();
         }
-        if (isset($_POST['recipient_id']) && !empty($_POST['recipient_id'])) {
+        if(isset($_POST['recipient_id']) && !empty($_POST['recipient_id'])){
             $recipient_id = Wo_Secure($_POST['recipient_id']);
-        } else if (isset($_POST['event_id']) && !empty($_POST['event_id'])) {
+        }elseif(isset($_POST['event_id']) && !empty($_POST['event_id'])){
             $event_id = Wo_Secure($_POST['event_id']);
-        } else if (isset($_POST['page_id']) && !empty($_POST['page_id'])) {
+        }elseif(isset($_POST['page_id']) && !empty($_POST['page_id'])){
             $page_id = Wo_Secure($_POST['page_id']);
-        } else if (isset($_POST['group_id']) && !empty($_POST['group_id'])) {
-            $group_id = Wo_Secure($_POST['group_id']);
-            $group    = Wo_GroupData($group_id);
-            if (!empty($group['id'])) {
-                if ($group['privacy'] == 1) {
-                    $_POST['postPrivacy'] = 0;
-                } else if ($group['privacy'] == 2) {
-                    $_POST['postPrivacy'] = 2;
-                }
+        }elseif(isset($_POST['group_id']) && !empty($_POST['group_id'])){
+            $group = Wo_GroupData($group_id = Wo_Secure($_POST['group_id']));
+            if(!empty($group['id'])){
+                if(1 == $group['privacy']){$_POST['postPrivacy'] = 0;}elseif(2 == $group['privacy']){$_POST['postPrivacy'] = 2;}
             }
         }
-        if (isset($_FILES['postFile']['name'])) {
-            if ($_FILES['postFile']['size'] > $wo['config']['maxUpload']) {
+        if(isset($_FILES['postFile']['name'])){
+            if($_FILES['postFile']['size'] > $wo['config']['maxUpload']){
                 $errors = str_replace('{file_size}', Wo_SizeUnits($wo['config']['maxUpload']), $wo['lang']['file_too_big']);
-            } else if (Wo_IsFileAllowed($_FILES['postFile']['name']) == false) {
+            }elseif(false == Wo_IsFileAllowed($_FILES['postFile']['name'])){
                 $errors = $wo['lang']['file_not_supported'];
-            } else {
-                $fileInfo = array(
+            }else{
+                $fileInfo = [
                     'file' => $_FILES["postFile"]["tmp_name"],
                     'name' => $_FILES['postFile']['name'],
                     'size' => $_FILES["postFile"]["size"],
                     'type' => $_FILES["postFile"]["type"]
-                );
-                $media    = Wo_ShareFile($fileInfo);
-                if (!empty($media)) {
+                ];
+                if(!empty($media = Wo_ShareFile($fileInfo))){
                     $mediaFilename = $media['filename'];
                     $mediaName     = $media['name'];
                 }
             }
         }
+        
         $not_video = true;
-        if (isset($_FILES['postVideo']['name']) && empty($mediaFilename)) {
-            $mimeType = mime_content_type($_FILES['postVideo']['tmp_name']);
-            $fileType = explode('/', $mimeType)[0]; // video|image
-            if ($fileType === 'video' && Wo_IsFfmpegFileAllowed($_FILES['postVideo']['name']) && !Wo_IsVideoNotAllowedMime($_FILES["postVideo"]["type"])) {
-                $not_video = false;
-            }
-            if ($_FILES['postVideo']['size'] > $wo['config']['maxUpload']) {
-                $errors = str_replace('{file_size}', Wo_SizeUnits($wo['config']['maxUpload']), $wo['lang']['file_too_big']);
-            } else if (Wo_IsFileAllowed($_FILES['postVideo']['name']) == false && $wo['config']['ffmpeg_system'] != 'on') {
-                $errors = $wo['lang']['file_not_supported'];
-            } elseif ($wo['config']['ffmpeg_system'] == 'on' && $not_video) {
-                $errors = $wo['lang']['file_not_supported'];
-            } else {
-                $fileInfo = array(
-                    'file' => $_FILES["postVideo"]["tmp_name"],
-                    'name' => $_FILES['postVideo']['name'],
-                    'size' => $_FILES["postVideo"]["size"],
-                    'type' => $_FILES["postVideo"]["type"]
-                );
-                if ($wo['config']['ffmpeg_system'] != 'on') {
-                    $fileInfo['types'] = 'mp4,m4v,webm,flv,mov,mpeg,mkv';
-                }
-                if ($wo['config']['ffmpeg_system'] == 'on') {
-                    if ($not_video == false) {
-                        $fileInfo['is_video'] = 1;
+        if(isset($_FILES['postVideo']['name']) && empty($mediaFilename) && 0 < $c = count($_FILES['postVideo']['name'])){//pa($_FILES);
+            $videoTypes           = ['mp4','m4v','webm','flv','mov','mpeg','mkv'];
+            $ffmpeg_b             = $wo['config']['ffmpeg_binary_file'];
+            for($i=0; $i<$c; $i++){
+                $mimeType = mime_content_type($_FILES['postVideo']['tmp_name'][$i]);
+                $fileType = explode('/', $mimeType)[0]; // video|image
+                $not_video = ('video' === $fileType && Wo_IsFfmpegFileAllowed($_FILES['postVideo']['name'][$i]) && !Wo_IsVideoNotAllowedMime($_FILES["postVideo"]["type"][$i])) ? false : $not_video;
+                
+                if($_FILES['postVideo']['size'][$i] > $wo['config']['maxUpload']){
+                    $errors = str_replace('{file_size}', Wo_SizeUnits($wo['config']['maxUpload']), $wo['lang']['file_too_big']);
+                }elseif(Wo_IsFileAllowed(false == $_FILES['postVideo']['name'][$i]) && 'on' != $wo['config']['ffmpeg_system']){
+                    $errors = $wo['lang']['file_not_supported'];
+                }elseif('on' == $wo['config']['ffmpeg_system'] && $not_video){
+                    $errors = $wo['lang']['file_not_supported'];
+                }else{
+                    $fileInfo = [
+                        'file' => $_FILES["postVideo"]["tmp_name"][$i],
+                        'name' => $_FILES['postVideo']['name'][$i],
+                        'size' => $_FILES["postVideo"]["size"][$i],
+                        'type' => $_FILES["postVideo"]["type"][$i]
+                    ];
+                    if('on' != $wo['config']['ffmpeg_system']){$fileInfo['types'] = implode(',', $videoTypes);}
+                    if('on' == $wo['config']['ffmpeg_system']){
+                        if(false == $not_video){$fileInfo['is_video'] = 1;}
+                        $amazone_s3                   = $wo['config']['amazone_s3'];
+                        $wasabi_storage               = $wo['config']['wasabi_storage'];
+                        $backblaze_storage            = $wo['config']['backblaze_storage'];
+                        $ftp_upload                   = $wo['config']['ftp_upload'];
+                        $spaces                       = $wo['config']['spaces'];
+                        $cloud_upload                 = $wo['config']['cloud_upload'];
+                        $wo['config']['amazone_s3']        = 0;
+                        $wo['config']['wasabi_storage']    = 0;
+                        $wo['config']['backblaze_storage'] = 0;
+                        $wo['config']['ftp_upload']        = 0;
+                        $wo['config']['spaces']            = 0;
+                        $wo['config']['cloud_upload']      = 0;
                     }
-                    $amazone_s3                   = $wo['config']['amazone_s3'];
-                    $wasabi_storage                   = $wo['config']['wasabi_storage'];
-                    $backblaze_storage                   = $wo['config']['backblaze_storage'];
-                    $ftp_upload                   = $wo['config']['ftp_upload'];
-                    $spaces                       = $wo['config']['spaces'];
-                    $cloud_upload                 = $wo['config']['cloud_upload'];
-                    $wo['config']['amazone_s3']   = 0;
-                    $wo['config']['wasabi_storage']   = 0;
-                    $wo['config']['backblaze_storage']   = 0;
-                    $wo['config']['ftp_upload']   = 0;
-                    $wo['config']['spaces']       = 0;
-                    $wo['config']['cloud_upload'] = 0;
-                }
-                $media = Wo_ShareFile($fileInfo);
-                if ($wo['config']['ffmpeg_system'] == 'on') {
-                    $wo['config']['amazone_s3']   = $amazone_s3;
-                    $wo['config']['wasabi_storage']   = $wasabi_storage;
-                    $wo['config']['backblaze_storage']   = $backblaze_storage;
-                    $wo['config']['ftp_upload']   = $ftp_upload;
-                    $wo['config']['spaces']       = $spaces;
-                    $wo['config']['cloud_upload'] = $cloud_upload;
-                }
-                if (!empty($media)) {
-                    $mediaFilename = $media['filename'];
-                    $mediaName     = $media['name'];
-                    if (!empty($mediaFilename) && $wo['config']['ffmpeg_system'] == 'on') {
-                        $ffmpeg_convert_video = $mediaFilename;
+                    
+                    $video[$i] = $media = Wo_ShareFile($fileInfo);
+                    if('on' == $wo['config']['ffmpeg_system']){
+                        $wo['config']['amazone_s3']        = $amazone_s3;
+                        $wo['config']['wasabi_storage']    = $wasabi_storage;
+                        $wo['config']['backblaze_storage'] = $backblaze_storage;
+                        $wo['config']['ftp_upload']        = $ftp_upload;
+                        $wo['config']['spaces']            = $spaces;
+                        $wo['config']['cloud_upload']      = $cloud_upload;
                     }
-                    $img_types = array(
-                        'image/png',
-                        'image/jpeg',
-                        'image/jpg',
-                        'image/gif'
-                    );
-                    if (!empty($_FILES['video_thumb']) && in_array($_FILES["video_thumb"]["type"], $img_types)) {
-                        $fileInfo = array(
-                            'file' => $_FILES["video_thumb"]["tmp_name"],
-                            'name' => $_FILES['video_thumb']['name'],
-                            'size' => $_FILES["video_thumb"]["size"],
-                            'type' => $_FILES["video_thumb"]["type"],
-                            'types' => 'jpeg,png,jpg,gif',
-                            'crop' => array(
-                                'width' => 525,
-                                'height' => 295
-                            )
-                        );
-                        $media    = Wo_ShareFile($fileInfo);
-                        if (!empty($media)) {
-                            $video_thumb = $media['filename'];
-                        }
-                    }
-                }
-            }
-        }
+                    if(!empty($media)){ 
+                        $mediaFilename = $media['filename'];
+                        $mediaName     = $media['name'];
+                        if(!empty($mediaFilename) && 'on' == $wo['config']['ffmpeg_system']){$ffmpeg_convert_video = $mediaFilename;}
+                        $img_types = [
+                            'image/png',
+                            'image/jpeg',
+                            'image/jpg',
+                            'image/gif'
+                        ]; //pa($_FILES['video_thumb']);
+                        if(!empty($_FILES['video_thumb']) && in_array($_FILES["video_thumb"]["type"][$i], $img_types)){
+                            $fileInfo = [
+                                'file' => $_FILES["video_thumb"]["tmp_name"][$i],
+                                'name' => $_FILES['video_thumb']['name'][$i],
+                                'size' => $_FILES["video_thumb"]["size"][$i],
+                                'type' => $_FILES["video_thumb"]["type"][$i],
+                                'types' => 'jpeg,png,jpg,gif',
+                                'crop' => ['width' => 525, 'height' => 295]
+                            ];
+                            $media = Wo_ShareFile($fileInfo);
+                            if(!empty($media)){$videos_thumb[$i] = $video_thumb = $media['filename'];}
+                        }else{
+                            $video_file_full_path = dirname(__DIR__) . '/' . $ffmpeg_convert_video;
+                            if(!file_exists($thumbDir = str_replace('videos', 'photos', dirname($video_file_full_path)))){mkdir($thumbDir, 0777, true);}
+                            $thumbFile = ($thumbJpeg = str_replace($videoTypes, 'jpeg', basename($video_file_full_path))) ? $thumbDir.DIRECTORY_SEPARATOR.$thumbJpeg : null;
+                            
+                            $thumb_info = shell_exec("$ffmpeg_b -i ".$video_file_full_path." -r 30 -t 2 -ss 0:00 -frames:v 1 ".$thumbFile." 2>&1");
+                            if(@getimagesize($thumbFile)){$videos_thumb[$i] = ['filename' => $thumbFile, 'name' => $thumbJpeg];}
+                        }   
+        }   }   }   }
         if (isset($_FILES['postMusic']['name']) && empty($mediaFilename)) {
             if ($_FILES['postMusic']['size'] > $wo['config']['maxUpload']) {
                 $errors = str_replace('{file_size}', Wo_SizeUnits($wo['config']['maxUpload']), $wo['lang']['file_too_big']);
@@ -561,7 +542,7 @@ if ($f == 'posts') {
                     }
                 }
             } else {
-                $errors = 'Please write the question.';
+                $errors = $wo['lang']['write_question'];
             }
         }
         if (empty($errors) && $invalid_file == false) {
@@ -573,6 +554,15 @@ if ($f == 'posts') {
             if ($wo['config']['post_approval'] == 1 && !Wo_IsAdmin()) {
                 $post_active = 0;
             }
+            if(is_array($video) && !empty($video)){
+                //$videoFilename = json_encode($video, JSON_UNESCAPED_UNICODE);
+                $videoFilename = base64_encode(serialize($video));
+            } 
+            if(is_array($videos_thumb) && !empty($videos_thumb)){
+                //$postVideo_thumb = json_encode($videos_thumb, JSON_UNESCAPED_UNICODE);
+                $postVideo_thumb = base64_encode(serialize($video_thumb));
+            }
+            
             $post_data                = array(
                 'user_id' => Wo_Secure($wo['user']['user_id']),
                 'page_id' => Wo_Secure($page_id),
@@ -582,6 +572,7 @@ if ($f == 'posts') {
                 'recipient_id' => Wo_Secure($recipient_id),
                 'postRecord' => Wo_Secure($_POST['postRecord']),
                 'postFile' => Wo_Secure($mediaFilename, 0),
+                'postVideo' => Wo_Secure($videoFilename, 0),
                 'postFileName' => Wo_Secure($mediaName,1),
                 'postMap' => Wo_Secure($post_map),
                 'postPrivacy' => Wo_Secure($post_privacy),
@@ -597,11 +588,12 @@ if ($f == 'posts') {
                 'postWatching' => Wo_Secure($watching),
                 'postTraveling' => Wo_Secure($traveling),
                 'postFileThumb' => Wo_Secure($video_thumb),
+                'postVideoThumb' => Wo_Secure($postVideo_thumb),
                 'time' => time(),
                 'blur' => $blur,
                 'multi_image_post' => 0,
                 'active' => $post_active
-            );
+            ); //pa($post_data);
             $post_data['ai_post'] = 0;
             if (($wo['config']['ai_post_system'] == 1 || $wo['config']['ai_image_system'] == 1) && !empty($_POST['ai_post']) && $_POST['ai_post'] == 'on') {
                 $post_data['ai_post'] = 1;
@@ -642,7 +634,6 @@ if ($f == 'posts') {
                 $post_data['color_id'] = Wo_Secure($_POST['post_color']);
             }
             if (!empty($ffmpeg_convert_video)) {
-                $ffmpeg_b             = $wo['config']['ffmpeg_binary_file'];
                 $video_file_full_path = dirname(__DIR__) . '/' . $ffmpeg_convert_video;
                 $video_info           = shell_exec("$ffmpeg_b -i " . $video_file_full_path . " 2>&1");
                 $re                   = '/[0-9]{3}+x[0-9]{3}/m';
@@ -683,12 +674,12 @@ if ($f == 'posts') {
                 if (is_callable('litespeed_finish_request')) {
                     litespeed_finish_request();
                 }
-                $id = FFMPEGUpload(array(
+                $id = FFMPEGUpload($ar = array(
                     'filename' => $ffmpeg_convert_video,
                     'id' => $id,
                     'video_thumb' => $video_thumb,
                     'post_data' => $post_data
-                ));
+                ));//pa($ar);
             } else {
                 $id = Wo_RegisterPost($post_data);
             }
@@ -1355,7 +1346,7 @@ if ($f == 'posts') {
                 $data = array(
                     'status' => 200,
                     'like_lang' => $wo['lang']['like'],
-					'reactions_count' => Rx_GetPostReactionsCount($_GET['post_id']),
+//					'reactions_count' => Rx_GetPostReactionsCount($_GET['post_id']),
                     'reactions' => Wo_GetPostReactions($_GET['post_id'])
                 );
             }
@@ -1395,7 +1386,7 @@ if ($f == 'posts') {
             if (Wo_AddReactions($_GET['post_id'], $_GET['reaction']) == 'reacted') {
                 $data = array(
                     'status' => 200,
-					'reactions_count' => Rx_GetPostReactionsCount($_GET['post_id']),
+//					'reactions_count' => Rx_GetPostReactionsCount($_GET['post_id']),
                     'reactions' => Wo_GetPostReactions($_GET['post_id']),
                     'like_lang' => $wo['lang']['liked']
                 );

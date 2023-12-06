@@ -978,6 +978,20 @@ if ($f == 'chat') {
             $data['status'] = 200;
             $data['code']   = 0;
         } else if ($code === 1) {
+            $group_id = Wo_Secure($_GET['group_id']);
+            $group_chat        = Wo_GroupTabData($group_id);
+            $db->where('user_id', $_GET['user_id'])->where('group_id', $group_id)->update(T_GROUP_CHAT_USERS, array(
+                'last_seen' => time(),
+                'active' => '1'
+            ));
+            $notification_data = array(
+                'recipient_id' => $group_chat['user_id'],
+                'notifier_id' => $_GET['user_id'],
+                'group_chat_id' => $group_id,
+                'type' => 'accept_group_chat_request',
+                'url' => 'index.php?link1=timeline&u=' . $wo['user']['username']
+            );
+//            Wo_RegisterNotification($notification_data);
             $data['status'] = 200;
             $data['code']   = 1;
         }
@@ -1101,7 +1115,7 @@ if ($f == 'chat') {
             'status' => 500,
             'message' => $error_icon . $wo['lang']['please_check_details']
         );
-        if (strlen($_POST['group_name']) < 4 || strlen($_POST['group_name']) > 15) {
+        if (strlen($_POST['group_name']) < 4 || strlen($_POST['group_name']) > 30) {
             $error           = true;
             $data['message'] = $error_icon . $wo['lang']['group_name_limit'];
         }

@@ -9,7 +9,7 @@
    $wo['comment']['publisher']['url'] = 'javascript:void(0)';
 }
 ?>
-<div class="reply reply-container" id="comment_reply_<?php echo $wo['reply']['id'];?>" data-reply-id="<?php echo $wo['reply']['id'];?>">
+<div class="reply reply-container" id="comment_reply_<?php echo $wo['reply']['id'];?>" data-comment-id="<?php echo $wo['reply']['id'];?>">
 	<?php if (!isset($anonymous)) { ?>
 		<a class="<?php echo Wo_RightToLeft('pull-left'); ?>" href="<?php echo $wo['reply']['publisher']['url']?>" onclick="InjectAPI('{&quot;profile_id&quot; : &quot;<?php echo $wo['reply']['publisher']['id']?>&quot;, &quot;type&quot;:&quot;<?php echo $wo['reply']['publisher']['type']?>&quot;}', event);">
 			<img class="avatar" src="<?php echo $wo['reply']['publisher']['avatar']?>" alt="avatar">
@@ -100,9 +100,9 @@
 						}
 					</style>
 					
-					<span class="pointer reply-to-reply" data-id="<?php echo $wo['reply']['id']; ?>" data-curuser="<?php echo $wo['reply']['publisher']['username']; ?>" data-curfullname="<?php echo $wo['reply']['publisher']['name']?>" onclick="Wo_ViewMoreReplies(<?php echo $wo['comment']['id'];?>);" >
+					<span class="pointer reply-to-reply" data-id="<?php echo $wo['reply']['id']; ?>" data-curuser="<?php echo $wo['reply']['publisher']['username']; ?>" data-curfullname="<?php echo $wo['reply']['publisher']['name']?>" onclick="Wo_OpenReplyBox(<?php echo $wo['reply']['id']; ?>, this);" >
 						<?php
-							echo '<span class="replay-reply " style="margin: 30px;" data-id="'.$wo['reply']['publisher']['name'].'">' ?> <?php echo $wo['lang']['reply'] ;?> <?php echo ' </span>';   
+							echo '<span class="replay-reply " style="margin: 10px;" data-id="'.$wo['reply']['publisher']['name'].'">' ?> <?php echo $wo['lang']['reply'] ;?> <?php echo ' </span>';
 						?>
 					</span>
 				</div>

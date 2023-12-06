@@ -15,10 +15,14 @@ if (mysqli_query($wo['sqlConnect'], "DESCRIBE `wondertage_settings`" )) {
 	}
 }
 //pa($wo['page']);
+//pa(array_filter(get_defined_functions()['user'], function($v, $k){return str_contains($v, 'notify');}, ARRAY_FILTER_USE_BOTH) );
+//pa($wo['user']['user_id']);
+//pa(Wo_GetNotifications([]));
+//pa($wo['user']);
 ?>
 
 <div class="page-margin profile wo_user_profile" data-page="timeline" data-id="<?php echo $wo['user_profile']['user_id'];?>">
-	<div class="container-fluid tag_cont_fluid">
+    <div class="container-fluid tag_cont_fluid">
 		<div class="profile-container tag_cover_bg">
 			<button class="btn btn-mat btn_goback" onclick="window.history.back();"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path fill="currentColor" d="M19 11H7.83l4.88-4.88c.39-.39.39-1.03 0-1.42-.39-.39-1.02-.39-1.41 0l-6.59 6.59c-.39.39-.39 1.02 0 1.41l6.59 6.59c.39.39 1.02.39 1.41 0 .39-.39.39-1.02 0-1.41L7.83 13H19c.55 0 1-.45 1-1s-.45-1-1-1z"></path></svg></button>
 			<?php if ($wo['config']['profile_back'] == 1) { ?>
@@ -95,10 +99,10 @@ if (mysqli_query($wo['sqlConnect'], "DESCRIBE `wondertage_settings`" )) {
 						<?php if($IsOwner === true) { ?>
 							<form action="#" method="post" class="profile-cover-changer">
 								<div class="when-notedit profile_cover">
-									<span class="btn btn-file btn-mat">
+									<span class="btn btn-file btn-mat cover_modal_trigger" title="<?php echo $wo['lang']['choose_cover']?>">
 										<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path fill="currentColor" d="M23 18V6c0-1.1-.9-2-2-2H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2zM8.9 12.98l2.1 2.53 3.1-3.99c.2-.26.6-.26.8.01l3.51 4.68c.25.33.01.8-.4.8H6.02c-.42 0-.65-.48-.39-.81L8.12 13c.19-.26.57-.27.78-.02z"></path></svg> <?php echo $wo['lang']['cover']?>
-										<input type="file" name="cover" accept="image/x-png, image/jpeg" onchange="Wo_UpdateProfileCover();">
 									</span>
+									<input class="hidden" id="cover_input" type="file" name="cover" accept="image/x-png, image/jpeg" onchange="Wo_UpdateProfileCover();">
 									<?php if ($wo['config']['ai_user_system'] == 1) { ?>
 										<span class="btn btn-file btn-mat" onclick="openAiUserModel('cover')">
 											<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path fill="currentColor" d="M6 18H18V6H6V18ZM14 20H10V22H8V20H5C4.44772 20 4 19.5523 4 19V16H2V14H4V10H2V8H4V5C4 4.44772 4.44772 4 5 4H8V2H10V4H14V2H16V4H19C19.5523 4 20 4.44772 20 5V8H22V10H20V14H22V16H20V19C20 19.5523 19.5523 20 19 20H16V22H14V20ZM8 8H16V16H8V8Z"></path></svg> AI
@@ -125,7 +129,8 @@ if (mysqli_query($wo['sqlConnect'], "DESCRIBE `wondertage_settings`" )) {
 								<input name="cover_image" id="cover-input-image" value="<?php echo $wo['user_profile']['cover_org']?>" type="hidden">
 								<input name="real_image" id="full-input-image" value="<?php echo Wo_GetMedia($wo['user_profile']['cover_full']); ?>" type="hidden">
 								<input type="hidden" name="user_id" value="<?php echo $wo['user_profile']['user_id'];?>">
-							</form>
+                                <input type="hidden" name="type" value="user_cover">
+                            </form>
 						<?php } ?>
 						<div class="user-cover-uploading-progress">
 							<div class="pace-activity-parent"><div class="pace-activity"></div></div>
@@ -292,8 +297,8 @@ if (mysqli_query($wo['sqlConnect'], "DESCRIBE `wondertage_settings`" )) {
 						<a class="btn btn-default btn-mat" href="<?php echo Wo_SeoLink('index.php?link1=setting&user=' . $wo['user_profile']['username'] . '&page=general-setting') ?>" data-ajax="?link1=setting&user=<?php echo $wo['user_profile']['username'] . '&page=general-setting'; ?>">
 							<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path fill="currentColor" d="M3 17.46v3.04c0 .28.22.5.5.5h3.04c.13 0 .26-.05.35-.15L17.81 9.94l-3.75-3.75L3.15 17.1c-.1.1-.15.22-.15.36zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg> <?php echo $wo['lang']['edit'];?>
 						</a>
-						<a class="btn btn-default btn-mat" href="<?php echo Wo_SeoLink('index.php?link1=timeline&u=' . $wo['user_profile']['username'] . '&type=activities');?>" data-ajax="?link1=timeline&u=<?php echo $wo['user_profile']['username'] . '&type=activities'; ?>">
-							<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M4 10.5c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5-.67-1.5-1.5-1.5zm0-6c-.83 0-1.5.67-1.5 1.5S3.17 7.5 4 7.5 5.5 6.83 5.5 6 4.83 4.5 4 4.5zm0 12c-.83 0-1.5.68-1.5 1.5s.68 1.5 1.5 1.5 1.5-.68 1.5-1.5-.67-1.5-1.5-1.5zM8 19h12c.55 0 1-.45 1-1s-.45-1-1-1H8c-.55 0-1 .45-1 1s.45 1 1 1zm0-6h12c.55 0 1-.45 1-1s-.45-1-1-1H8c-.55 0-1 .45-1 1s.45 1 1 1zM7 6c0 .55.45 1 1 1h12c.55 0 1-.45 1-1s-.45-1-1-1H8c-.55 0-1 .45-1 1z"/></svg> <?php echo $wo['lang']['activities'];?>
+						<a class="<?php if(Wo_IsMobile()) {echo 'mt-2';} ?> btn btn-default btn-mat" href="<?php echo Wo_SeoLink('index.php?link1=timeline&u=' . $wo['user_profile']['username'] . '&type=activities');?>" data-ajax="?link1=timeline&u=<?php echo $wo['user_profile']['username'] . '&type=activities'; ?>">
+							<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M4 10.5c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5-.67-1.5-1.5-1.5zm0-6c-.83 0-1.5.67-1.5 1.5S3.17 7.5 4 7.5 5.5 6.83 5.5 6 4.83 4.5 4 4.5zm0 12c-.83 0-1.5.68-1.5 1.5s.68 1.5 1.5 1.5 1.5-.68 1.5-1.5-.67-1.5-1.5-1.5zM8 19h12c.55 0 1-.45 1-1s-.45-1-1-1H8c-.55 0-1 .45-1 1s.45 1 1 1zm0-6h12c.55 0 1-.45 1-1s-.45-1-1-1H8c-.55 0-1 .45-1 1s.45 1 1 1zM7 6c0 .55.45 1 1 1h12c.55 0 1-.45 1-1s-.45-1-1-1H8c-.55 0-1 .45-1 1z"/></svg> <?php echo $wo['lang']['activity_log'];?>
 						</a>
 					<?php } ?>
 				</div>
@@ -698,16 +703,16 @@ if (mysqli_query($wo['sqlConnect'], "DESCRIBE `wondertage_settings`" )) {
 								<?php if ($wo['config']['connectivitySystem'] == 0) {?>
 									<div>
 										<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><path fill="currentColor" d="M14 14.252v2.09A6 6 0 0 0 6 22l-2-.001a8 8 0 0 1 10-7.748zM12 13c-3.315 0-6-2.685-6-6s2.685-6 6-6 6 2.685 6 6-2.685 6-6 6zm0-2c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm6 6v-3h2v3h3v2h-3v3h-2v-3h-3v-2h3z"></path></svg>
-										<a href="<?php echo Wo_SeoLink('index.php?link1=timeline&u=' . $wo['user_profile']['username'] . '&type=following');?>" data-ajax="?link1=timeline&u=<?php echo $wo['user_profile']['username']?>&type=following"><?php echo $wo['user_profile']['details']['following_count'];?> <?php echo $wo['lang']['following'];?></a>
+										<a href="<?php echo Wo_SeoLink('index.php?link1=timeline&u=' . $wo['user_profile']['username'] . '&type=following');?>" data-ajax="?link1=timeline&u=<?php echo $wo['user_profile']['username']?>&type=following"> <?php echo $wo['lang']['following'];?> <span class="numbers_square"><?php echo $wo['user_profile']['details']['following_count'];?></span></a>
 									</div>
 									<div>
 										<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><path fill="currentColor" d="M2 22a8 8 0 1 1 16 0h-2a6 6 0 1 0-12 0H2zm8-9c-3.315 0-6-2.685-6-6s2.685-6 6-6 6 2.685 6 6-2.685 6-6 6zm0-2c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm8.284 3.703A8.002 8.002 0 0 1 23 22h-2a6.001 6.001 0 0 0-3.537-5.473l.82-1.824zm-.688-11.29A5.5 5.5 0 0 1 21 8.5a5.499 5.499 0 0 1-5 5.478v-2.013a3.5 3.5 0 0 0 1.041-6.609l.555-1.943z"></path></svg>
-										<a href="<?php echo Wo_SeoLink('index.php?link1=timeline&u=' . $wo['user_profile']['username'] . '&type=followers');?>" data-ajax="?link1=timeline&u=<?php echo $wo['user_profile']['username']?>&type=followers"><?php echo $wo['user_profile']['details']['followers_count'];?> <?php echo $wo['lang']['followers'];?></a>
+                                        <a href="<?php echo Wo_SeoLink('index.php?link1=timeline&u=' . $wo['user_profile']['username'] . '&type=followers');?>" data-ajax="?link1=timeline&u=<?php echo $wo['user_profile']['username']?>&type=followers"> <?php echo $wo['lang']['followers'];?> <span class="numbers_square"><?php echo $wo['user_profile']['details']['followers_count'];?></span></a>
 									</div>
 								<?php } ?>
 								<div>
 									<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="currentColor" d="M20 22H4a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1zm-1-2V4H5v16h14zM8 7h8v2H8V7zm0 4h8v2H8v-2zm0 4h5v2H8v-2z"></path></svg>
-									<?php echo number_format($wo['user_profile']['details']['post_count']);?> <?php echo TextForMode('posts'); ?>
+                                    <?php echo TextForMode('photo_and_video'); ?> <span class="numbers_square"><?php echo number_format($wo['user_profile']['details']['post_count']);?></span>
 								</div>
 								<?php if(!empty($wo['user_profile']['website'])) {  ?>
 									<div>
@@ -715,6 +720,12 @@ if (mysqli_query($wo['sqlConnect'], "DESCRIBE `wondertage_settings`" )) {
 										<a rel="nofollow" href="<?php echo $wo['user_profile']['website']?>"><?php echo $wo['user_profile']['website']?></a>
 									</div>
 								<?php } ?>
+                                <?php if(!empty($wo['user_profile']['working_link'])) {  ?>
+                                    <div>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><path fill="currentColor" d="M18.364 15.536L16.95 14.12l1.414-1.414a5 5 0 1 0-7.071-7.071L9.879 7.05 8.464 5.636 9.88 4.222a7 7 0 0 1 9.9 9.9l-1.415 1.414zm-2.828 2.828l-1.415 1.414a7 7 0 0 1-9.9-9.9l1.415-1.414L7.05 9.88l-1.414 1.414a5 5 0 1 0 7.071 7.071l1.414-1.414 1.415 1.414zm-.708-10.607l1.415 1.415-7.071 7.07-1.415-1.414 7.071-7.07z"></path></svg>
+                                        <a rel="nofollow" href="<?php echo $wo['user_profile']['working_link']?>"><?php echo $wo['user_profile']['working_link']?></a>
+                                    </div>
+                                <?php } ?>
 								<div>
 									<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="currentColor" d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zm-5-8h2a3 3 0 0 0 6 0h2a5 5 0 0 1-10 0z"></path></svg>
 									<?php 
@@ -726,6 +737,7 @@ if (mysqli_query($wo['sqlConnect'], "DESCRIBE `wondertage_settings`" )) {
 											echo $wo['genders'][array_keys($wo['genders'])[0]];
 										}
 									?>
+									<?= $wo['lang']['gender']?>
 								</div>
 								<?php if ($wo['user_profile']['birthday'] != '0000-00-00' && $wo['user_profile']['birthday'] != '00-00-0000' && Wo_CanSeeBirthday($wo['user_profile']['user_id'], $wo['user_profile']['birth_privacy']) === true) {  ?>
 									<div>
@@ -737,8 +749,7 @@ if (mysqli_query($wo['sqlConnect'], "DESCRIBE `wondertage_settings`" )) {
 											$birth = mktime( 0, 0, 0, $month, $day, $year);
 											//result
 											$age = floor((((($today - $birth) / 60) / 60) / 24) / 365.25);
-											echo "$age";?> <?php echo $wo['lang']['years_old'];
-										?>
+											echo "$age";?> <span class="years_old_<?php echo $wo['user_profile']['user_id'] ?> d-inline"><?php echo $wo['lang']['years_old']; ?></span>
 									</div>
 								<?php } ?>
 								<?php if(!empty(Wo_UserRelationship($wo['user_profile']['id']))) {  ?>
@@ -1120,6 +1131,7 @@ if (mysqli_query($wo['sqlConnect'], "DESCRIBE `wondertage_settings`" )) {
 										if ($wo['loggedin'] && $wo['user_profile']['user_id'] == $wo['user']['id']) {
 											$array['anonymous'] = true;
 										}
+                                                                                //pa($array);
 										$stories = Wo_GetPosts($array); 
 										if (count($stories) == 0 && count($pinedstory) == 0) {
 											echo Wo_LoadPage('story/profile-no-stories');
@@ -1161,7 +1173,7 @@ if (mysqli_query($wo['sqlConnect'], "DESCRIBE `wondertage_settings`" )) {
 <?php echo Wo_LoadPage('modals/cover-image');?>
 <?php if (!empty($wo['user_profile']['background_image']) && $wo['user_profile']['background_image_status'] == 1) { ?>
 <style>
-body {background: url(<?php echo Wo_GetMedia($wo['user_profile']['background_image']); ?>) fixed !important;background-size:100% auto;}
+body {background: url(<?php echo Wo_GetMedia($wo['user_profile']['background_image']); ?>) no-repeat fixed; background-size: cover; background-position: center center;}
 </style>
 <?php } ?>
 
@@ -1296,6 +1308,33 @@ body {background: url(<?php echo Wo_GetMedia($wo['user_profile']['background_ima
             </div>
         </div>
     <?php endif; ?>
+
+<div class="modal fade" id="cover_prompt_modal" role="dialog" data-keyboard="false">
+    <div class="modal-dialog modal-md wow_mat_mdl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <p style="font-weight: bold">
+                    <?php echo $wo["lang"]["add_cover"]?>
+                </p>
+            </div>
+            <div class="modal-body">
+                <div class="cover_modal_img">
+                    <img src="<?php echo $wo['config']['theme_url'];?>/img/select-message.png" alt="">
+                </div>
+                <div class="cover_prompt_label">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
+                        <path fill="rgb(42, 88, 133)" d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+                    </svg>
+                    <p class="cover_prompt_blue"><?php echo $wo['lang']['upload_cover']?></p>
+                    <p class='cover_prompt'><?php echo $wo['lang']['cover_prompt']?></p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default btn-mat close_cover_modal"><?php echo $wo['lang']['close'] ?></button>
+            </div>
+        </div>
+    </div>
+</div>
 	
 	<?php if ($wo['config']['website_mode'] == 'linkedin') { ?>
     	<div class="modal fade" id="finding_a_job_modal" role="dialog" data-keyboard="false">
@@ -1537,6 +1576,7 @@ body {background: url(<?php echo Wo_GetMedia($wo['user_profile']['background_ima
 				</div>
 			</div>
 		</div>
+		
 	<?php } ?>
 	
 	<?php if (!empty($wondertage_settings) && $wondertage_settings['tag_profile_qr'] == 1) { ?>
@@ -1559,6 +1599,33 @@ body {background: url(<?php echo Wo_GetMedia($wo['user_profile']['background_ima
 <?php if ($wo['config']['ai_user_system'] == 1) { echo Wo_LoadPage('timeline/ai_user');} ?>
 
 <script>
+$(".cover_modal_trigger").on('click', function(e) {
+	e.preventDefault()
+	console.log($('#cover_prompt_modal'))
+	$('#cover_prompt_modal').toggleClass("show")
+}) 
+
+$(".close_cover_modal").on('click', function(e) {
+	$('#cover_prompt_modal').removeClass("show")
+}) 
+
+$('.cover_prompt_label').on('click', function(e) {
+	$('#cover_input').trigger("click")
+}) 
+
+//function declination(value, words){
+//    value = Math.abs(value) % 100;
+//    var num = value % 10;
+//    if(value > 10 && value < 20) return words[2];
+//    if(num > 1 && num < 5) return words[1];
+//    if(num == 1) return words[0];
+//    return words[2];
+//}
+//let years = ['год', 'года', 'лет']
+//
+//let yearWord = declination(<?php //echo $age ?>//, years)
+//
+//$(`.years_old_<?php //echo $wo['user_profile']['user_id'] ?>//`).html(yearWord);
 function Wo_OpenReportBox() {
 	$('#report-user-modal').modal({
   	  show: true
@@ -1919,7 +1986,7 @@ $(function () {
       $('.profile_avatar').fadeIn(100);
       if(data.status == 200) {
         Wo_GetNewPosts();
-        $('[id^=updateImage-<?php echo $wo['user_profile']['id']; ?>]').attr('data-target', '#ProfileImageModal-Stopped'); 
+        $('[id^=updateImage-<?php echo $wo['user_profile']['id']; ?>]').attr('data-target', '#ProfileImageModal-Stopped');
         $('[id^=updateImage-<?php echo $wo['user_profile']['id']; ?>]').attr('onclick', 'Wo_OpenProfilePicture("' + data.img_or + '");');
         $('[id^=updateImage-<?php echo $wo['user_profile']['id']; ?>]').attr("src", data.img);
         $('#cropImage').modal('show');
@@ -2133,6 +2200,7 @@ function Wo_UpdateProfileAvatar() {
 }
 
 function Wo_UpdateProfileCover() {
+  $("#cover_prompt_modal").removeClass('show')
   $("form.profile-cover-changer").submit();
 }
 
@@ -2323,7 +2391,7 @@ function DeleteOpenToWork(){
 }
 function EditOpenToWork(){
 	$('#edit_finding_a_job_modal').modal('show');
-}
+}delete_providing_service
 <?php } ?>
 <?php if ($wo['loggedin'] && $wo['config']['website_mode'] == 'linkedin' && $wo['user_profile']['is_providing_service'] != 0) { ?>
 function EditProvidingService(){

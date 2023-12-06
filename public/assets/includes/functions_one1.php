@@ -1291,7 +1291,7 @@ function Wo_DeleteUser($user_id) {
             'from_name' => $wo['config']['siteName'],
             'to_email' => $user_data['email'],
             'to_name' => $user_data['name'],
-            'subject' => 'Your account was deleted',
+            'subject' => $wo['lang']['account_was_deleted'],
             'charSet' => 'utf-8',
             'message_body' => Wo_LoadPage('emails/account-deleted'),
             'is_html' => true

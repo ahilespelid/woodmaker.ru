@@ -19,6 +19,7 @@
 			<span class="btn btn-mat changer previous-btn" onclick="Wo_PreviousAlbumPicture(<?php echo $wo['image']['post_id'];?>, <?php echo $wo['image']['id'];?>);"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="currentColor" d="M10.828 12l4.95 4.95-1.414 1.414L8 12l6.364-6.364 1.414 1.414z"/></svg></span>
 			<span class="btn btn-mat changer next-btn" onclick="Wo_NextAlbumPicture(<?php echo $wo['image']['post_id'];?>, <?php echo $wo['image']['id'];?>);"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="currentColor" d="M13.172 12l-4.95-4.95 1.414-1.414L16 12l-6.364 6.364-1.414-1.414z"/></svg></span>
 			<div id="draggableHelper" class="dragable">
+                <?php  ?>
 				<img src="<?php echo $wo['image']['image_org'];?>" alt="media" class="" id="wo_zoom_<?php echo $wo['image']['id'];?>">
 			</div>
 		</div>

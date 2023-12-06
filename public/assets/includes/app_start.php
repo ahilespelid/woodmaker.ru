@@ -8,6 +8,16 @@ error_reporting(0);
 require_once "config.php";
 require_once "assets/libraries/DB/vendor/autoload.php";
 
+if(!function_exists('pa')){
+    function pa($a,$br=0,$mes='',$t='pre'):bool{$backtrace = debug_backtrace(); $fileinfo = '';$sbr='';
+        if(!empty($backtrace[0]) && is_array($backtrace[0])){$fileinfo = $backtrace[0]['file'] . ":" . $backtrace[0]['line'];}
+        while($br){$sbr.=(empty($t) ? PHP_EOL : '<br>');$br--;}
+        echo $fileinfo.$sbr.$mes.(empty($t) ? '' : '<'.$t.'>'); print_r($a=(!empty($a)?$a:[])); echo(empty($t) ? '' : '</'.$t.'>').PHP_EOL;
+        return true;
+}}
+
+
+
 $wo           = array();
 // Connect to SQL Server
 $sqlConnect   = $wo["sqlConnect"] = mysqli_connect($sql_db_host, $sql_db_user, $sql_db_pass, $sql_db_name, 3306);
@@ -126,8 +136,9 @@ $wo["QQLoginUrl"]         = $config["site_url"] . "/login-with.php?provider=QQ";
 $wo["WeChatLoginUrl"]     = $config["site_url"] . "/login-with.php?provider=WeChat";
 $wo["DiscordLoginUrl"]    = $config["site_url"] . "/login-with.php?provider=Discord";
 $wo["MailruLoginUrl"]     = $config["site_url"] . "/login-with.php?provider=Mailru";
+$wo["YandexLoginUrl"]     = $config["site_url"] . "/login-with.php?provider=Yandex";
 $wo["OkLoginUrl"]         = $config["site_url"] . "/login-with.php?provider=OkRu";
-$wo["TikTokLoginUrl"]         = $config["site_url"] . "/login-with.php?provider=TikTok";
+$wo["TikTokLoginUrl"]     = $config["site_url"] . "/login-with.php?provider=TikTok";
 // Defualt User Pictures
 $wo["userDefaultAvatar"]  = "upload/photos/d-avatar.jpg";
 $wo["userDefaultFAvatar"] = "upload/photos/f-avatar.jpg";
@@ -153,6 +164,7 @@ if (Wo_IsLogged() == true) {
 } else {
     $wo["userSession"] = getUserProfileSessionID();
 }
+
 if (!empty($_GET["c_id"]) && !empty($_GET["user_id"])) {
     $application = "windows";
     if (!empty($_GET["application"])) {
@@ -531,4 +543,6 @@ if (!empty($wo['config']['reserved_usernames'])) {
     $wo['reserved_usernames'] = explode(',', $wo['config']['reserved_usernames']);
 }
 
+$wo['config']['maxCharacters'] = 5000;
 
+//echo $sql_db_user; //exit;

@@ -131,13 +131,13 @@ if (mysqli_query($wo['sqlConnect'], "DESCRIBE `wondertage_settings`" )) {
 	
 	<?php
         if ($wo['config']['groups'] == 1) {
-		$groups = Wo_GroupSug(1);
+		$groups = Wo_GroupSug(3);
 		if (count($groups) > 0) {
 	?>
 		<div class="wow_content mb-15 tag_sidebar_widget">
 			<div class="valign tag_sidebar_widget_title">
 				<b><?php echo $wo['lang']['suggested_groups'] ?></b>
-				<span onclick="Wo_ReloadSideBarGroups();" class="refresh"><?php echo $wo['lang']['home_refresh'] ?></span>
+				<a href="/suggested-groups" class="refresh"><?php echo $wo['lang']['see_all'] ?></a>
 			</div>
 			<div class="sidebar-group-may-know-container">
 				<?php 
@@ -184,7 +184,7 @@ if (mysqli_query($wo['sqlConnect'], "DESCRIBE `wondertage_settings`" )) {
 	<div id="sidebar-sticky">
 		<?php $activities = Wo_GetActivities();?>
 		<ul class="wow_content mb-15 tag_sidebar_widget list-group activity-container">
-			<li class="list-group-item text-muted sidebar-title-back" contenteditable="false"><?php echo $wo['lang']['latest_activities']; ?>
+			<li class="list-group-item text-muted sidebar-title-back" contenteditable="false"><?php echo $wo['lang']['activities']; ?>
 				<?php if (count($activities) > 0) { ?> <span onclick="Wo_GetMoreActivities();" data-toggle="tooltip" title= "<?php echo $wo['lang']['load_more_activities'];?>" class="<?php echo Wo_RightToLeft('pull-right');?>  refresh" >
 				<i class="fa fa-repeat progress-icon" data-icon="repeat"></i>
 				</span><?php } ?>
@@ -206,7 +206,7 @@ if (mysqli_query($wo['sqlConnect'], "DESCRIBE `wondertage_settings`" )) {
 		</ul>
 	</div>
 	<?php if (!empty($wo['config']['native_android_messenger_url']) || !empty($wo['config']['native_android_timeline_url']) || !empty($wo['config']['native_ios_messenger_url']) || !empty($wo['config']['native_ios_timeline_url']) || !empty($wo['config']['native_windows_messenger_url'])) { ?>
-        <div class="wow_content mb-15 tag_sidebar_widget">
+        <!-- <div class="wow_content mb-15 tag_sidebar_widget">
 			<div class="valign tag_sidebar_widget_title">
 				<b><?php echo $wo['lang']['apps'] ?></b>
 			</div>
@@ -243,7 +243,7 @@ if (mysqli_query($wo['sqlConnect'], "DESCRIBE `wondertage_settings`" )) {
 	            	<?php } ?>
             	<?php } ?>
             </div>
-        </div>
+        </div> -->
 	<?php } ?>
 		
 	<?php if ($wo['config']['user_ads'] == 1): ?>

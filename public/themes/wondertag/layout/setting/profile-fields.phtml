@@ -24,7 +24,7 @@
 				height: 100px;
 			}
 		</style>
-		<select name="<?php echo $wo['field']['fid'];?>[]" multiple>
+		<select name="<?php echo $wo['field']['fid'];?>" multiple>
 				<?php if( isset( $wo['field']['issearch'] ) ){ ?> <option value=""><?php echo $wo['lang']['all'];?></option> <?php } ?>
 				<?php
 					foreach ($options as $key => $value) {
@@ -46,8 +46,8 @@
 	<?php } else if ($wo['field']['type'] == 'textarea') {?>
 		<textarea placeholder=" " id="<?php echo $wo['field']['fid'];?>" name="<?php echo $wo['field']['fid'];?>" rows="3"><?php echo br2nl($fid);?></textarea>
 	<?php } } ?>
-	<span><?php echo $wo['field']['description']; ?></span>
+	<span><?php echo $wo['field']['name'];?> </span>
 </label>
 <?php if( !isset( $wo['field']['issearch'] ) ){ ?>
-	<div class="help-block"><?php echo $wo['field']['description'];?></div>
+	<div class="help-block"><?php echo $wo['field']['description']; ?> <?php if($wo['field']['id'] == 3) {echo $wo['lang']['in_woodworking'];} ?></div>
 <?php } ?>

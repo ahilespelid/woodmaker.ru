@@ -6,8 +6,8 @@ class OdnoklassnikiSDK{
     private static $app_public_key;
     private static $app_secret_key;
     private static $redirect_url;
-    private static $TOKEN_SERVICE_ADDRESS = "http://api.odnoklassniki.ru/oauth/token.do";
-    private static $API_REQUSET_ADDRESS = "http://api.odnoklassniki.ru/fb.do";
+    private static $TOKEN_SERVICE_ADDRESS = "https://api.odnoklassniki.ru/oauth/token.do";
+    private static $API_REQUSET_ADDRESS = "https://api.odnoklassniki.ru/fb.do";
     private static $access_token;
     private static $refresh_token;
     

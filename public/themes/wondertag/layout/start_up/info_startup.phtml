@@ -1,3 +1,10 @@
+<?php
+function my_mb_ucfirst($str) {
+    $fc = mb_strtoupper(mb_substr($str, 0, 1));
+    return $fc.mb_substr($str, 1);
+}
+;?>
+
 <style>
 .required-field {
   color: red;
@@ -30,22 +37,40 @@
 								<input id="first_name" name="first_name" type="text" placeholder="" value="<?php echo $wo['user']['first_name']?>" required oninvalid="this.setCustomValidity('<?php echo $wo['lang']['wm_feild_required']; ?>')">
 								<span><?php echo $wo['lang']['first_name']; ?> <span class="required-field">*</span></span>
 							</label>
+                            <label class="tag_field">
+                                <input id="last_name" name="last_name" type="text" placeholder="" value="<?php echo $wo['user']['last_name']?>" required oninvalid="this.setCustomValidity('<?php echo $wo['lang']['wm_feild_required']; ?>')">
+                                <span><?php echo $wo['lang']['last_name']; ?> <span class="required-field">*</span></span>
+                            </label>
 							<label class="tag_field">
-								<input id="last_name" name="last_name" type="text" placeholder="" value="<?php echo $wo['user']['last_name']?>" required oninvalid="this.setCustomValidity('<?php echo $wo['lang']['wm_feild_required']; ?>')">
-								<span><?php echo $wo['lang']['last_name']; ?> <span class="required-field">*</span></span>
+								<input id="email" name="email" type="email" placeholder="" value="<?php echo $wo['user']['email']?>" required oninvalid="this.setCustomValidity('<?php echo $wo['lang']['wm_feild_required']; ?>')">
+								<span><?php echo $wo['lang']['email']; ?> <span class="required-field">*</span></span>
 							</label>
-							<label class="tag_field">
-								<select id="country" name="country">
-									<?php 
-										foreach ($wo['countries_name'] as $country_ids => $country) { 
-										$country_id = $wo['user']['country_id'];
-										$selected_contry = ($country_ids == $country_id) ? ' selected' : '' ;
-									?>
-										<option value="<?php echo $country_ids;?>" <?php echo $selected_contry;?> ><?php echo $country;?></option>
-									<?php } ?>
-								</select>
-								<span><?php echo $wo['lang']['country']; ?></span>
-							</label>
+                            <div class="city_wrapper">
+                                <label class="tag_field">
+                                    <input id="city" name="city" type="text" placeholder="" value="<?php echo $wo["cities"][$wo['user']['country_id']]?>">
+                                    <span><?php echo my_mb_ucfirst($wo['lang']['city']); ?></span>
+                                </label>
+                                <div class="themes_dropdown_body dropdown-menu">
+                                    <ul>
+                                        <li class="themes_dropdown_item none_selected" data-id="none"><?php echo $wo["lang"]["none_selected"]; ?></li>
+                                        <?php foreach($wo["cities"] as $city_id => $city_name) { ?>
+                                            <li class="themes_dropdown_item" data-id="<?= $city_id; ?>"><?= $city_name; ?></li>
+                                        <?php }; ?>
+                                    </ul>
+                                </div>
+                            </div>
+<!--							<label class="tag_field">-->
+<!--								<select id="country" name="country">-->
+<!--									--><?php // pa($wo['user']); 
+//										foreach ($wo['countries_name'] as $country_ids => $country) {
+//										$country_id = $wo['user']['country_id'];
+//										$selected_contry = ($country_ids == $country_id) ? ' selected' : '' ;
+//									?>
+<!--										<option value="--><?php //echo $country_ids;?><!--" --><?php //echo $selected_contry;?><!-- >--><?php //echo $country;?><!--</option>-->
+<!--									--><?php //} ?>
+<!--								</select>-->
+<!--								<span>--><?php //echo $wo['lang']['country']; ?><!--</span>-->
+<!--							</label>-->
 							<?php
 								$cutoff   = 1930;
 								$now      = date('Y');
@@ -86,11 +111,36 @@ $(function() {
 	});
 });
 
+$("#city").on("click", function (e) {
+    e.stopPropagation()
+    $(".themes_dropdown_body").toggleClass("show")
+})
+
+$(".themes_dropdown_item").each((i, item) => {
+    $(item).on("click", function (e) {
+        e.stopPropagation()
+        $("#city").val(this.textContent)
+        $(".themes_dropdown_body").removeClass("show")
+    })
+})
+
+$(document).on("click", function () {
+    if($(".themes_dropdown_body").hasClass("show")) {
+        $(".themes_dropdown_body").removeClass("show")
+    }
+})
+
+function isEmail(email) {
+  var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+  return regex.test(email);
+}
+
 function Wo_SubmitInfoForm() {
 	var firstName = $("#first_name").val();
     var lastName = $("#last_name").val();
+    var email = $("#email").val();
 	
-	if (firstName === "" || lastName === "") {
+	if (firstName === "" || lastName === "" || email === "" || !isEmail(email)) {
 	  if (firstName === "") {
 		$("#first_name").focus();
 		$("#first_name")[0].setCustomValidity("<?php echo $wo['lang']['wm_feild_required']; ?>");

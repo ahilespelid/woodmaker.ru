@@ -125,7 +125,7 @@ if ($f == "update_general_settings") {
                                 'from_name' => $wo['config']['siteName'],
                                 'to_email' => $_POST['email'],
                                 'to_name' => $wo['user']['name'],
-                                'subject' => 'Please verify that it’s you',
+                                'subject' => $wo['lang']['please_verify_you'],
                                 'charSet' => 'utf-8',
                                 'message_body' => $message,
                                 'is_html' => true

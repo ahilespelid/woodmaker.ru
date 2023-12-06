@@ -162,8 +162,13 @@ if ($f == 'pages') {
                             $data      = array(
                                 'status' => 200,
                                 'message' => $success_icon . $wo['lang']['setting_updated'],
+                                'cover_or' => $userdata2['cover_org'],
+                                'cover_full' => Wo_GetMedia($userdata2['cover_full']),
                                 'cover' => $userdata2['cover'],
-                                'avatar' => $userdata2['avatar']
+                                'avatar' => $userdata2['avatar'],
+                                'avatar_or' => $userdata2['avatar_org'],
+                                'avatar_full' => Wo_GetMedia($userdata2['avatar_full']) . '?cache=' . rand(11, 22),
+                                'avatar_full_or' => $userdata2['avatar_full'],
                             );
                         }
                     }

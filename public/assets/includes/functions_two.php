@@ -1874,6 +1874,8 @@ function Wo_PageData($page_id = 0) {
     if (empty($fetched_data)) {
         return array();
     }
+    $fetched_data['avatar_org'] = $fetched_data['avatar'];
+    $fetched_data['cover_org']  = $fetched_data['cover'];
     $fetched_data["avatar"]            = Wo_GetMedia($fetched_data["avatar"]);
     $fetched_data["cover"]             = Wo_GetMedia($fetched_data["cover"]);
     $fetched_data["about"]             = $fetched_data["page_description"];
@@ -1885,6 +1887,15 @@ function Wo_PageData($page_id = 0) {
     $fetched_data["category"]          = "";
     $fetched_data["page_sub_category"] = "";
     $fetched_data["is_reported"]       = Wo_IsReportExists($fetched_data["page_id"], "page");
+
+    $explode2                   = @end(explode('.', $fetched_data['cover']));
+    $explode3                   = @explode('.', $fetched_data['cover']);
+    $fetched_data['cover_full'] =  mb_substr($explode3[1], 3) . '_full.' . $explode2;
+
+    $fetched_data['avatar_full'] = $fetched_data['avatar'];
+    $explode2 = @end(explode('.', $fetched_data['avatar']));
+    $explode3 = @explode('.', $fetched_data['avatar']);
+    $fetched_data['avatar_full'] = mb_substr($explode3[1], 3) . '_full.' . $explode2;
     if (!empty($wo["page_categories"][$fetched_data["page_category"]])) {
         $fetched_data["category"] = $wo["page_categories"][$fetched_data["page_category"]];
     }
@@ -2636,6 +2647,8 @@ function Wo_GroupData($group_id = 0) {
         return array();
     }
     $fetched_data["group_id"]           = $fetched_data["id"];
+    $fetched_data['avatar_org'] = $fetched_data['avatar'];
+    $fetched_data['cover_org']  = $fetched_data['cover'];
     $fetched_data["avatar"]             = Wo_GetMedia($fetched_data["avatar"]);
     $fetched_data["cover"]              = Wo_GetMedia($fetched_data["cover"]);
     $fetched_data["url"]                = Wo_SeoLink("index.php?link1=timeline&u=" . $fetched_data["group_name"]);
@@ -2646,6 +2659,16 @@ function Wo_GroupData($group_id = 0) {
     $fetched_data["category"]           = $wo["group_categories"][$fetched_data["category"]];
     $fetched_data["is_reported"]        = Wo_IsReportExists($fetched_data["id"], "group");
     $fetched_data["group_sub_category"] = "";
+
+    $explode2                   = @end(explode('.', $fetched_data['cover']));
+    $explode3                   = @explode('.', $fetched_data['cover']);
+    $fetched_data['cover_full'] =  mb_substr($explode3[1], 3) . '_full.' . $explode2;
+
+    $fetched_data['avatar_full'] = $fetched_data['avatar'];
+    $explode2 = @end(explode('.', $fetched_data['avatar']));
+    $explode3 = @explode('.', $fetched_data['avatar']);
+    $fetched_data['avatar_full'] = mb_substr($explode3[1], 3) . '_full.' . $explode2;
+
     if (!empty($fetched_data["sub_category"]) && !empty($wo["group_sub_categories"][$fetched_data["category_id"]])) {
         foreach ($wo["group_sub_categories"][$fetched_data["category_id"]] as $key => $value) {
             if ($value["id"] == $fetched_data["sub_category"]) {

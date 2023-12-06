@@ -28,8 +28,8 @@
 						<?php $user_pro_type = Wo_GetUserProType($wo['story']['publisher']['pro_type']); ?>
 						<span class="fs-14">&nbsp;<span class="pro-badge" style="background-color:<?php echo $user_pro_type['color_name'];?>" title="<?php echo $user_pro_type['type_name'];?>" data-toggle="tooltip"><a href="<?php echo Wo_SeoLink('index.php?link1=go-pro'); ?>" data-ajax="?link1=go-pro"><i class="fa fa-<?php echo $user_pro_type['icon'];?> fa-fw"></i> PRO</a></span></span>
 					<?php } } ?>
-         			<span class="fs-14">&nbsp;<?php echo $wo['lang']['shared_a_post']; ?></span>
-         			<span class="fs-14">&nbsp;<a href="<?php echo $post_shared_from['url']; ?>" class="name"><?php echo strtolower($wo['lang']['post']); ?></a></span>
+         			<span class="fs-14">&nbsp;<?php if($wo['story']['publisher']['gender'] == 'female') {echo $wo['lang']['shared_a_post_female'];} else { echo $wo['lang']['shared_a_post'];} ?></span>
+         			<span class="fs-14">&nbsp;<a href="<?php echo $post_shared_from['url']; ?>" class="name"><?php echo strtolower($wo['lang']['shared_post']); ?></a></span>
          			<?php if (empty($wo['story']['parent_id'])) { ?>
 						<?php if ($wo['story']['recipient_exists'] == true) {  ?>
 							<span class="fs-14">&nbsp;<?php echo $wo['lang']['to']; ?></span>
@@ -617,8 +617,10 @@
 							!empty($wo['story']['postFacebook']) || 
 							!empty($wo['story']['postDailymotion']) ||
 							!empty($wo['story']['album_name']) || ($wo['config']['google_map'] == 0 && $wo['config']['yandex_map'] == 0)) {
-						?>
-							<span class="middot">·</span><span class="time"><?php echo $wo['story']['postMap'];?></span>
+						?>	
+						<?php if(!$nothing_in_post) {?>
+							<span class="time pointer post_location post_location_<?php echo $wo['story']['id']?>" onclick="openMapModal('<?php echo $wo['story']['postMap'];?>');"><?php echo $wo['story']['postMap'];?></span>
+						<?php }?>
 						<?php } ?>
 					<?php } else { ?>
 						<?php

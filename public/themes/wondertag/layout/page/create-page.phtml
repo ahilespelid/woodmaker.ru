@@ -8,11 +8,12 @@
 			<form class="create-page-form form-horizontal" method="post">
 				<label class="tag_field">
 					<input id="page_title" name="page_title" type="text" placeholder=" ">
-					<span><?php echo $wo['lang']['page_name']; ?></span>
+					<span><?php echo $wo['lang']['page_title']; ?></span>
 				</label>
+				<p><?php echo $wo['lang']['page_name_rules']?></p>
 				<label class="tag_field">
 					<input id="page_name" name="page_name" type="text" placeholder=" ">
-					<span><?php echo $wo['lang']['page'];?> URL</span>
+					<span><?php echo $wo['lang']['page_name'];?>/<?php echo $wo['lang']['page'];?> URL</span>
 				</label>
 				<div class="help-block"><?php echo $wo['config']['site_url'];?>/<?php echo $wo['lang']['page'];?> URL</div>
 				<label class="tag_field">

@@ -41,6 +41,7 @@ $allow_array     = array(
     'fortumo',
     'aamarpay',
     'pay_with_bitcoin',
+    //'load_posts',
 );
 if ($f == 'certification' && $s == 'download_user_certification' && !empty($_GET['id']) && is_numeric($_GET['id']) && $_GET['id'] > 0) {
     $allow_array[] = 'certification';
@@ -95,6 +96,7 @@ $non_login_array = array(
     'pay_with_bitcoin',
     'resend_two_factor',
     'cashfree',
+    'crop-avatar',
 );
 if ($wo['config']['membership_system'] == 1) {
     $non_login_array[] = 'pro_register';
@@ -113,7 +115,7 @@ if ($wo['config']['membership_system'] == 1) {
 ///*/ ahilespelid ///*/
 
     //
-    /*/pa($allow_array);
+    /*/ pa($allow_array);
     pa($_SERVER['HTTP_X_REQUESTED_WITH']);
     pa($non_login_array); 
     pa($wo['loggedin']);
@@ -147,7 +149,10 @@ if ($f != 'admin_setting' && $f != 'admincp') {
     }
 }
 if (file_exists('xhr/' . $f . '.php') && in_array($f . '.php', $files)) {
+    //pa('xhr/' . $f . '.php');
+    try{
     include 'xhr/' . $f . '.php';
+    } catch (\Exception $e) {pa($e);}
 }
 elseif (!empty($_GET['mode_type']) && in_array($_GET['mode_type'], array('linkedin','instagram'))) {
     include 'xhr/modes/' . Wo_Secure($_GET['mode_type']) . '.php';

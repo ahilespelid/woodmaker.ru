@@ -20,9 +20,21 @@
 								<input id="last_name" name="last_name" type="text" placeholder=" ">
 								<span><?php echo $wo['lang']['last_name']; ?></span>
 							</label>
+                            <label class="tag_field">
+                                <input id="email" name="email" type="email" placeholder=" ">
+                                <span><?php echo $wo['lang']['email']; ?></span>
+                            </label>
 							<label class="tag_field">
-								<input id="email" name="email" type="email" placeholder=" ">
-								<span><?php echo $wo['lang']['email']; ?></span>
+								<select id="theme" name="theme" size="1" required>
+                                    <option disabled="disabled" selected="selected"></option>
+                                    <option value="Данные не доступны">Данные не доступны</option>
+                                    <option value="Доступ к профилю">Доступ к профилю</option>
+                                    <option value="Сотрудничество и коммерческие предложения">Сотрудничество и коммерческие предложения</option>
+                                    <option value="Технические вопросы">Технические вопросы</option>
+                                    <option value="Сообщить о не законных материалах или поведении">Сообщить о не законных материалах или поведении</option>
+                                    <option value="Прочее">Прочее</option>
+                                </select>  
+								<span style="font-size: 16px!important;"><?=$wo['lang']['selectTheme'];?></span>
 							</label>
 							<label class="tag_field">
 								<textarea name="message" id="message" rows="5" placeholder=" "></textarea>

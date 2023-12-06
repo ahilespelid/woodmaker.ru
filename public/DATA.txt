@@ -1,0 +1,5 @@
+Array
+
+                        '84',       '0',        '0',        '0',        '',         '0',                '', 'upload/videos/2023/10/2VOwaPCNaTb_16_3d5f832ab7831e08fc89488ea3151cde_video_240p_converted.mp4', 'Ом горы горы храм -Добрыня Сатин.mp4', '', '0', '', '', '', '', '', '0', '', '', '', '', '', '', '1697455147', '0', '0', '1', '0', '', '10/2023', 'post'
+
+INSERT INTO Wo_Posts (`user_id`, `page_id`, `group_id`, `event_id`, `postText`, `recipient_id`, `postRecord`, `postFile`, `postFileName`, `postMap`, `postPrivacy`, `postLinkTitle`, `postLinkContent`, `postLink`, `postLinkImage`, `album_name`, `multi_image`, `postFeeling`, `postListening`, `postPlaying`, `postWatching`, `postTraveling`, `postFileThumb`, `time`, `blur`, `multi_image_post`, `active`, `ai_post`, `send_notify`, `registered`, `postType`) VALUES ('84', '0', '0', '0', '', '0', '', 'upload/videos/2023/10/2VOwaPCNaTb_16_3d5f832ab7831e08fc89488ea3151cde_video_240p_converted.mp4', 'Ом горы горы храм -Добрыня Сатин.mp4', '', '0', '', '', '', '', '', '0', '', '', '', '', '', '', '1697455147', '0', '0', '1', '0', '', '10/2023', 'post')

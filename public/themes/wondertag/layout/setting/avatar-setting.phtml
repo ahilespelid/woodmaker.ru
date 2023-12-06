@@ -14,7 +14,7 @@
 	margin: -70px auto 15px;
 }
 </style>
-<h2 class="tag_page_title"><button type="button" class="btn setting_navigation" onclick="$('.tag_sett_sidebar').fadeIn(50);$('#tag_sett_right_prt').fadeOut(50);"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z" fill="currentColor"></path></svg></button> <?php echo $wo['lang']['avatar_and_cover']; ?> <?php echo $wo['lang']['setting']; ?></h2>
+<h2 class="tag_page_title"><button type="button" class="btn setting_navigation" onclick="$('.tag_sett_sidebar').fadeIn(50);$('#tag_sett_right_prt').fadeOut(50);"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z" fill="currentColor"></path></svg></button> <?php echo $wo['lang']['avatar_and_cover']; ?></h2>
 <div class="wow_sett_content wow_content p20">
 
 <div class="page-margin profile wo_user_profile" data-page="timeline" data-id="<?php echo $wo['user_profile']['user_id'];?>">
@@ -94,10 +94,10 @@
 						<?php if($IsOwner === true) { ?>
 							<form action="#" method="post" class="profile-cover-changer">
 								<div class="when-notedit profile_cover">
-									<span class="btn btn-file btn-mat">
+									<span class="btn btn-file btn-mat cover_modal_trigger">
 										<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path fill="currentColor" d="M23 18V6c0-1.1-.9-2-2-2H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2zM8.9 12.98l2.1 2.53 3.1-3.99c.2-.26.6-.26.8.01l3.51 4.68c.25.33.01.8-.4.8H6.02c-.42 0-.65-.48-.39-.81L8.12 13c.19-.26.57-.27.78-.02z"></path></svg> <?php echo $wo['lang']['cover']?>
-										<input type="file" name="cover" accept="image/x-png, image/jpeg" onchange="Wo_UpdateProfileCover();">
 									</span>
+									<input id="cover_input" class="hidden" onchange="Wo_UpdateProfileCover();" type="file" name="cover" accept="image/x-png, image/jpeg">
 									<span class="btn btn-file btn-mat btn-sm tag_prof_repos_hide" onclick="Wo_StartRepositioner();" title="<?php echo $wo['lang']['drag_to_re']?>">
 										<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path fill="currentColor" d="M13,6V11H18V7.75L22.25,12L18,16.25V13H13V18H16.25L12,22.25L7.75,18H11V13H6V16.25L1.75,12L6,7.75V11H11V6H7.75L12,1.75L16.25,6H13Z"></path></svg>
 									</span>
@@ -117,6 +117,7 @@
 								<input class="image_type" name="image_type" value="0" type="hidden">
 								<input name="cover_image" id="cover-input-image" value="<?php echo $wo['user_profile']['cover_org']?>" type="hidden">
 								<input name="real_image" id="full-input-image" value="<?php echo Wo_GetMedia($wo['user_profile']['cover_full']); ?>" type="hidden">
+								<input type="hidden" name="type" value="user_cover">
 								<input type="hidden" name="user_id" value="<?php echo $wo['user_profile']['user_id'];?>">
 							</form>
 						<?php } ?>
@@ -198,6 +199,35 @@
 			</div>
 		</div>
 	</div>
+
+	
+<div class="modal fade" id="cover_prompt_modal" role="dialog" data-keyboard="false">
+    <div class="modal-dialog modal-md wow_mat_mdl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <p style="font-weight: bold">
+                    <?php echo $wo["lang"]["add_cover"]?>
+                </p>
+            </div>
+            <div class="modal-body">
+                <div class="cover_modal_img">
+                    <img src="<?php echo $wo['config']['theme_url'];?>/img/select-message.png" alt="">
+                </div>
+                <div class="cover_prompt_label">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
+                        <path fill="rgb(42, 88, 133)" d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+                    </svg>
+                    <p class="cover_prompt_blue"><?php echo $wo['lang']['upload_cover']?></p>
+                    <p class='cover_prompt'><?php echo $wo['lang']['cover_prompt']?></p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default btn-mat close_cover_modal"><?php echo $wo['lang']['close'] ?></button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <?php echo Wo_LoadPage('modals/profile-picture');?>
 <?php echo Wo_LoadPage('modals/cover-image');?>
 <?php if (!empty($wo['user_profile']['background_image']) && $wo['user_profile']['background_image_status'] == 1) { ?>
@@ -207,6 +237,20 @@ body {background: url(<?php echo Wo_GetMedia($wo['user_profile']['background_ima
 <?php } ?>
 <script>
 jQuery(document).ready(function() {jQuery('.custom-fixed-side').theiaStickySidebar({additionalMarginTop: -15});});
+
+$(".cover_modal_trigger").on('click', function(e) {
+	e.preventDefault()
+	console.log($('#cover_prompt_modal'))
+	$('#cover_prompt_modal').toggleClass("show")
+}) 
+
+$(".close_cover_modal").on('click', function(e) {
+	$('#cover_prompt_modal').removeClass("show")
+}) 
+
+$('.cover_prompt_label').on('click', function(e) {
+	$('#cover_input').trigger("click")
+}) 
 
 $(function(){
     var url = window.location.pathname, 
@@ -321,6 +365,7 @@ $(function () {
         },
         success: function(data) {
             if (data.status == 200) {
+				console.log(data)
                 $('.user-cover-reposition-w img').attr('src', data.url + '?time=' + Math.random()).on("load", function () {
                     $('.when-edit').hide();
                     $('.when-notedit').show();
@@ -370,6 +415,7 @@ function Wo_UpdateProfileAvatar() {
 }
 
 function Wo_UpdateProfileCover() {
+  $("#cover_prompt_modal").removeClass('show')
   $("form.profile-cover-changer").submit();
 }
 

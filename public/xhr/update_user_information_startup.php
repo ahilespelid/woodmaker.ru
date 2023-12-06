@@ -19,7 +19,9 @@ if ($f == 'update_user_information_startup' && Wo_CheckSession($hash_id) === tru
             $Update_data = array(
                 'first_name' => $_POST['first_name'],
                 'last_name' => $_POST['last_name'],
-                'country_id' => $_POST['country'],
+                'city' => $_POST['city'],
+                'email' => $_POST['email'],
+//                'country_id' => $_POST['country'],
                 'birthday' => $age_data,
                 'start_up_info' => 1
             );

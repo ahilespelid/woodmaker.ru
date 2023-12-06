@@ -1,4 +1,29 @@
 <script>
+
+function closeModal() {
+  $('#show-map').removeClass('show');
+  $('#post-map-wrapper').html("");
+};
+
+function openMapModal(map) {
+  $('#show-map').toggleClass('show');
+  if(map) {
+    setTimeout(() => {
+      var myMap;
+      ymaps.geocode(map).then(function (res) {
+        myMap = new ymaps.Map('post-map-wrapper', {
+          center: res.geoObjects.get(0).geometry.getCoordinates(),
+          zoom : 10
+        });
+        myMap.geoObjects.add(new ymaps.Placemark(res.geoObjects.get(0).geometry.getCoordinates(), {
+          balloonContent: ''
+        }));
+      });
+    }, 1000)
+    $('.modal-header-more p').text(map)
+  };
+};
+
 	function CheckIfCanUse() {
 		<?php if(!$wo['config']['can_use_chat']){ ?>
 			$("body").snackbar({
@@ -36,12 +61,15 @@
            $('.edit-offer-form').find('.disable_btn').removeAttr("disabled");
           }
       });
+
     
   });
 function Wo_RegisterReactionLike(element,reaction_icon,is_html){
 
     var reaction = parseInt($(element).attr('data-reaction-id'));
     var post_id = $(element).attr('data-post-id');
+
+    console.log(post_id, element)
 	
     if ($('#react_'+post_id).attr('data_react') == 1) {
       return false;
@@ -77,8 +105,6 @@ function Wo_RegisterReactionLike(element,reaction_icon,is_html){
 			reaction_color = '#f7806c';
 			break;
 	}
-
-	console.log(reaction_color);
 
 	reaction_html = '<div class="inline_post_emoji no_anim"><div class="reaction"><img src="'+reaction_icon+'"></div></div>';
 
@@ -750,7 +776,9 @@ function Wo_LoadMoreReactedUsers(self) {
 function Wo_SortComments(type,post_id) {
 	if (type == 'top') {
 		$('.order-text-'+post_id).text('<?php echo($wo['lang']['top']) ?>');
-	}
+	} else if('oldest' === type) {
+        $('.order-text-'+post_id).text('<?php echo($wo['lang']['oldest']) ?>');
+    }
 	else{
 		$('.order-text-'+post_id).text('<?php echo($wo['lang']['latest']) ?>');
 	}
@@ -764,7 +792,8 @@ function Wo_SortComments(type,post_id) {
 	}, function (data) {
 		if(data.status == 200) {
 			main_wrapper.find('.comments-list').html(data.html);
-			$('#post-' + post_id).find('.post-comments .msg_progress').hide();
+            main_wrapper.find('.tag_post_load_more_comms').hide();
+            $('#post-' + post_id).find('.post-comments .msg_progress').hide();
 		}
 	});
 }
@@ -1684,9 +1713,44 @@ function Wo_OpenBannedMenu(type = 'notification'){
     $('#requests-list').html("<div class='empty_state'><svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='24' height='24'><path d='M14 14.252v2.09A6 6 0 0 0 6 22l-2-.001a8 8 0 0 1 10-7.748zM12 13c-3.315 0-6-2.685-6-6s2.685-6 6-6 6 2.685 6 6-2.685 6-6 6zm0-2c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm7 6.586l2.121-2.122 1.415 1.415L20.414 19l2.122 2.121-1.415 1.415L19 20.414l-2.121 2.122-1.415-1.415L17.586 19l-2.122-2.121 1.415-1.415L19 17.586z' fill='currentColor'/></svg><?php echo($wo['lang']['your_requests_because_you_were_banned']); ?></div>");
   }
 }
-function AddYandexResult(target,self,result_co) {
-  $(target).val($(self).text());
-  $(result_co).html('');
+function AddYandexResult(target,self,result_co,target_map='#yandex_publisher_map') {
+    //console.log($(target));
+    console.log($(self).attr('geo').split(','));
+    //console.log(target_map);console.log($(target_map));
+    //console.log(target_map.substring(1, target_map.length));
+    
+    $(target_map).html('');
+    $(target_map).css({
+      background : "#eee",
+      width: "100%",
+      height: "436px"
+    });
+    
+    let map = new ymaps.Map(target_map.substring(1, target_map.length),{
+        center: $(self).attr('geo').split(','),//$(self).attr('geo'),
+        zoom: 12,
+    });
+    console.log(map)
+    map.controls.remove('geolocationControl'); // удаляем геолокацию
+    map.controls.remove('searchControl'); // удаляем поиск
+    map.controls.remove('trafficControl'); // удаляем контроль трафика
+    map.controls.remove('typeSelector'); // удаляем тип
+    map.controls.remove('fullscreenControl'); // удаляем кнопку перехода в полноэкранный режим
+    //map.controls.remove('zoomControl'); // удаляем контрол зуммирования
+    map.controls.remove('rulerControl'); // удаляем контрол правил
+    map.behaviors.disable(['scrollZoom']); // отключаем скролл карты (опционально)
+
+    if($(self).hasClass('my_location')) {
+      ymaps.ready(function(){
+        var myReverseGeocoder = ymaps.geocode($(self).attr('geo').split(','));
+        myReverseGeocoder.then(function (res) {
+          $(target).val(res.geoObjects.get(0).properties.get('text'));
+        });
+      });
+    } else {
+      $(target).val($(self).text());
+    }
+    $(result_co).html('');
 }
 
 const loadImageFromUrl = url => fetch(url)

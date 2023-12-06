@@ -2,7 +2,11 @@
 if ($f == 'open_lightbox') {
     $html = '';
     if (!empty($_GET['post_id'])) {
-        $wo['story'] = Wo_PostData($_GET['post_id']);
+        if($s != 'pinched') {
+            $wo['story'] = Wo_PostData($_GET['post_id'], "", "5");
+        } else {
+            $wo['story'] = Wo_PostData($_GET['post_id'], "", "5", "", true);
+        }
         if (!empty($wo['story'])) {
             $html = Wo_LoadPage('lightbox/content');
         }

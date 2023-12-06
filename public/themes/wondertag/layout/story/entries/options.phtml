@@ -22,6 +22,6 @@ if ($wo['loggedin'] == true) {
 			<div class="answer-vote <?php echo ($is_voted) ? '' : 'hidden'?>"><?php echo ($is_voted) ? $value['percentage']:''?></div>
 		</div>
 	<?php endforeach ?>
-	<div class="total-votes"><span id="total-votes"><?php echo $value['all'];?></span> <?php echo $wo['lang']['total_votes'] ?></div>
+	<div class="total-votes"> <?php echo $wo['lang']['total_votes'] ?>: <span id="total-votes"><?php echo $value['all'];?></span> </div>
 </div>
 <?php $wo['story'] = $wo['current_post']; ?>

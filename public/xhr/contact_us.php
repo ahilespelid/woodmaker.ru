@@ -40,12 +40,12 @@ if ($f == 'contact_us') {
             'reply-to' => $email,
             'to_email' => $wo['config']['siteEmail'],
             'to_name' => $wo['config']['siteName'],
-            'subject' => 'Contact us new message',
+            'subject' => $wo['lang']['contact_us_subject'].' '.(($_POST['theme']) ?? ''),
             'charSet' => 'utf-8',
-            'message_body' => $message,
+            'message_body' => $email.' : '.$wo['lang']['request_number'].' '.(time()-strtotime('today')).' '.PHP_EOL.$message,
             'is_html' => false
         );
-        $send              = Wo_SendMessage($send_message_data);
+        $send = Wo_SendMessage($send_message_data);
         if ($send) {
             $data = array(
                 'status' => 200,
