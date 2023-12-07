@@ -1490,14 +1490,15 @@ if (mysqli_query($wo['sqlConnect'], "DESCRIBE `wondertage_settings`" )) {
 
 		<script>
 			//Код для остановки всех остальных видео когда начинается какое-то одно.
-			$(document).on('load', function() {
-				$('.post video').each(function (i, item) {
-					$(item).trigger('pause')
-					$(item).on('play', function() {
-						$(this).trigger('play')
-					})
-				})
-			}) 
+			// $(document).on('load', function() {
+			// 	$('.post video').each(function (i, item) {
+			// 		console.log(item, 'all video')
+			// 		$(item).on('play', function() {
+			// 			console.log(this, '1 video')
+			// 			$(this).trigger('play')
+			// 		})
+			// 	})
+			// }) 
 		</script>
 		
 		<?php
@@ -1745,10 +1746,6 @@ if (mysqli_query($wo['sqlConnect'], "DESCRIBE `wondertage_settings`" )) {
             lastScrollTop = st;
         });
     });
-
-            $("#post-1361").on("inview", function () {
-                console.log("Pirkol")
-            })
 
 			//	$('body').on('inview', 'js-post-view', function(event, isInView) {
 				//	console.log('hi');

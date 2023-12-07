@@ -154,7 +154,7 @@ $postVideosCount = count((array) $postVideos);
 
     <script>
 	var timerForVideo<?php echo $wo['story']['id'];?>;
-	var tagvideo = '.plyrr-<?php echo $wo['story']['id'];?>';
+	var tagvideo = '#post-<?php echo $wo['story']['id'];?> video';
 	var players = Plyr.setup(tagvideo, {
 		muted: true,
 		volume: 0,
