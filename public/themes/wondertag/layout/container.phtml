@@ -1494,7 +1494,7 @@ if (mysqli_query($wo['sqlConnect'], "DESCRIBE `wondertage_settings`" )) {
 				$('.post video').each(function (i, item) {
 					$(item).trigger('pause')
 					$(item).on('play', function() {
-						this.play()
+						$(this).trigger('play')
 					})
 				})
 			}) 
