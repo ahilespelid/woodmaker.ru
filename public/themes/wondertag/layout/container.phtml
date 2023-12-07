@@ -1261,6 +1261,7 @@ if (mysqli_query($wo['sqlConnect'], "DESCRIBE `wondertage_settings`" )) {
 	  
 		<?php if ($wo['config']['user_status'] == 1 && $wo['loggedin'] == true) { ?>
 			<script type="text/javascript">
+
 				$(document).on('mouseover', '.story_lightbox .tag_lbox_img_innr', function(event) {
 					$('.width_').css('width', $('.width_').css('width'));
 					value = $('.story_lightbox').attr('data-post-id');
@@ -1486,6 +1487,18 @@ if (mysqli_query($wo['sqlConnect'], "DESCRIBE `wondertage_settings`" )) {
 				}
 			</script>
 		<?php } ?>
+
+		<script>
+			//Код для остановки всех остальных видео когда начинается какое-то одно.
+			$(document).on('load', function() {
+				$('.post video').each(function (i, item) {
+					$(item).trigger('pause')
+					$(item).on('play', function() {
+						this.play()
+					})
+				})
+			}) 
+		</script>
 		
 		<?php
 		if ($wo['loggedin'] == true) {
