@@ -13,6 +13,10 @@ if ($f == 're_cover') {
         $image_type           = $_POST['image_type'];
         $default_cover_width  = 1120;
         $default_cover_height = 276;
+        if($type === 'blog') {
+            $default_cover_width  = 1260;
+            $default_cover_height = 573;
+        }
         require_once("assets/libraries/thumbncrop.inc.php");
         $tb = new ThumbAndCrop();
         $tb->openImg($default_image);
@@ -44,6 +48,10 @@ if ($f == 're_cover') {
            if(initial('Wo_EventData', 'event')) {
                $full_url_image = initial('Wo_EventData', 'event');
            }
+        } elseif ($_POST['type'] == 'blog_cover') {
+            if(initial('Wo_GetArticle', 'blog')) {
+                $full_url_image = initial('Wo_BlogData', 'blog');
+            }
        } elseif ($_POST['type'] == 'user_cover') {
            if (($_POST['cover_image'] != $wo['userDefaultCover']) && ($_POST['cover_image'] == $wo['user']['cover_org'] || Wo_IsAdmin()) && (Wo_GetMedia($wo['user']['cover_full']) == $_POST['real_image']) || Wo_IsAdmin()) {
                if(initial('Wo_UserData', 'user', true)) {

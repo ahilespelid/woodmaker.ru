@@ -1502,6 +1502,8 @@ function Wo_UploadImage($file, $name, $type, $type_file, $user_id = 0, $placemen
         $image_data['id'] = Wo_Secure($user_id);
     } else if ($placement == 'event') {
         $image_data['event_id'] = Wo_Secure($user_id);
+    } else if ($placement == 'blog') {
+        $image_data['id'] = Wo_Secure($user_id);
     } else {
         $image_data['user_id'] = Wo_Secure($user_id);
     }
@@ -1512,6 +1514,8 @@ function Wo_UploadImage($file, $name, $type, $type_file, $user_id = 0, $placemen
             $query_one_delete_cover = mysqli_query($sqlConnect, " SELECT `cover` FROM " . T_GROUPS . " WHERE `id` = " . $image_data['id'] . " AND `active` = '1'");
         } else if ($placement == 'event') {
             $query_one_delete_cover = mysqli_query($sqlConnect, " SELECT `cover` FROM " . T_EVENTS . " WHERE `id` = " . $image_data['event_id']);
+        } else if ($placement == 'blog') {
+            $query_one_delete_cover = mysqli_query($sqlConnect, " SELECT `thumbnail` FROM " . T_EVENTS . " WHERE `id` = " . $image_data['id']);
         } else {
             $query_one_delete_cover = mysqli_query($sqlConnect, " SELECT `cover` FROM " . T_USERS . " WHERE `user_id` = " . $image_data['user_id'] . " AND `active` = '1' ");
         }
@@ -1533,6 +1537,10 @@ function Wo_UploadImage($file, $name, $type, $type_file, $user_id = 0, $placemen
                 }
             } else if ($placement == 'group') {
                 if(Wo_UploadImageCover('Wo_UpdateGroupData', $image_data, $filename, 'id')) {
+                    return true;
+                }
+            } else if ($placement == 'blog') {
+                if(Wo_UploadImageCover('Wo_UpdateBlog', $image_data, $filename, 'id')) {
                     return true;
                 }
             } else if ($placement == 'event') {

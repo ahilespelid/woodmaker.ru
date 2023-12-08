@@ -1729,6 +1729,7 @@ function Wo_GetArticle($id = 0) {
         $fetched_data = mysqli_fetch_assoc($sql_query_one);
         if (!empty($fetched_data)) {
             $fetched_data['author']     = Wo_UserData($fetched_data['user']);
+            $fetched_data['thumbnail_org']          = $fetched_data['thumbnail'];
             $fetched_data['thumbnail']  = Wo_GetMedia($fetched_data['thumbnail']);
             $fetched_data['tags_array'] = @explode(',', $fetched_data['tags']);
             if ($wo['config']['useSeoFrindly'] == 1) {
@@ -1740,6 +1741,11 @@ function Wo_GetArticle($id = 0) {
             $fetched_data['category_link'] = Wo_SeoLink('index.php?link1=blog-category&id=' . $fetched_data['category']);
             $fetched_data['category_name'] = '';
             $fetched_data['is_post_admin'] = false;
+
+            $explode2                   = @end(explode('.', $fetched_data['thumbnail']));
+            $explode3                   = @explode('.', $fetched_data['thumbnail']);
+            $fetched_data['thumbnail_full'] =  mb_substr($explode3[1], 3) . '_full.' . $explode2;
+
             if ($wo['loggedin'] == true) {
                 $fetched_data['is_post_admin'] = ($fetched_data['user'] == $wo['user']['id']) ? true : false;
             }

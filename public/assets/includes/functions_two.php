@@ -2647,8 +2647,8 @@ function Wo_GroupData($group_id = 0) {
         return array();
     }
     $fetched_data["group_id"]           = $fetched_data["id"];
-    $fetched_data['avatar_org'] = $fetched_data['avatar'];
-    $fetched_data['cover_org']  = $fetched_data['cover'];
+    $fetched_data['avatar_org']         = $fetched_data['avatar'];
+    $fetched_data['cover_org']          = $fetched_data['cover'];
     $fetched_data["avatar"]             = Wo_GetMedia($fetched_data["avatar"]);
     $fetched_data["cover"]              = Wo_GetMedia($fetched_data["cover"]);
     $fetched_data["url"]                = Wo_SeoLink("index.php?link1=timeline&u=" . $fetched_data["group_name"]);
