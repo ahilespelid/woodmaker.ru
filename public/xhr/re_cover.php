@@ -43,7 +43,6 @@ if ($f == 're_cover') {
        } elseif ($_POST['type'] == 'group_cover') {
            if(initial('Wo_GroupData', 'group')) {
                $full_url_image = initial('Wo_GroupData', 'group');
-               echo $$full_url_image;
            }
        } elseif ($_POST['type'] == 'event_cover') {
            if(initial('Wo_EventData', 'event')) {
