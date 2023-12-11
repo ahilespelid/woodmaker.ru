@@ -1777,8 +1777,8 @@ input.cusrange[type=range]::-ms-thumb {background-color: var(--main);width:15px;
 .story_lightbox .wo_story_header .wo_stor_h_info .wo_s_h_i_r .user-name a {color: white;}
 .story_lightbox .wo_story_header .wo_stor_h_info .wo_s_h_i_r span {color: rgba(255, 255, 255, 0.8);font-size: 12px;}
 .story_lightbox .tag_lbox_img_innr {padding: 0;width: 100%;}
-.story_lightbox .story-img .changer.previous-btn {left: -80px;background-color: rgba(255, 255, 255, 0.2);}
-.story_lightbox .story-img .changer.next-btn {right: -80px;background-color: rgba(255, 255, 255, 0.2);}
+.story_lightbox .story-img .changer.previous-btn {left: -80px;}
+.story_lightbox .story-img .changer.next-btn {right: -80px;}
 .story_lightbox .dragable {border-radius: 10px;overflow: hidden;}
 .story_lightbox .story-img .tag_lbox_img_innr img, .story_lightbox .story-img .tag_lbox_img_innr video {max-height: calc(100vh - 93px);vertical-align: middle;}
 .story_lightbox .story-img .tag_lbox_story_view.more-view .tag_lbox_img_innr img, .story_lightbox .story-img .tag_lbox_story_view.more-view .tag_lbox_img_innr video {max-height: calc(100vh - 75px);}
