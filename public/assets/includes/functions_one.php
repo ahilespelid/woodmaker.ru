@@ -5195,7 +5195,10 @@ function Wo_ShareFile($data = array(), $type = 0, $crop = true){
     $filename    = $dir . '/' . Wo_GenerateKey(11, 11) . '_' . date('d') . '_' . md5(time()) . "_{$fileType}.{$file_extension}";
     $second_file = pathinfo($filename, PATHINFO_EXTENSION);
     
-    if(move_uploaded_file($data['file'], $filename)){
+    //exit;
+    
+    if(move_uploaded_file($data['file'], $filename)){ 
+        //system('ls /tmp >> /var/www/woodmaker.ru/ls.txt');
         if ($second_file == 'jpg' || $second_file == 'jpeg' || $second_file == 'png' || $second_file == 'gif') {
             $check_file = getimagesize($filename);
             if (!$check_file) {

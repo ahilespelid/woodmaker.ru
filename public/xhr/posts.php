@@ -268,7 +268,8 @@ if ($f == 'posts') {
         }
         
         $not_video = true;
-        if(isset($_FILES['postVideo']['name']) && empty($mediaFilename) && 0 < $c = count($_FILES['postVideo']['name'])){//pa($_FILES);
+        if(isset($_FILES['postVideo']['name']) && empty($mediaFilename) && 0 < $c = count($_FILES['postVideo']['name'])){//
+        //pa($_FILES);
             $videoTypes           = ['mp4','m4v','webm','flv','mov','mpeg','mkv'];
             $ffmpeg_b             = $wo['config']['ffmpeg_binary_file'];
             for($i=0; $i<$c; $i++){
@@ -305,7 +306,7 @@ if ($f == 'posts') {
                         $wo['config']['spaces']            = 0;
                         $wo['config']['cloud_upload']      = 0;
                     }
-                    
+                    //pa($fileInfo);
                     $video[$i] = $media = Wo_ShareFile($fileInfo);
                     if('on' == $wo['config']['ffmpeg_system']){
                         $wo['config']['amazone_s3']        = $amazone_s3;
@@ -345,6 +346,7 @@ if ($f == 'posts') {
                             if(@getimagesize($thumbFile)){$videos_thumb[$i] = ['filename' => $thumbFile, 'name' => $thumbJpeg];}
                         }   
         }   }   }   }
+        //pa($media);
         if (isset($_FILES['postMusic']['name']) && empty($mediaFilename)) {
             if ($_FILES['postMusic']['size'] > $wo['config']['maxUpload']) {
                 $errors = str_replace('{file_size}', Wo_SizeUnits($wo['config']['maxUpload']), $wo['lang']['file_too_big']);
