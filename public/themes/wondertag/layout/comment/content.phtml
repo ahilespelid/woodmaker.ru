@@ -207,7 +207,7 @@ if ($wo['config']['shout_box_system'] == 1 && $wo['story']['postPrivacy'] == 4 &
 					<div class="wo_commreply_combo valign" id="post-<?php echo $wo["comment"]["id"];?>">
 						<img class="avatar" src="<?php echo $wo['user']['avatar'];?>"/>
 						<div class="valign">
-							<textarea rows="1" class="auto-resize reply-box form-control textarea comment-reply-textarea" onkeydown="Wo_RegisterReply(this.value,<?php echo $wo['comment']['id']; ?>,<?php echo $wo['story']['publisher']['user_id']; ?>, event, <?php echo (!empty($wo['story']['publisher']['page_id'])) ? $wo['story']['publisher']['page_id'] : '0'; ?>, null, reply_user)" placeholder="<?php echo TextForMode('reply_to_comment');?>" dir="auto"></textarea>
+							<textarea id="reply-box-<?php echo $wo['comment']['id']; ?>" rows="1" class="auto-resize reply-box form-control textarea comment-reply-textarea" onkeydown="Wo_RegisterReply(this.value,<?php echo $wo['comment']['id']; ?>,<?php echo $wo['story']['publisher']['user_id']; ?>, event, <?php echo (!empty($wo['story']['publisher']['page_id'])) ? $wo['story']['publisher']['page_id'] : '0'; ?>, null, reply_user)" placeholder="<?php echo TextForMode('reply_to_comment');?>" dir="auto"></textarea>
 							<div class="valign image-comment">
 								<?php if ($wo['config']['stickers'] == 1){ ?>
 									<div class="dropdown">
@@ -264,7 +264,7 @@ if ($wo['config']['shout_box_system'] == 1 && $wo['story']['postPrivacy'] == 4 &
 	<script>
         let declinationRes_<?php echo $wo['comment']['id']; ?> = declination(<?php echo $replies ?>, ['<?php echo $wo['lang']['answer_1'] ?>', '<?php echo $wo['lang']['answer_2'] ?>', '<?php echo $wo['lang']['answer_3'] ?>']);
         //
-        console.log(declinationRes_<?php echo $wo['comment']['id']; ?>);
+        console.log(declinationRes_<?php echo $wo['comment']['id']; ?>, "ONO RABOTAET?");
 
         //$('.answer_variation_<?php //echo $wo['comment']['id'] ?>//').html(declinationRes);
 

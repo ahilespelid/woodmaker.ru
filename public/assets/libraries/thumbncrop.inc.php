@@ -1,7 +1,7 @@
 <?php
   class ThumbAndCrop
   {
-  
+    private $extension;
     private $handleimg;
     private $original = "";
     private $handlethumb;
@@ -10,8 +10,24 @@
     /*
       Apre l'immagine da manipolare
     */
+///*/ ahilespelid ///*/
+    public function openImg($file){
+        $this->extension = $e = pathinfo($file, PATHINFO_EXTENSION);
+        $this->original = $file; 
+        
+        $f = 'imagecreatefrom'.(('jpg' == $e || 'jpeg' == $e) ? 'jpeg' : $this->extension);
+        $this->handleimg = @$f($file);
+    }
+///*/ ahilespelid ///*/
+    /*
     public function openImg($file)
     {
+     * 
+        $this->handleimg = ($this->extension($file) == 'jpg' || $this->extension($file) == 'jpeg') ? @imagecreatefromjpeg($file) :
+                          (($this->extension($file) == 'png') ? @imagecreatefrompng($file) :
+                          (($this->extension($file) == 'gif') ? @imagecreatefromgif($file) :
+                          (($this->extension($file) == 'bmp') ? @imagecreatefromwbmp($file): null)));
+
       $this->original = $file;
       
       if($this->extension($file) == 'jpg' || $this->extension($file) == 'jpeg')
@@ -37,7 +53,7 @@
     */
     public function getWidth()
     {
-      return @imageSX($this->handleimg);
+      return @imagesx($this->handleimg);
     }
     
     /*
@@ -58,7 +74,7 @@
     */
     public function getHeight()
     {
-      return @imageSY($this->handleimg);
+      return @imagesy($this->handleimg);
     }
     
     /*

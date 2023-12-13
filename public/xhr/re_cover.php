@@ -1,5 +1,6 @@
 <?php
-if ($f == 're_cover') {
+ini_set('display_errors', '1'); ini_set('display_startup_errors', '1'); error_reporting(-1); 
+if ($f == 're_cover') { 
     function initial($function, $type,$user = false) {
         if(Wo_IsAdmin() && !empty($_POST['user_id']) && is_numeric($_POST['user_id'])){
             $wo[$type] = $function(Wo_Secure($_POST['user_id']));
@@ -9,7 +10,15 @@ if ($f == 're_cover') {
         $full_url_image       = $wo[$type]['cover'];
         $default_image        = explode('.', $wo[$type]['cover_org']);
         $default_image        = $default_image[0] . '_full.' . $default_image[1];
-        $get_default_image    = file_put_contents($default_image, fetchDataFromURL(Wo_GetMedia($default_image)));
+        // if(is_readable($default_image)) {
+        //     pa(ini_get('allow_url_fopen'));
+        //     pa(ini_get('allow_url_open'));
+        //     pa(file_get_contents(Wo_GetMedia($default_image)));
+        //     pa(Wo_GetMedia($default_image));
+        //     pa(pathinfo($default_image));
+        //     pa(filesize($default_image));
+        // } exit;
+        $get_default_image    = file_put_contents($default_image, fetchDataFromURL(Wo_GetMedia($default_image))); 
         $image_type           = $_POST['image_type'];
         $default_cover_width  = 1120;
         $default_cover_height = 276;
@@ -20,7 +29,7 @@ if ($f == 're_cover') {
         require_once("assets/libraries/thumbncrop.inc.php");
         $tb = new ThumbAndCrop();
         $tb->openImg($default_image);
-        $newHeight = $tb->getRightHeight($default_cover_width);
+        $newHeight = $tb->getRightHeight($default_cover_width); 
         $tb->creaThumb($default_cover_width, $newHeight);
         $tb->setThumbAsOriginal();
         $tb->cropThumb($default_cover_width, 366, 0, $from_top);
@@ -52,7 +61,7 @@ if ($f == 're_cover') {
             if(initial('Wo_GetArticle', 'blog')) {
                 $full_url_image = initial('Wo_BlogData', 'blog');
             }
-       } elseif ($_POST['type'] == 'user_cover') {
+       } elseif ($_POST['type'] == 'user_cover') { 
            if (($_POST['cover_image'] != $wo['userDefaultCover']) && ($_POST['cover_image'] == $wo['user']['cover_org'] || Wo_IsAdmin()) && (Wo_GetMedia($wo['user']['cover_full']) == $_POST['real_image']) || Wo_IsAdmin()) {
                if(initial('Wo_UserData', 'user', true)) {
                    $full_url_image = initial('Wo_UserData', 'user', true);

@@ -99,12 +99,16 @@
 							display: inline-flex;
 						}
 					</style>
-					
+					<?php 
+						$turn_on = false;
+						if($turn_on) {
+					?>
 					<span class="pointer reply-to-reply" data-id="<?php echo $wo['reply']['id']; ?>" data-curuser="<?php echo $wo['reply']['publisher']['username']; ?>" data-curfullname="<?php echo $wo['reply']['publisher']['name']?>" onclick="Wo_OpenReplyBox(<?php echo $wo['reply']['id']; ?>, this);" >
 						<?php
 							echo '<span class="replay-reply " style="margin: 10px;" data-id="'.$wo['reply']['publisher']['name'].'">' ?> <?php echo $wo['lang']['reply'] ;?> <?php echo ' </span>';
 						?>
 					</span>
+					<?php } ?>
 				</div>
 			<?php } else { ?>
 				<span class="comment-icons">

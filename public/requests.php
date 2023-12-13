@@ -41,6 +41,7 @@ $allow_array     = array(
     'fortumo',
     'aamarpay',
     'pay_with_bitcoin',
+    //'re_cover',
     //'load_posts',
 );
 if ($f == 'certification' && $s == 'download_user_certification' && !empty($_GET['id']) && is_numeric($_GET['id']) && $_GET['id'] > 0) {
