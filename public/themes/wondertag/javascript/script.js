@@ -2173,10 +2173,10 @@ function Wo_OpenReplyBox(id, el) {
   Wo_ViewMoreReplies(id);
   $(el.parentElement.nextElementSibling).find('.view-more-replies').hide();
   $(el.parentElement.nextElementSibling).hide();
-   $('.comments-list #comment_' + id).find('.comment-replies').slideDown(50, function () {
-     $('.comments-list #comment_' + id).find('.comment-reply').slideDown(50);
-   });
-    var _this = $(el);
+  $('.comments-list #comment_' + id).find('.comment-replies').slideDown(50, function () {
+    $('.comments-list #comment_' + id).find('.comment-reply').slideDown(50);
+  });
+  var _this = $(el);
 	console.log(_this);
 	//var data = {};
 	//data['handle'] = _this.data('handle');
@@ -2211,6 +2211,9 @@ function Wo_RegisterReply(text, comment_id, user_id, event, page_id, type, menti
     }
 	if (mention_user != '') {
 		text = text.substring(text.indexOf(',') + 1);
+    if(!text.trim().length > 0) {
+      return false;
+    }
 		text = mention_user + ' ' + text;
 	}
 	
@@ -2249,6 +2252,9 @@ function Wo_RegisterReply2(comment_id, user_id, page_id, type,gif_url = '') {
     comment_wrapper = $('[id=comment_' + comment_id + ']');
 	if (reply_user != '') {
 		text = $('#comment_'+comment_id).find('.comment-reply-textarea').val();
+    if(!text.substring(text.indexOf(',') + 1).trim().length > 0) {
+      return false;
+    }
 		text = $('#comment_'+comment_id).find('.comment-reply-textarea').data( "reply_user") + ' ' + text.substring(text.indexOf(',') + 1);
 	} else {
 		text = $('#comment_'+comment_id).find('.comment-reply-textarea').val();
@@ -2277,7 +2283,7 @@ function Wo_RegisterReply2(comment_id, user_id, page_id, type,gif_url = '') {
 		if (node_socket_flow == "1") {
           socket.emit("comment_notification", { comment_id: comment_id, user_id: _getCookie("user_id"), type: "added", for: "replies" });
         }
-        if (data.mention.length > 0 && node_socket_flow == "1") {
+        if (data.mention?.length > 0 && node_socket_flow == "1") {
           $.each(data.mention, function( index, value ) {
             socket.emit("user_notification", { to_id: value, user_id: _getCookie("user_id")});
           });
