@@ -8667,7 +8667,7 @@ function Wo_GetPostComments($post_id = 0, $limit = 5, $offset = 0, $reversed = 0
     // }
     $offset_query = "";
     if (!empty($offset)) {
-        $offset_query = " AND `id` > " . $offset;
+        $offset_query = " AND `id` < " . $offset;
     }
     $logged_user_id = 0;
     if ($wo['loggedin']) {
@@ -8679,7 +8679,7 @@ function Wo_GetPostComments($post_id = 0, $limit = 5, $offset = 0, $reversed = 0
     if($reversed) {
         $order = "DESC";
     }
-    $query   = "SELECT `id` FROM " . T_COMMENTS . " WHERE `post_id` = {$post_id} AND `user_id` NOT IN (SELECT `blocked` FROM " . T_BLOCKS . " WHERE `blocker` = '{$logged_user_id}') AND `user_id` NOT IN (SELECT `blocker` FROM " . T_BLOCKS . " WHERE `blocked` = '{$logged_user_id}') {$offset_query} ORDER BY `id` {$order}";
+    $query   = "SELECT `id` FROM " . T_COMMENTS . " WHERE `post_id` = {$post_id} AND `user_id` NOT IN (SELECT `blocked` FROM " . T_BLOCKS . " WHERE `blocker` = '{$logged_user_id}') AND `user_id` NOT IN (SELECT `blocker` FROM " . T_BLOCKS . " WHERE `blocked` = '{$logged_user_id}') {$offset_query} ORDER BY `id` DESC";
     if (($comments_num = Wo_CountPostComment($post_id)) > $limit) {
         //$query .= " LIMIT " . ($comments_num - $limit) . ", {$limit} ";
         $query .= " LIMIT {$limit} ";

@@ -867,7 +867,7 @@ if (mysqli_query($wo['sqlConnect'], "DESCRIBE `wondertage_settings`" )) {
 
     </head>
    
-	<body <?php if (!empty($wondertage_settings) && $wondertage_settings['tag_header_layout'] == 1) { ?> class="inViewAddView tag_header_top_p"<?php } ?><?php if ($wo['config']['chatSystem'] == 0) { ?> chat-off="true" <?php } ?>>
+	<body <?php if (!empty($wondertage_settings) && $wondertage_settings['tag_header_layout'] == 1) { ?> class="inViewAddView tag_header_top_p <?php if('night' == $_COOKIE['mode']) {echo 'dark_theme';}?>"<?php } ?><?php if ($wo['config']['chatSystem'] == 0) { ?> chat-off="true" <?php } ?>>
 	<?php if($wo['page'] != 'welcome') {?>
         <div class="anchor" onclick="$('html, body').animate({scrollTop});">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="32" height="32"><path fill="currentColor" d="M12 13.172l4.95-4.95 1.414 1.414L12 16 5.636 9.636 7.05 8.222z"></path></svg>
@@ -1704,12 +1704,18 @@ if (mysqli_query($wo['sqlConnect'], "DESCRIBE `wondertage_settings`" )) {
 				</div>
 			</div>
 <script>
+	const themeMode = "<?php echo $_COOKIE['mode']?>"
 	const plyrSettings = JSON.parse(localStorage.getItem('plyr'));
 	if(plyrSettings) {
 		plyrSettings.muted = true;
 		localStorage.setItem('plyr', JSON.stringify(plyrSettings));
 	}
-    //localStorage.setItem("deleteStoryText", "<?php //echo $wo['lang']['confirm_status_delete'] ?>//")
+    if("night" === themeMode) {
+		$('.tag_logo_pc, .tag_logo_mobi').attr('src', '<?php echo $wo['config']['theme_url'];?>/img/logo.<?php echo $wo['config']['logo_extension'];?>')
+	} else {
+		$('.tag_logo_pc, .tag_logo_mobi').attr('src', '<?php echo $wo['config']['theme_url'];?>/img/logo_2.<?php echo $wo['config']['logo_extension'];?>')
+	}
+
     localStorage.setItem('player', JSON.stringify({speed: '<?php echo $wo['lang']['speed'] ?>', normal: '<?php echo $wo['lang']['normal'] ?>', quality: '<?php echo $wo['lang']['quality'] ?>'}))
 
     const posts = localStorage.getItem('watchedPosts')

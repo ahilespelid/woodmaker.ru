@@ -607,14 +607,18 @@ $(document).on('click', '#night_mode_toggle', function(event) {
   mode = $(this).attr('data-mode');
   if (mode == 'night') {
       $('head').append('<link rel="stylesheet" href="<?php echo $wo['config']['theme_url'];?>/stylesheet/dark.css<?php echo $wo['update_cache']; ?>" id="night-mode-css">');
-	  $('head').append('<meta name="theme-color" content="#212121" id="night-mode-meta">');
+	    $('head').append('<meta name="theme-color" content="#212121" id="night-mode-meta">');
       $('#night_mode_toggle').attr('data-mode', 'day');
       $('#night-mode-text').addClass('active');
-  } else {
+      $('.tag_logo_pc, .tag_logo_mobi').attr('src', '<?php echo $wo['config']['theme_url'];?>/img/logo.<?php echo $wo['config']['logo_extension'];?>')
+      $('body').addClass('dark_theme');
+    } else {
       $('#night-mode-css').remove();
-	  $('#night-mode-meta').remove();
+	    $('#night-mode-meta').remove();
       $('#night_mode_toggle').attr('data-mode', 'night');
       $('#night-mode-text').removeClass('active');
+      $('.tag_logo_pc, .tag_logo_mobi').attr('src', '<?php echo $wo['config']['theme_url'];?>/img/logo_2.<?php echo $wo['config']['logo_extension'];?>')
+      $('body').removeClass('dark_theme');
   }
   $.post(Wo_Ajax_Requests_File() + '?mode=' + mode);
 });
