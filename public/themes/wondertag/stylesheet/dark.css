@@ -178,7 +178,7 @@ pre {color: #d5d5d5;background-color: #292929;border-color: #4e4e4e;}
 
 /*Header*/
 .tag_hdr_user_dropdown > li > a svg, .tag_hdr_user_submenu a {background-color: rgb(255 255 255 / 8%);}
-.show > .tag_hdr_droptoggle {background: rgb(255 255 255 / 20%);color: var(--header-hover-color);}
+.show > .tag_hdr_droptoggle {background: rgb(255 255 255 / 20%);}
 .tag_mobi_langs_menu > li > a {color: #e7e7e7;border-color: rgb(255 255 255 / 0.07);}
 .tag_navbar_top_right .tag_hdr_right > .dropdown .dropdown-menu, .tag_navbar_top .tag_header > .search-container .dropdown-menu {background: var(--header-background);}
 .tag_navbar_top .tag_srch_recent, .tag_navbar_top_right .tag_hdr_right > .dropdown .dropdown-menu .empty_state, .tag_navbar_top_right .notification-list .notification-text > span, .tag_navbar_top_right .tag_hdr_user_dropdown > li > a, .tag_navbar_top_right .tag_hdr_user_dropdown > li > a:hover, .tag_navbar_top_right .tag_hdr_user_dropdown > li > a:active, .tag_navbar_top_right .tag_hdr_user_dropdown > li > a:focus, .tag_navbar_top_right .turn-off-sound, .tag_navbar_top_right .notification-list .notification-text > span a, .tag_navbar_top_right .notification-list .ajax-time, .tag_navbar_top_right .user-request-list .user-info .user-lastseen, .tag_navbar_top_right .user-request-list .user-info > a, .tag_navbar_top_right .tag_footer, .tag_navbar_top_right .tag_footer .tag_footer_links a, .tag_navbar_top_right .tag_hdr_user_submenu a, .tag_navbar_top_right .tag_footer .tag_footer_cright .dropup .dropdown-toggle, .tag_navbar_top_right .notification-list, .tag_navbar_top_right .user-request-list, .tag_navbar_top_right .messages-list, .tag_navbar_top_right .show-message-link, .tag_navbar_top .search-advanced-container a, .tag_navbar_top .search-dropdown-result a, .tag_navbar_top .hashtag-search-result a, .tag_navbar_top_right .notification-list .notification-text > span, .tag_navbar_top_right .tag_hdr_right > .dropdown .dropdown-menu .tag_switch_noti, .tag_navbar_top .tag_header > .search-container.show .search-input, .tag_navbar_top .tag_header > .search-container.show .search-input::placeholder, .tag_navbar_top_right .tag_hdr_right > .dropdown .dropdown-menu .tag_switch_noti > li > a {color: var(--header-color);}
@@ -363,6 +363,12 @@ body .sidebar .wo_sidebar_pages .card {background-color: var(--header-background
 .who_react_to_this_user {border-bottom-color: #373737;}
 .cc-window {background-color: #313131;}
 
+.tag_navbar_top {background: var(--header-background)}
+.navbar svg path {fill: #fff}
+.tag_hdr_droptoggle {color: #fff;}
+.tag_header .search-input {background: #0f1110; color: #fff;}
+.tag_header .search-input::placeholder {color: #fff;}
+
 /*Theme options*/
 .modal-dialog .tag_theme_opts_close {color: #f4f4f4;background: rgb(255 255 255 / 0.1);}
 .bmc-btn {color: #000000 !important;}
@@ -524,6 +530,7 @@ body.tag_header_top_p .wow_movie_filters .tag_sidebar_head,  body.tag_header_top
 .notification-list, .user-request-list, .messages-list, .show-message-link, .search-advanced-container a, .search-dropdown-result a, .hashtag-search-result a, .notification-list .notification-text > span, .turn-off-sound, .notification-list .ajax-time, .user-request-list .user-info > a, .user-request-list .user-info .user-lastseen, .notification-list .notification-text > span a, .tag_sidebar_section > a, .tag_sidebar_head, .tag_footer, .tag_footer .tag_footer_links a {color: var(--header-color);}
 .tag_sidebar_section > a:hover {color: var(--header-hover-color);}
 .tag_sidebar {border-color: #2f2f2f;}
+nav.navbar.navbar-default {background:var(--header-background) ;}
 }
 
 @media (max-width: 1150px) {

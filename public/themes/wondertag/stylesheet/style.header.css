@@ -17,10 +17,11 @@ body.tag_header_top_p .tag_live_sidebar {top: 56px;box-shadow: 0 0 10px rgba(0, 
 
 /*Header*/
 .tag_header_top_m {margin-left: 250px;}
-.tag_navbar_top {position: fixed;z-index: 1045;top: 0;left: 0;right: 0;width: 100%;background: var(--header-background);height: 56px;}
+.tag_navbar_top {position: fixed;z-index: 1045;top: 0;left: 0;right: 0;width: 100%;background: #fff;height: 56px;}
+.dark_theme .tag_navbar_top {background: var(--header-background)}
 .tag_navbar_top .tag_toggle_sidebar, .tag_navbar_top_right .tag_footer_mobi {display: block;}
 .tag_navbar_top .header-brand, .tag_navbar_top .tag_header > .search-container {position: relative;top: auto;left: auto;right: auto;}
-.tag_navbar_top .header-brand img {max-width: 130px;max-height: 40px;transform: translateZ(0px);}
+.tag_navbar_top .header-brand img {max-width: 173px;max-height: 40px; height: 40px; transform: translateZ(0px);}
 .tag_prem {background-color: #ff7043;background: linear-gradient(-90deg, #efb34e 0%, #ff7043 45%, #ff7043 55%, #efb34e 100%);background-size: 300% 300%;animation: tag_prem_animation 1.7s ease;color: white;height: 30px;line-height: 30px;margin: 0 16px;padding: 0 16px;font-weight: 500;position: relative;border-radius: 8px;transform: skewX(-25deg);transition: all .15s ease-in-out;display: inline-block;letter-spacing: 0.3px;}
 .tag_prem span {transform: skewX(25deg);display: block;}
 .tag_prem:hover, .tag_prem:focus {animation: tag_prem_animation 1.7s ease infinite;color: white;}
@@ -37,6 +38,9 @@ body.tag_header_top_p .tag_live_sidebar {top: 56px;box-shadow: 0 0 10px rgba(0, 
 .tag_navbar_top_right .tag_hdr_right > .dropdown .dropdown-menu .tag_switch_noti > li > a {color: #000;}
 .tag_navbar_top_right .tag_hdr_right > .dropdown .dropdown-menu .tag_switch_noti {background: #ecf0f5;color: #212529;}
 .tag_navbar_top .tag_header_shadow {visibility: visible;opacity: 1;}
+.navbar svg path {fill: #000}
+#navbar-searchbox svg path {fill: none}
+#navbar-searchbox svg path:nth-child(2) {fill: currentColor}
 @keyframes tag_prem_animation {
 0% {background-position: 0% 50%;}50% {background-position: 100% 50%;}100% {background-position: 0% 50%;}
 }
