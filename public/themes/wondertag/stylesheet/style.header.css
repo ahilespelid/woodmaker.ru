@@ -53,12 +53,18 @@ body.tag_header_top_p .tag_live_sidebar {top: 56px;box-shadow: 0 0 10px rgba(0, 
 .tag_navbar_top_side .sidebar_innr > .btn:hover {background: rgb(0 0 0 / 0.04);}
 .tag_navbar_top_side .sidebar_innr > .btn svg {margin: 0;min-width: 40px;height: 40px;background: #fff;border-radius: 50%;padding: 9px;}
 .tag_navbar_top_side .sidebar_innr > .btn span {padding: 0 10px;}
-.tag_navbar_top_side .sidebar_innr > .btn.home svg {background: #ff9800;background: linear-gradient(145deg, #ffb74d 0%, #ff9800 100%);}
-.tag_navbar_top_side .sidebar_innr > .btn.albums svg {background: #4CAF50;background: linear-gradient(145deg, #A5D6A7 0%, #4CAF50 100%);}
-.tag_navbar_top_side .sidebar_innr > .btn.saved svg {background: #fd3a84;background: linear-gradient(145deg, #ffa68d 0%, #fd3a84 100%);}
-.tag_navbar_top_side .sidebar_innr > .btn.ads svg {background: #d226ff;background: linear-gradient(145deg, #eca1ff 0%, #d226ff 100%);}
-.tag_navbar_top_side .sidebar_innr > .btn.events svg {background: #E91E63;background: linear-gradient(145deg, #F48FB1 0%, #E91E63 100%);}
-.tag_navbar_top_side .sidebar_innr > .btn.market svg {background: #00BCD4;background: linear-gradient(145deg, #80DEEA 0%, #00BCD4 100%);}
+.tag_navbar_top_side .sidebar_innr > .btn.home svg {background: unset;}
+.tag_navbar_top_side .sidebar_innr > .btn.home svg path {fill: #2d695d;}
+.tag_navbar_top_side .sidebar_innr > .btn.albums svg {background: unset;}
+.tag_navbar_top_side .sidebar_innr > .btn.albums svg path {fill: #2d695d;}
+.tag_navbar_top_side .sidebar_innr > .btn.saved svg {background: #fff;}
+.tag_navbar_top_side .sidebar_innr > .btn.saved svg path {fill: #2d695d;}
+.tag_navbar_top_side .sidebar_innr > .btn.ads svg {background: #fff;}
+.tag_navbar_top_side .sidebar_innr > .btn.ads svg path {fill: #2d695d;}
+.tag_navbar_top_side .sidebar_innr > .btn.events svg {background: #2d695d;}
+.tag_navbar_top_side .sidebar_innr > .btn.events svg path {fill: #fff;}
+.tag_navbar_top_side .sidebar_innr > .btn.market svg {background: #2d695d;}
+.tag_navbar_top_side .sidebar_innr > .btn.market svg path {background: #fff;}
 .tag_navbar_top_side .sidebar_innr > .btn.blogs svg {background: #2196F3;background: linear-gradient(145deg, #90CAF9 0%, #2196F3 100%);}
 .tag_navbar_top_side .sidebar_innr > .btn.pages svg {background: #FF9800;background: linear-gradient(145deg, #FFCC80 0%, #FF9800 100%);}
 .tag_navbar_top_side .sidebar_innr > .btn.groups svg {background: #3F51B5;background: linear-gradient(145deg, #9FA8DA 0%, #3F51B5 100%);}
