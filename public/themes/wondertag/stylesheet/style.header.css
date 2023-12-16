@@ -53,21 +53,24 @@ body.tag_header_top_p .tag_live_sidebar {top: 56px;box-shadow: 0 0 10px rgba(0, 
 .tag_navbar_top_side .sidebar_innr > .btn:hover {background: rgb(0 0 0 / 0.04);}
 .tag_navbar_top_side .sidebar_innr > .btn svg {margin: 0;min-width: 40px;height: 40px;background: #fff;border-radius: 50%;padding: 9px;}
 .tag_navbar_top_side .sidebar_innr > .btn span {padding: 0 10px;}
-.tag_navbar_top_side .sidebar_innr > .btn.home svg {background: unset;}
+.tag_navbar_top_side .sidebar_innr > .btn.home svg {background: #fff;}
 .tag_navbar_top_side .sidebar_innr > .btn.home svg path {fill: #2d695d;}
-.tag_navbar_top_side .sidebar_innr > .btn.albums svg {background: unset;}
+.tag_navbar_top_side .sidebar_innr > .btn.albums svg {background: #fff;}
 .tag_navbar_top_side .sidebar_innr > .btn.albums svg path {fill: #2d695d;}
 .tag_navbar_top_side .sidebar_innr > .btn.saved svg {background: #fff;}
 .tag_navbar_top_side .sidebar_innr > .btn.saved svg path {fill: #2d695d;}
 .tag_navbar_top_side .sidebar_innr > .btn.ads svg {background: #fff;}
 .tag_navbar_top_side .sidebar_innr > .btn.ads svg path {fill: #2d695d;}
-.tag_navbar_top_side .sidebar_innr > .btn.events svg {background: #2d695d;}
-.tag_navbar_top_side .sidebar_innr > .btn.events svg path {fill: #fff;}
-.tag_navbar_top_side .sidebar_innr > .btn.market svg {background: #2d695d;}
-.tag_navbar_top_side .sidebar_innr > .btn.market svg path {background: #fff;}
-.tag_navbar_top_side .sidebar_innr > .btn.blogs svg {background: #2196F3;background: linear-gradient(145deg, #90CAF9 0%, #2196F3 100%);}
-.tag_navbar_top_side .sidebar_innr > .btn.pages svg {background: #FF9800;background: linear-gradient(145deg, #FFCC80 0%, #FF9800 100%);}
-.tag_navbar_top_side .sidebar_innr > .btn.groups svg {background: #3F51B5;background: linear-gradient(145deg, #9FA8DA 0%, #3F51B5 100%);}
+.tag_navbar_top_side .sidebar_innr > .btn.events svg {background: #fff;}
+.tag_navbar_top_side .sidebar_innr > .btn.events svg path {fill: #2d695d;}
+.tag_navbar_top_side .sidebar_innr > .btn.market svg {background: #fff;}
+.tag_navbar_top_side .sidebar_innr > .btn.market svg path {fill: #2d695d;}
+.tag_navbar_top_side .sidebar_innr > .btn.blogs svg {background: #fff;}
+.tag_navbar_top_side .sidebar_innr > .btn.blogs svg path {fill: #2d695d;}
+.tag_navbar_top_side .sidebar_innr > .btn.pages svg {background: #fff;}
+.tag_navbar_top_side .sidebar_innr > .btn.pages svg path {fill: #2d695d;}
+.tag_navbar_top_side .sidebar_innr > .btn.groups svg {background: #fff;}
+.tag_navbar_top_side .sidebar_innr > .btn.groups svg path {fill: #2d695d;}
 
 /*Header More*/
 body.side_open {overflow: hidden;}
