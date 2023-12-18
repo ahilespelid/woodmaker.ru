@@ -17,17 +17,17 @@ if ($wo['config']['shout_box_system'] == 1 && $wo['story']['postPrivacy'] == 4 &
 					$('body').on('click', '.reply-to-reply', function () {
 							
 						var _this = $(this);
-						//var data = {};
-						//data['handle'] = _this.data('handle');
+						/*var data = {};
+						data['handle'] = _this.data('handle');*/
 						
 						reply_user = _this.data('curuser');
 						reply_user = "@" + reply_user;
 						reply_fullname = _this.data('curfullname');
 						reply_fullname = reply_fullname.substring(0, reply_fullname.indexOf(' '));
-						////add the data to textarea
+						/*add the data to textarea*/
 						$('.comment-reply-textarea').data( "reply_user", reply_user );
 						cur_input = _this.parents().find('.comment-reply-textarea:first');
-						//console.log(cur_input);
+						/*console.log(cur_input);*/
 						cur_input.val("" + reply_fullname + ", ");
 						cur_input.focus();
 						
@@ -116,7 +116,7 @@ if ($wo['config']['shout_box_system'] == 1 && $wo['story']['postPrivacy'] == 4 &
 		<span class="comment-options" <?php if ($wo['loggedin'] != true) { ?>onclick="location.href= '<?php echo $wo['config']['site_url'];?>'"<?php } ?>>
 			<?php if ($wo['config']['second_post_button'] == 'reaction') { ?>
 				<div onclick="" class="wo-reaction-comment stat-item" id="comment_reactions" data-id="<?php echo $wo['comment']['id']; ?>">
-					<span class="like-btn like-btn-comment" data-id="<?php echo $wo['comment']['id']; ?>">
+					<span onclick="Wo_RegisterCommentReaction(<?php echo $wo['comment']['id'];?>,<?php echo $wo['reactions_types'][1]['id'] ?>);" class="like-btn like-btn-comment" data-id="<?php echo $wo['comment']['id']; ?>">
 						<?php
 						if ($wo['loggedin'] && Wo_IsReacted($wo['comment']['id'], $wo['user']['user_id'], "comment") === true) {    
 							echo '<span class="comment-status-reaction-'.$wo['comment']['id'].' active-like unselectable bold">'.$wo['lang']['liked'].' <span class="c_likes-'.$wo['comment']['id'].'"></span></span>'; 

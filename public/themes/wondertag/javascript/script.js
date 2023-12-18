@@ -3217,27 +3217,43 @@ function decodeHTMLEntities(text) {
     return text;
 }
 
-function Wo_RegisterCommentReaction(comment_id,reaction){
+function Wo_RegisterCommentReaction(comment_id,reaction, html){
   if (!comment_id && !reaction)
     return false;
 
+  var commentId = $('.comment-status-reaction-' + comment_id);
+
   $('.reactions-comment-container-' + comment_id).css('display', 'none');
-  $.get(Wo_Ajax_Requests_File(), {f: 'posts', s: 'register_comment_reaction', comment_id: comment_id, reaction: reaction}, function (data) {
-    if(data.status == 200) {
-		if (node_socket_flow == "1") {
-			socket.emit("comment_notification", { comment_id: comment_id, user_id: _getCookie("user_id"), type: "added" });
-		}
+  if(!commentId.hasClass('active-like')) {
+    $.get(Wo_Ajax_Requests_File(), {f: 'posts', s: 'register_comment_reaction', comment_id: comment_id, reaction: reaction}, function (data) {
+      if(data.status == 200) {
+      if (node_socket_flow == "1") {
+        socket.emit("comment_notification", { comment_id: comment_id, user_id: _getCookie("user_id"), type: "added" });
+      }
+          $('.comment-reactions-icons-'+comment_id).html(data.reactions);
+          $('.comment-status-reaction-'+comment_id).addClass("active-like");
+          //$('.c_likes-'+comment_id).html(data.like_lang);
+        //post.find("[id^=likes]").text(data.likes);
+      } else {
+        //post.find("[id^=likes]").text(data.likes);
+      }
+      if (data.can_send == 1) {
+        Wo_SendMessages();
+      }
+    });
+  } else {    
+    $.get(Wo_Ajax_Requests_File(), {f: 'posts', s: 'delete_comment_reaction', comment_id: comment_id}, function (data) {
+      if(data.status == 200) {
+        if (node_socket_flow == "1") {
+          socket.emit("comment_notification", { comment_id: comment_id, user_id: _getCookie("user_id"), type: "removed" });
+        }
+        $('.reactions-comment-container-'+comment_id).toggle();
         $('.comment-reactions-icons-'+comment_id).html(data.reactions);
-        $('.comment-status-reaction-'+comment_id).addClass("active-like");
-        //$('.c_likes-'+comment_id).html(data.like_lang);
-      //post.find("[id^=likes]").text(data.likes);
-    } else {
-      //post.find("[id^=likes]").text(data.likes);
-    }
-    if (data.can_send == 1) {
-      Wo_SendMessages();
-    }
-  });
+        $('.comment-status-reaction-'+comment_id).removeClass("active-like");
+      }
+    });
+  }
+  
 
 }
 
