@@ -1,4 +1,5 @@
-/changes
-/cache
-/upload
-/*_updated.php
+/public/changes
+/publiC/cache
+/publiC/upload
+/publiC/dumpsql
+/publiC/*_updated.php
