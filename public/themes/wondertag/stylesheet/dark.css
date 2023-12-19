@@ -364,7 +364,7 @@ body .sidebar .wo_sidebar_pages .card {background-color: var(--header-background
 .cc-window {background-color: #313131;}
 
 .tag_navbar_top {background: var(--header-background)}
-.navbar svg path {fill: #fff}
+.navbar svg:not(.dark_theme .navbar .svg, .search_result_badge svg, .search-advanced-container svg) path {fill: #fff}
 .tag_hdr_droptoggle {color: #fff;}
 .tag_header .search-input {background: #0f1110; color: #fff;}
 .tag_header .search-input::placeholder {color: #fff;}
@@ -554,4 +554,5 @@ nav.navbar.navbar-default {background:var(--header-background) ;}
 @media (max-width: 520px) {
 .tag_header > .search-container .dropdown-menu {background: var(--header-background);}
 .tag_msg_write {background: #212121;}
+.tag_expand_search.tag_header > .search-container.show {background-color: var(--header-background);}
 }

@@ -1141,20 +1141,20 @@ $(window).on('load', function() {
     }, 500);
   });
 
-  $('body').delegate('.like-btn-replay','click', function() {
-    var replay_id = $( this ).attr( 'data-id' );
+  // $('body').delegate('.like-btn-replay','click', function() {
+  //   var replay_id = $( this ).attr( 'data-id' );
     
-    $.get(Wo_Ajax_Requests_File(), {f: 'posts', s: 'delete_replay_reaction', replay_id: replay_id}, function (data) {
-      if(data.status == 200) {
-        if (node_socket_flow == "1") {
-          socket.emit("reply_notification", { reply_id: replay_id, user_id: _getCookie("user_id"), type: "removed" });
-        }
-        $('.reactions-box-comment-replay-container-'+replay_id).toggle();
-        $('.replay-reactions-icons-'+replay_id).html(data.reactions);
-        $('.replay-status-reaction-'+replay_id).removeClass("active-like");
-      }
-    });
-  });
+  //   $.get(Wo_Ajax_Requests_File(), {f: 'posts', s: 'delete_replay_reaction', replay_id: replay_id}, function (data) {
+  //     if(data.status == 200) {
+  //       if (node_socket_flow == "1") {
+  //         socket.emit("reply_notification", { reply_id: replay_id, user_id: _getCookie("user_id"), type: "removed" });
+  //       }
+  //       $('.reactions-box-comment-replay-container-'+replay_id).toggle();
+  //       $('.replay-reactions-icons-'+replay_id).html(data.reactions);
+  //       $('.replay-status-reaction-'+replay_id).removeClass("active-like");
+  //     }
+  //   });
+  // });
 
 
   //reactions comment lightbox

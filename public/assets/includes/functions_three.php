@@ -6363,7 +6363,7 @@ function Wo_GetNearbyUsers($args = array()) {
     if ($gender && in_array($gender, array_keys($wo['genders']))) {
         $sub_sql .= " AND `gender` = '$gender' ";
     }
-    $sql   = "
+    /*$sql   = "
     SELECT `user_id`, ( {$unit} * acos(cos(radians('$user_lat'))  *
     cos(radians(lat)) * cos(radians(lng) - radians('$user_lng')) +
     sin(radians('$user_lat')) * sin(radians(lat ))) ) AS distance
@@ -6371,7 +6371,14 @@ function Wo_GetNearbyUsers($args = array()) {
     AND `user_id` NOT IN (SELECT `follower_id` FROM $t_followers WHERE `follower_id` <> {$user} AND `following_id` = {$user} AND `active` = '1')
     AND `user_id` NOT IN (SELECT `following_id` FROM $t_followers WHERE `follower_id` = {$user} AND `following_id` <> {$user} AND `active` = '1')
     AND `lat` <> 0 AND `lng` <> 0
-    HAVING distance < '$distance' ORDER BY `user_id` DESC LIMIT 0, $limit ";
+    HAVING distance < '$distance' ORDER BY `user_id` DESC LIMIT 0, $limit ";*/
+    $sql   = "
+    SELECT `user_id`, ( {$unit} * acos(cos(radians('$user_lat'))  *
+    cos(radians(lat)) * cos(radians(lng) - radians('$user_lng')) +
+    sin(radians('$user_lat')) * sin(radians(lat ))) ) AS distance
+    FROM $t_users WHERE `user_id` <> '$user'   {$sub_sql}
+    AND `lat` <> 0 AND `lng` <> 0
+    HAVING distance > '$distance' ORDER BY `user_id` DESC LIMIT 0, $limit ";
     $query = mysqli_query($sqlConnect, $sql);
     if (mysqli_num_rows($query)) {
         while ($fetched_data = mysqli_fetch_assoc($query)) {

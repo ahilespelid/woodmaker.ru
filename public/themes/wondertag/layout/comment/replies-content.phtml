@@ -69,9 +69,9 @@
 		<span class="comment-options">
 			<?php if ($wo['config']['second_post_button'] == 'reaction') { ?>
 				<div class="wo-reaction wo-reaction-replay stat-item" data-id="<?php echo $wo['reply']['id']; ?>" id="comment_reactions">
-					<span class="like-btn like-btn-replay" data-id="<?php echo $wo['reply']['id']; ?>">
+					<span onclick="Wo_RegisterReplyReaction(<?php echo $wo['reply']['user_id']; ?>,<?php echo $wo['reply']['id']; ?>,<?php echo $wo['reactions_types'][1]['id'] ?>);" class="like-btn like-btn-replay" data-id="<?php echo $wo['reply']['id']; ?>">
 						<?php
-						if (Wo_IsReacted($wo['reply']['id'], $wo['reply']['user_id'],"replay") === true) {
+						if (Wo_IsReacted($wo['reply']['id'], $wo['user']['id'],"replay") === true) {
 							echo '<span class="bold replay-status-reaction-'.$wo['reply']['id'].' active-like">'.$wo['lang']['liked'].' <span class="r_likes-'.$wo['reply']['id'].'"></span></span>';
 						} else {   
 							echo '<span class="bold replay-status-reaction-'.$wo['reply']['id'].'">'.$wo['lang']['like'].' <span class="r_likes-'.$wo['reply']['id'].'"></span></span>';
@@ -132,7 +132,7 @@
 				<span id="comment-reply-wonders" class="pointer" onclick="Wo_OpenPostWonderedUsers(<?php echo $wo['reply']['id']; ?>,'reply')"><?php echo $wo['reply']['comment_wonders'];?></span>
 			<?php } ?>
 			<span class="middot">·</span>
-			<span class="time ajax-time" title="<?php echo date('c',$wo['reply']['time']);?>"><?php echo $wo['reply']['time']?></span>
+			<span class="time ajax-time" title="<?php echo date('c',$wo['reply']['time']);?>"><?php echo $wo['reply']['time']?></span><span class="ajax-time"><?php echo $wo['lang']['time_ago'];?></span>
 		</span>
 		<div class="hidden" data-post-comm-reply-edit="<?php echo $wo['reply']['id']?>">
             <textarea class="edit-box form-control" onkeydown="Wo_UpdatCommReply(<?php echo $wo['reply']['id']?>,event,this)"><?php echo $wo['reply']['Orginaltext']?></textarea>

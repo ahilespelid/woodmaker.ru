@@ -179,12 +179,15 @@ if ($wo['config']['shout_box_system'] == 1 && $wo['story']['postPrivacy'] == 4 &
 			?>
 				<span class="time pointer" title="<?php echo date('c',$wo['comment']['time']);?>" onclick="go_to_duration(<?php echo($wo['story']['id']) ?>,<?php echo $current_time; ?>)"><?php echo $time ?></span>
 			<?php  }else{ ?>
-				<span class="time ajax-time" title="<?php echo date('c',$wo['comment']['time']);?>"><?php echo $wo['comment']['time']?></span>
+					<span class="time ajax-time" title="<?php echo date('c',$wo['comment']['time']);?>"><?php echo $wo['comment']['time']?></span><span class="ajax-time"><?php echo $wo['lang']['time_ago'];?></span>
 			<?php } ?>
 		</span>
         <div class="comment-edit">
 			<textarea onkeydown="textAreaAdjust(this, 26)" class="edit-box form-control" onkeyup="Wo_EditComment(this.value,<?php echo $wo['comment']['id']?>, event)" placeholder="<?php echo $wo['lang']['edit_comment']; ?>" dir="auto" id="edit_comment_<?php echo $wo['comment']['id']?>"><?php echo $wo['comment']['Orginaltext']?></textarea>
 		</div>
+		<?php if($replies > 0) {?>
+			<hr class="comment-reply-separation">
+		<?php }?>
 		<div class="comment-replies" <?php if ($wo['loggedin'] != true) { ?>onclick="location.href= '<?php echo $wo['config']['site_url'];?>'"<?php } ?>>
 			<div class="comment-replies-text">
                 <div class="reply-container"></div>
@@ -256,7 +259,9 @@ if ($wo['config']['shout_box_system'] == 1 && $wo['story']['postPrivacy'] == 4 &
 		<?php if($replies > 2) { ?>
             <div onclick="Wo_ViewMoreReplies(<?php echo $wo['comment']['id']; ?>, this);" class="answers_btn answers_btn-<?php echo $wo['comment']['id'] ?>">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-corner-down-right" style="margin-top: -3px;"><polyline points="15 10 20 15 15 20"></polyline><path d="M4 4v7a4 4 0 0 0 4 4h12"></path></svg>
-                <span class="mr-1"><?php echo Wo_CountCommentReplies($wo['comment']['id']) - 2; ?></span><span class="answer_variation_<?php echo $wo['comment']['id'] ?>"><?php echo $wo['lang']['view_more_answers']; ?> </span>
+                <span class="mr-1"><?php echo $wo['lang']['show'];?></span>
+				<span class="mr-1"><?php echo Wo_CountCommentReplies($wo['comment']['id']) - 2; ?></span>
+				<span class="answer_variation_<?php echo $wo['comment']['id'] ?>"><?php echo $wo['lang']['view_more_answers']; ?> </span>
             </div>
         <?php } ?>
 	</div>

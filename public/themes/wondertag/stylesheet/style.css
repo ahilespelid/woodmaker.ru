@@ -485,7 +485,7 @@ header {margin-bottom: 30px;}
 .no-activities.text-center {font-size: 15px;font-family: 'Readex Pro', sans-serif;}
 
 /*Header Search*/
-.tag_toggle_search {border: none;background: var(--header-background);padding: 5px;line-height: 1;color: var(--header-color);position: fixed;left: 10px;top: 9px;display: none;}
+.tag_toggle_search {border: none;background: unset;padding: 5px;line-height: 1;color: var(--header-color);position: fixed;left: 10px;top: 9px;display: none;}
 .search-dropdown-result {overflow: hidden;overflow-y: auto;max-height: calc(100vh - 250px);overscroll-behavior-y: contain;}
 .tag_srch_recent {margin: 8px 0 0;position: relative;}
 .recent {justify-content: space-between;padding: 0 0 6px;}
@@ -1073,6 +1073,7 @@ header {margin-bottom: 30px;}
 .view-more-replies {font-size: 12px;cursor: pointer;margin-top: 5px;font-weight: 500;}
 .view-more-replies svg {width: 18px;height: 18px;transform: rotate(180deg);margin: -1px 0 0;}
 .answers_btn {cursor: pointer; margin-top: 5px}
+.comment-reply-separation {margin-left: -45px;}
 .comment-reply {display:none}
 .comment-reply .wo_commreply_combo {margin-top: 10px;position: relative;align-items: normal;}
 .post .post-footer .comment-reply .wo_commreply_combo .avatar {width: 30px;height: 30px;}
@@ -4228,7 +4229,7 @@ body {padding-top: 52px !important;}
 .tag_expand_search.tag_header > .search-container > form {float: right;width: 0%;min-width: 36px;height: 36px;overflow: hidden;transition: width 0.2s;border-radius: 2em;}
 .tag_expand_search.tag_header .search-input {width: 100%;padding: 10px;white-space: nowrap;font-size: 0px;}
 .tag_expand_search.tag_header > .search-container .tag_toggle_search {position: relative;left: auto;right: auto;top: auto;}
-.tag_expand_search.tag_header > .search-container.show {position: fixed;left: 0;right: 0;padding: 0 10px;background: var(--header-background);margin: 0;}
+.tag_expand_search.tag_header > .search-container.show {position: fixed;left: 0;right: 0;padding: 0 10px;background: #fff;margin: 0;}
 .tag_expand_search.tag_header > .search-container.show > form {width: calc(100% - 40px);}
 .tag_expand_search.tag_header > .search-container:not(.show) > form svg {left: 6px;opacity: 1;width: 24px;height: 24px;}
 .tag_expand_search.tag_header > .search-container.show .tag_toggle_search {display: inline-block;}
