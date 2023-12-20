@@ -128,7 +128,7 @@ if (!empty($wo['activity']['activity_type'])) {
 			<span>
 				<a class="main-color" href="<?php echo $wo['activity']['activator']['url'];?> " data-ajax="?link1=timeline&u=<?php echo $wo['activity']['activator']['username']; ?>"><?php echo $wo['activity']['activator']['name']; ?></a>
 			</span> <span class="sec_text"><?php echo $wo['activity']['type_text']; ?></span>
-			<div class="d-flex"><div class="ajax-time mr-1" title="<?php echo date('c',$wo['activity']['time']); ?>"><?php echo Wo_Time_Elapsed_String($wo['activity']['time'])?></div><span class="ajax-time" style='margin-left: 0;'><?php if(Wo_Time_Elapsed_String($wo['activity']['time']) !== $wo['lang']['now']) {echo $wo['lang']['time_ago'];} ?></span></div>
+			<div class="ajax-time mr-1" title="<?php echo date('c',$wo['activity']['time']); ?>"><?php echo Wo_Time_Elapsed_String($wo['activity']['time'])?></div>
 			<?php echo $wo['activity']['icon'];?>
 		</div>
 	</div>
