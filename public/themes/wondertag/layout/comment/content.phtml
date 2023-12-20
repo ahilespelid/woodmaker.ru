@@ -179,7 +179,7 @@ if ($wo['config']['shout_box_system'] == 1 && $wo['story']['postPrivacy'] == 4 &
 			?>
 				<span class="time pointer" title="<?php echo date('c',$wo['comment']['time']);?>" onclick="go_to_duration(<?php echo($wo['story']['id']) ?>,<?php echo $current_time; ?>)"><?php echo $time ?></span>
 			<?php  }else{ ?>
-					<span class="time ajax-time" title="<?php echo date('c',$wo['comment']['time']);?>"><?php echo $wo['comment']['time']?></span><span class="ajax-time"><?php echo $wo['lang']['time_ago'];?></span>
+					<span class="time ajax-time mr-1" title="<?php echo date('c',$wo['comment']['time']);?>"><?php echo $wo['comment']['time']?>
 			<?php } ?>
 		</span>
         <div class="comment-edit">

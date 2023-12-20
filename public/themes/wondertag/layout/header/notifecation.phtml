@@ -429,15 +429,9 @@ if ($wo['notification']['type2'] == 'ffmpeg') {
 					<?php } ?>
 				</span>
 				<span class="sec_text"><?php echo $wo['notification']['type_text']; ?></span>
-				<div class="d-flex">
                     <div class="ajax-time mr-1" title="<?php echo date('c',$wo['notification']['time']); ?>">
                         <?php echo Wo_Time_Elapsed_String_word($wo['notification']['time'])?> 
                     </div> 
-                    <span class="ajax-time" style='margin-left: 0;'>
-                        <?php if(Wo_Time_Elapsed_String_word($wo['notification']['time']) !== $wo['lang']['now']) {
-                            echo $wo['lang']['time_ago'];} ?>
-                    </span>
-                </div>
 				<?php echo $wo['notification']['icon'];?>
 			</div>
 		</div>
