@@ -132,7 +132,7 @@
 				<span id="comment-reply-wonders" class="pointer" onclick="Wo_OpenPostWonderedUsers(<?php echo $wo['reply']['id']; ?>,'reply')"><?php echo $wo['reply']['comment_wonders'];?></span>
 			<?php } ?>
 			<span class="middot">·</span>
-			<span class="time ajax-time" title="<?php echo date('c',$wo['reply']['time']);?>"><?php echo $wo['reply']['time']?></span><span class="ajax-time"><?php echo $wo['lang']['time_ago'];?></span>
+			<span class="time ajax-time mr-1" title="<?php echo date('c',$wo['reply']['time']);?>"><?php echo $wo['reply']['time']?></span>
 		</span>
 		<div class="hidden" data-post-comm-reply-edit="<?php echo $wo['reply']['id']?>">
             <textarea class="edit-box form-control" onkeydown="Wo_UpdatCommReply(<?php echo $wo['reply']['id']?>,event,this)"><?php echo $wo['reply']['Orginaltext']?></textarea>
@@ -141,3 +141,7 @@
 	</div>
 	<?php echo Wo_LoadPage('modals/delete-comment-reply');?>
 </div>
+<script>
+	console.log('<?php echo Wo_Time_Elapsed_String($wo['reply']['time']);?>')
+	console.log($("#comment_reply_<?php echo $wo['reply']['id'];?> .ajax-time:first-child").text());
+</script>

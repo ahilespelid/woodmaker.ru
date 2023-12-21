@@ -102,34 +102,34 @@
                 words = substitute($l.seconds, '');
             }
             else if (seconds < 90) {
-                words = substitute('<?php echo $wo['lang']['_time_m'];?>', 1);
+                words = substitute('<?php echo $wo['lang']['_time_m'];?>' + ' <?php echo $wo['lang']['time_ago'];?>', 1);
             }
             else if (minutes < 45) {
-                words = substitute('<?php echo $wo['lang']['_time_m'];?>', Math.round(minutes));
+                words = substitute('<?php echo $wo['lang']['_time_m'];?>' + ' <?php echo $wo['lang']['time_ago'];?>', Math.round(minutes));
             }
             else if (minutes < 90) {
-                words = substitute('<?php echo $wo['lang']['_time_h'];?>', 1);
+                words = substitute('<?php echo $wo['lang']['_time_h'];?>' + ' <?php echo $wo['lang']['time_ago'];?>', 1);
             }
             else if (hours < 24) {
-                words = substitute('<?php echo $wo['lang']['_time_hrs'];?>', Math.round(hours));
+                words = substitute('<?php echo $wo['lang']['_time_hrs'];?>' + ' <?php echo $wo['lang']['time_ago'];?>', Math.round(hours));
             }
             else if (hours < 42) {
-                words = substitute('<?php echo $wo['lang']['_time_d'];?>', 1);
+                words = substitute('<?php echo $wo['lang']['_time_d'];?>' + ' <?php echo $wo['lang']['time_ago'];?>', 1);
             }
             else if (days < 7) {
-                words = substitute('<?php echo $wo['lang']['_time_d'];?>', Math.round(days));
+                words = substitute('<?php echo $wo['lang']['_time_d'];?>' + ' <?php echo $wo['lang']['time_ago'];?>', Math.round(days));
             }
             else if (weeks < 2) {
-                words = substitute('<?php echo $wo['lang']['_time_w'];?>', 1);
+                words = substitute('<?php echo $wo['lang']['_time_w'];?>' + ' <?php echo $wo['lang']['time_ago'];?>', 1);
             }
             else if (weeks < 52) {
-                words = substitute('<?php echo $wo['lang']['_time_w'];?>', Math.round(weeks));
+                words = substitute('<?php echo $wo['lang']['_time_w'];?>' + ' <?php echo $wo['lang']['time_ago'];?>', Math.round(weeks));
             }
             else if (years < 1.5) {
-                words = substitute('<?php echo $wo['lang']['_time_y'];?>', 1);
+                words = substitute('<?php echo $wo['lang']['_time_y'];?>' + ' <?php echo $wo['lang']['time_ago'];?>', 1);
             }
             else {
-                words = substitute('<?php echo $wo['lang']['_time_yrs'];?>', Math.round(years));
+                words = substitute('<?php echo $wo['lang']['_time_yrs'];?>' + ' <?php echo $wo['lang']['time_ago'];?>', Math.round(years));
             }
         }
         else{
@@ -137,34 +137,34 @@
                 words = substitute($l.seconds, '');
             }
             else if (seconds < 90) {
-                words = substitute($l.minute + ' <?php echo $wo['lang']['ago'];?>', 1);
+                words = substitute($l.minute + ' <?php echo $wo['lang']['time_ago'];?>', 1);
             }
             else if (minutes < 45) {
-                words = substitute($l.minutes + ' <?php echo $wo['lang']['ago'];?>', Math.round(minutes));
+                words = substitute($l.minutes + ' <?php echo $wo['lang']['time_ago'];?>', Math.round(minutes));
             }
             else if (minutes < 90) {
-                words = substitute($l.hour + ' <?php echo $wo['lang']['ago'];?>', 1);
+                words = substitute($l.hour + ' <?php echo $wo['lang']['time_ago'];?>', 1);
             }
             else if (hours < 24) {
-                words = substitute($l.hours + ' <?php echo $wo['lang']['ago'];?>', Math.round(hours));
+                words = substitute($l.hours + ' <?php echo $wo['lang']['time_ago'];?>', Math.round(hours));
             }
             else if (hours < 42) {
-                words = substitute($l.day + ' <?php echo $wo['lang']['ago'];?>', 1);
+                words = substitute($l.day + ' <?php echo $wo['lang']['time_ago'];?>', 1);
             }
             else if (days < 7) {
-                words = substitute($l.days + ' <?php echo $wo['lang']['ago'];?>', Math.round(days));
+                words = substitute($l.days + ' <?php echo $wo['lang']['time_ago'];?>', Math.round(days));
             }
             else if (weeks < 2) {
-                words = substitute($l.week + ' <?php echo $wo['lang']['ago'];?>', 1);
+                words = substitute($l.week + ' <?php echo $wo['lang']['time_ago'];?>', 1);
             }
             else if (weeks < 52) {
-                words = substitute($l.weeks + ' <?php echo $wo['lang']['ago'];?>', Math.round(weeks));
+                words = substitute($l.weeks + ' <?php echo $wo['lang']['time_ago'];?>', Math.round(weeks));
             }
             else if (years < 1.5) {
-                words = substitute($l.year + ' <?php echo $wo['lang']['ago'];?>', 1);
+                words = substitute($l.year + ' <?php echo $wo['lang']['time_ago'];?>', 1);
             }
             else {
-                words = substitute($l.years + ' <?php echo $wo['lang']['ago'];?>', Math.round(years));
+                words = substitute($l.years + ' <?php echo $wo['lang']['time_ago'];?>', Math.round(years));
             }
         }
             
