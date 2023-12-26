@@ -1756,7 +1756,6 @@ function AddYandexResult(target,self,result_co,target_map='#yandex_publisher_map
     }
     $(result_co).html('');
 }
-
 const loadImageFromUrl = url => fetch(url)
                             .then(response => response.blob())
                             .then(blob => new Promise((resolve, reject) => {
@@ -1773,4 +1772,39 @@ function imageDataToFile(dataurl, filename) {
    }
   return new File([u8arr], filename, {type:mime});
 }
+
+///*/ ahilespelid ///*/
+async function Wo_Geoyandex(req){
+    <?php if(empty($token = ($wo['config']['yandex_geo_map_api'] ?? ''))){?>
+        return;
+    <?php }else{ ?>
+    const res = await fetch('https://suggest-maps.yandex.ru/v1/suggest?apikey=<?=$token;?>&results=10&types=biz,house,street,metro,district,locality,area,province,country,geo&attrs=uri&text='+req);
+    const geo = await res.json();
+    return geo;       
+    <?php } ?>
+}
+async function Wo_Mapyandex(req){
+    <?php //if(empty($token = ($wo['config']['yandex_geo_map_api'] ?? ''))){?>
+    <?php if(empty($token = '68e6dfc3-8d9e-4f06-a68c-ff338af9ee97')){?>
+        return;
+    <?php }else{ ?>
+    const res = await fetch('https://geocode-maps.yandex.ru/1.x?apikey=<?=$token;?>&lang=ru_RU&format=json&results=1&geocode='+req);
+    const map = await res.json();
+    return map;       
+    <?php } ?>
+}
+
+async function getUserLocation(){
+    const successCallback = (position) => {$('.my_location').show(); $('.my_location').attr('geo', position.coords.latitude + "," + position.coords.longitude);
+        console.log(position);
+    };
+    const errorCallback = (error) => {$('.my_location').hide();
+        console.log(error);
+    };
+
+    await navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
+}
+
+
+///*/ ahilespelid ///*/
 </script>

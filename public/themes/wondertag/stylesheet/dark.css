@@ -200,8 +200,8 @@ body .sidebar .wo_sidebar_pages .card {background-color: var(--header-background
 /*Home*/
 .greetalert > .btn {color: #d1d1d1;}
 .close:focus, .close:hover {color: #fff;}
-.tag_bday_box > .empty_state {color: white;background: linear-gradient(#736179, #212121 60%);}
-.tag_bdays > .btn {color: #ff6ea0;}
+.tag_bday_box > .empty_state {color: white;background: #212121;}
+.tag_bdays > .btn {color: #e94335;}
 .tag_stories_pc > li > a:hover {background-color: rgb(255 255 255 / 4%);}
 .promoted-post .promoted-icon {background-color: #48371e;}
 .promoted-post .post.boosted .panel {box-shadow: 0 0px 0px 1px #a47632, 0 1px 3px 0 rgba(0,0,0,.1), 0 1px 2px 0 rgba(0,0,0,.06);}

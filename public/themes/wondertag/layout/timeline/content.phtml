@@ -408,7 +408,9 @@ if (mysqli_query($wo['sqlConnect'], "DESCRIBE `wondertage_settings`" )) {
 					<div class="col-md-12">
 						<div class="page-margin wow_content wow_sett_content">
 							<div class="valign wo_page_hdng">
-								<span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><path fill="currentColor" d="M16 17V19H2V17S2 13 9 13 16 17 16 17M12.5 7.5A3.5 3.5 0 1 0 9 11A3.5 3.5 0 0 0 12.5 7.5M15.94 13A5.32 5.32 0 0 1 18 17V19H22V17S22 13.37 15.94 13M15 4A3.39 3.39 0 0 0 13.07 4.59A5 5 0 0 1 13.07 10.41A3.39 3.39 0 0 0 15 11A3.5 3.5 0 0 0 15 4Z"></path></svg></span> <?php if ($wo['config']['connectivitySystem'] == 1) { ?><?php echo $wo['user_profile']['details']['following_count'];?> <?php echo $wo['lang']['friends_btn']; ?><?php } else { ?><?php echo $wo['user_profile']['details']['followers_count'];?> <?php echo $wo['lang']['followers']; ?><?php } ?>
+								<span>
+									<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><path fill="currentColor" d="M16 17V19H2V17S2 13 9 13 16 17 16 17M12.5 7.5A3.5 3.5 0 1 0 9 11A3.5 3.5 0 0 0 12.5 7.5M15.94 13A5.32 5.32 0 0 1 18 17V19H22V17S22 13.37 15.94 13M15 4A3.39 3.39 0 0 0 13.07 4.59A5 5 0 0 1 13.07 10.41A3.39 3.39 0 0 0 15 11A3.5 3.5 0 0 0 15 4Z"></path></svg>
+								</span> <?php if ($wo['config']['connectivitySystem'] == 1) { ?><?php echo $wo['lang']['friends_btn']; ?> <?php echo $wo['user_profile']['details']['following_count'];?> <?php } else { ?><?php echo $wo['lang']['followers']; ?> <?php echo $wo['user_profile']['details']['followers_count'];?> <?php } ?>
 								<?php if ($wo['config']['website_mode'] != 'instagram') { ?>
 									<a href="<?php echo Wo_SeoLink('index.php?link1=timeline&u=' . $wo['user_profile']['username'] . '&type=family_list');?>" data-ajax="?link1=timeline&u=<?php echo $wo['user_profile']['username']?>&type=family_list"><?php echo $wo['lang']['family_members']; ?></a>
 								<?php } ?>

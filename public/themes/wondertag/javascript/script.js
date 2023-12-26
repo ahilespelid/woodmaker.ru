@@ -271,13 +271,35 @@ function Wo_ReloadSideBarPages() {
 }
 
 // get new notifications
+
+let notification_container = $('.notification-container');
+let notification_list = $('#notification-list');
+let notificationData = '';
+
+$.get(Wo_Ajax_Requests_File(), {
+  f: 'get_notifications'
+}, function (data) {
+  if(data.status == 200) {
+    notificationData = data
+    if(data.html.length == 0) {
+      notification_list.html('<div class="empty_state"><svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="m416 512h-320c-53.023438 0-96-42.976562-96-96v-320c0-53.023438 42.976562-96 96-96h320c53.023438 0 96 42.976562 96 96v320c0 53.023438-42.976562 96-96 96zm0 0" fill="#e3f8fa"/><path d="m245.328125 384c19.3125 0 35.472656-13.761719 39.183594-32h-78.382813c3.726563 18.238281 19.886719 32 39.199219 32zm0 0" fill="#8ce1eb"/><path d="m320.128906 256c-.050781 0-.082031 0-.128906 0-41.167969 0-74.671875-33.488281-74.671875-74.671875 0-11.3125 2.609375-22.015625 7.136719-31.648437-2.351563-.222657-4.722656-.367188-7.136719-.367188-41.230469 0-74.671875 33.421875-74.671875 74.671875v29.742187c0 21.105469-9.25 41.027344-25.472656 54.753907-5.40625 4.625-7.808594 11.984375-5.871094 19.152343 2.289062 8.367188 10.527344 13.695313 19.199219 13.695313h173.601562c9.085938 0 17.664063-5.886719 19.503907-14.785156 1.421874-6.878907-1.023438-13.773438-6.371094-18.253907-15.519532-13.023437-24.476563-32.128906-25.117188-52.289062zm0 0" fill="#26c6da"/><path d="m373.328125 181.328125c0 29.453125-23.875 53.328125-53.328125 53.328125s-53.328125-23.875-53.328125-53.328125 23.875-53.328125 53.328125-53.328125 53.328125 23.875 53.328125 53.328125zm0 0" fill="#8ce1eb"/></svg>' + data.message + '</div>');
+    } else {
+      document.getElementById('notification-list').innerHTML = data.html;
+      Wo_intervalUpdates();
+    }
+  }
+});
+
 function Wo_OpenNotificationsMenu() {
-  notification_container = $('.notification-container');
-  notification_list = $('#notification-list');
   notification_container.find('.new-update-alert').addClass('hidden').text('0');
   $.get(Wo_Ajax_Requests_File(), {
     f: 'get_notifications'
   }, function (data) {
+    if(data.status === notificationData.status || data.html === notificationData.html) {
+      return false
+    } else {
+      notificationData = data
+    }
     if(data.status == 200) {
       if(data.html.length == 0) {
         notification_list.html('<div class="empty_state"><svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="m416 512h-320c-53.023438 0-96-42.976562-96-96v-320c0-53.023438 42.976562-96 96-96h320c53.023438 0 96 42.976562 96 96v320c0 53.023438-42.976562 96-96 96zm0 0" fill="#e3f8fa"/><path d="m245.328125 384c19.3125 0 35.472656-13.761719 39.183594-32h-78.382813c3.726563 18.238281 19.886719 32 39.199219 32zm0 0" fill="#8ce1eb"/><path d="m320.128906 256c-.050781 0-.082031 0-.128906 0-41.167969 0-74.671875-33.488281-74.671875-74.671875 0-11.3125 2.609375-22.015625 7.136719-31.648437-2.351563-.222657-4.722656-.367188-7.136719-.367188-41.230469 0-74.671875 33.421875-74.671875 74.671875v29.742187c0 21.105469-9.25 41.027344-25.472656 54.753907-5.40625 4.625-7.808594 11.984375-5.871094 19.152343 2.289062 8.367188 10.527344 13.695313 19.199219 13.695313h173.601562c9.085938 0 17.664063-5.886719 19.503907-14.785156 1.421874-6.878907-1.023438-13.773438-6.371094-18.253907-15.519532-13.023437-24.476563-32.128906-25.117188-52.289062zm0 0" fill="#26c6da"/><path d="m373.328125 181.328125c0 29.453125-23.875 53.328125-53.328125 53.328125s-53.328125-23.875-53.328125-53.328125 23.875-53.328125 53.328125-53.328125 53.328125 23.875 53.328125 53.328125zm0 0" fill="#8ce1eb"/></svg>' + data.message + '</div>');
@@ -288,6 +310,7 @@ function Wo_OpenNotificationsMenu() {
     }
   });
 }
+
 function Wo_OpenMessagesMenu() {
   messages_container = $('.messages-notification-container');
   messages_list = $('#messages-list');
@@ -2170,7 +2193,7 @@ function Wo_DeleteJoinedUser(user_id, group_id) {
 }
 
 function Wo_OpenReplyBox(id, el) {
-  Wo_ViewMoreReplies(id);
+  console.log(el.parentElement.nextElementSibling)
   $(el.parentElement.nextElementSibling).find('.view-more-replies').hide();
   $(el.parentElement.nextElementSibling).hide();
   $('.comments-list #comment_' + id).find('.comment-replies').slideDown(50, function () {
@@ -2193,6 +2216,13 @@ function Wo_OpenReplyBox(id, el) {
 	cur_input.val("" + reply_fullname + ", ");
 	cur_input.focus();
 }
+
+function Wo_OpenReplyBoxWithAnswers(id, el) {
+  Wo_ViewMoreReplies(id);
+  Wo_OpenReplyBox(id, el);
+  $('.answers_btn-' + id).hide();
+}
+
 // register post comment
 function Wo_RegisterReply(text, comment_id, user_id, event, page_id, type, mention_user) {
   if(event.keyCode == 13 && event.shiftKey == 0) {
@@ -2305,6 +2335,7 @@ function Wo_ViewMoreReplies(comment_id, e) {
 if($(e)) {
     $(e).hide()
 };
+  Wo_OpenReplyBox(comment_id, document.querySelector('#comment_' + comment_id + ' #ReplyComment'))
   let main_wrapper = $('[id=comment_' + comment_id + ']'),
       view_more_wrapper = main_wrapper.find('.view-more-replies'),
       reply_id = main_wrapper.find('.reply').last().attr('data-reply-id')

@@ -174,10 +174,10 @@ if (!empty($_GET['url'])) {
 				</div>
 				<div class="tag_pub_hide map-form">
 					<div id="yandex_publisher_map"></div>
-					<input name="postMap" id="searchTextField" type="text" placeholder="<?php echo $wo['lang']['maps_placeholder']?>">
+                                        <input name="postMap" id="searchTextField" type="text" placeholder="<?php echo $wo['lang']['maps_placeholder']?>">
 					<?php if ($wo['config']['yandex_map'] == 1) { ?>
 						<div class="yandex_search_publisher">
-							<p class="pointer my_location" geo="" onclick="AddYandexResult('#searchTextField',this,'.yandex_search_publisher')"><?php echo $wo['lang']['my_location']?></p>
+							<p class="pointer my_location" geo="" onclick="AddYandexResult('#searchTextField',this,'.yandex_search_publisher');"><?php echo $wo['lang']['my_location']?></p>
 						</div>
 					<?php } ?>
 				</div>
@@ -1570,31 +1570,36 @@ $(function () {
 		});
 	  });
 /// Вывод карты при клике на местоположение при публикации поста */
-if ($wo['config']['yandex_map'] == 1) { ?>
-
-function getUserLocation() {
-	const successCallback = (position) => {
-		$('.my_location').show()
-		$('.my_location').attr('geo', position.coords.latitude + "," + position.coords.longitude)
-		console.log(position);
-	};
-
-	const errorCallback = (error) => {
-		$('.my_location').hide()
-		console.log(error);
-	};
-
-	navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
-}
+if ($wo['config']['yandex_map'] == 1) { $token = $wo['config']['yandex_map_api']; ?>
 
 $(document).ready(function(){
-	getUserLocation();
-
+    //getUserLocation();
     const searchTextField = document.getElementById("searchTextField");
 
     searchTextField.addEventListener('input', (e) => {$(function(){
         let self = this;
         console.log(searchTextField.value);
+        
+        
+        var myGeodate = Wo_Geoyandex(searchTextField.value);
+            if(myGeodate){
+                myGeodate.then(function(res){
+                    
+                    if(res.results){
+                        console.log(res);
+                        console.log(res.results.length);
+                        for(var key in res.results){
+                            let coord = Wo_Mapyandex(res.results[key].title.text);
+                            
+                            console.log(coord);
+                            console.log(res.results[key].title.text+' -> '+res.results[key].distance.text+' -> '+res.results[key].uri);
+                            console.log(res);
+                        }
+                    }else{/*/undefined//*/}
+                    
+                }
+            );}
+        
         var myGeocoder = ymaps.geocode(searchTextField.value);
         myGeocoder.then(
             function(res){

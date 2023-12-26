@@ -9,6 +9,9 @@
   }
 }(function ($) {
   $.timeago = function(timestamp) {
+    if(timestamp instanceof Date && timestamp > <?= time() - 604800; ?>) {
+      return 'Прошла неделя'
+    }
     if (timestamp instanceof Date) {
       return inWords(timestamp);
     } else if (typeof timestamp === "string") {
@@ -167,9 +170,6 @@
                 words = substitute($l.years + ' <?php echo $wo['lang']['time_ago'];?>', Math.round(years));
             }
         }
-            
-
-
 
       var separator = $l.wordSeparator || "";
       if ($l.wordSeparator === undefined) { separator = " "; }

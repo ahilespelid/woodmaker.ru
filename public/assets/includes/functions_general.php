@@ -2192,3 +2192,9 @@ function full_url( $s, $use_forwarded_host = false )
 {
     return url_origin( $s, $use_forwarded_host ) . $s['REQUEST_URI'];
 }
+
+function Wo_Geoyandex($text=''){if(empty($text)){return null;}
+    global $wo;
+    $api = ($wo['config']['yandex_geo_map_api'] ?? '');
+    return null;
+}

@@ -12,10 +12,6 @@ $postVideoThumb = unserialize(base64_decode($wo['story']['postVideoThumb']));
 $postVideosCount = count((array) $postVideos);
 ?>
 
-<script>
-    console.log('<?php echo $wo["story"]["postVideo"]; ?>')
-</script>
-
 <?php if (!empty($wondertage_settings) && $wondertage_settings['tag_artplayer'] == 1) { ?>
 	<div class="embed-responsive embed-responsive-16by9">
 		<?php if ($wo['story']['processing'] > 0 && (Wo_IsModerator() || Wo_IsAdmin() || $wo['story']['user_id'] == $wo['user']['id'])) { ?>

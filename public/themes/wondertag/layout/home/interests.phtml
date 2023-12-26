@@ -1,0 +1,25 @@
+<?php 
+$interests = array(
+    ['name' => 'Столярка', 'img' => '/img/interests/slolyar.jpg'],
+    ['name' => 'Лайф-хаки', 'img' => '/img/interests/life-hacks.jpg'],
+    ['name' => 'Токарка', 'img' => '/img/interests/tokarka.jpg'],
+    ['name' => 'Резьба', 'img' => '/img/interests/rezba.jpg'],
+    ['name' => 'Чпу', 'img' => '/img/interests/chpu.jpg'],
+    ['name' => 'Заточка', 'img' => '/img/interests/zatochka.jpg'],
+    ['name' => 'Мастерская', 'img' => '/img/interests/masterskaya.jpg']
+); ?>
+
+<div class="tag_stories_on_home">
+    <div class="tag_lbox_stories tag_stories_mobi">
+        <ul class="list-unstyled valign tag_scroll status-list tag_interests" id="storyList">
+                <?php
+                    $get_user_status = Wo_GetFriendsStatus(array('limit' => 6));
+                ?>
+                <?php
+                    foreach ($interests as $wo['interest']) {
+                        echo Wo_LoadPage('home/one_interest');
+                    }
+                ?>
+        </ul>
+    </div>
+</div>

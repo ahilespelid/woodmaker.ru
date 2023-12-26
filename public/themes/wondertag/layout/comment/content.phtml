@@ -168,7 +168,7 @@ if ($wo['config']['shout_box_system'] == 1 && $wo['story']['postPrivacy'] == 4 &
 			<?php } ?>
 			<?php if (($wo['config']['website_mode'] != 'askfm')) { ?>
 				<span class="middot">·</span>
-				<span class="pointer bold" id="ReplyComment" onclick="Wo_OpenReplyBox(<?php echo $wo['comment']['id']; ?>, this);" data-id="<?php echo $wo['comment']['id']; ?>" data-curuser="<?php echo $wo['comment']['publisher']['username']; ?>" data-curfullname="<?php echo $wo['comment']['publisher']['name']?>"><?php echo $wo['lang']['reply']?></span>
+				<span class="pointer bold" id="ReplyComment" onclick="Wo_OpenReplyBoxWithAnswers(<?php echo $wo['comment']['id']; ?>, this);" data-id="<?php echo $wo['comment']['id']; ?>" data-curuser="<?php echo $wo['comment']['publisher']['username']; ?>" data-curfullname="<?php echo $wo['comment']['publisher']['name']?>"><?php echo $wo['lang']['reply']?></span>
 			<?php } ?>
 			<span class="middot">·</span>
 			
@@ -257,9 +257,9 @@ if ($wo['config']['shout_box_system'] == 1 && $wo['story']['postPrivacy'] == 4 &
 			<?php } ?>
 		</div>
 		<?php if($replies > 2) { ?>
-            <div onclick="Wo_ViewMoreReplies(<?php echo $wo['comment']['id']; ?>, this);" class="answers_btn answers_btn-<?php echo $wo['comment']['id'] ?>">
+            <div onclick="Wo_ViewMoreReplies(<?php echo $wo['comment']['id']; ?>, this, document.querySelector('#comment_<?= $wo['comment']['id']?> #ReplyComment'));" class="answers_btn answers_btn-<?php echo $wo['comment']['id'] ?>">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-corner-down-right" style="margin-top: -3px;"><polyline points="15 10 20 15 15 20"></polyline><path d="M4 4v7a4 4 0 0 0 4 4h12"></path></svg>
-                <span class="mr-1"><?php echo $wo['lang']['show'];?></span>
+                <span class="mr-1"><?php echo $wo['lang']['view_word'];?></span>
 				<span class="mr-1"><?php echo Wo_CountCommentReplies($wo['comment']['id']) - 2; ?></span>
 				<span class="answer_variation_<?php echo $wo['comment']['id'] ?>"><?php echo $wo['lang']['view_more_answers']; ?> </span>
             </div>
@@ -267,10 +267,11 @@ if ($wo['config']['shout_box_system'] == 1 && $wo['story']['postPrivacy'] == 4 &
 	</div>
 	<?php echo Wo_LoadPage('modals/delete-comment');?>
 	<script>
-        let declinationRes_<?php echo $wo['comment']['id']; ?> = declination(<?php echo $replies - 2 ?>, ['<?php echo $wo['lang']['answer_1'] ?>', '<?php echo $wo['lang']['answer_2'] ?>', '<?php echo $wo['lang']['answer_3'] ?>']);
         
-		$('.answer_variation_<?php echo $wo['comment']['id']; ?>').text(declinationRes_<?php echo $wo['comment']['id']; ?>);
-
+		if(<?= $replies; ?> > 2) {
+			$('.answer_variation_<?php echo $wo['comment']['id']; ?>').text(declination(<?php echo $replies - 2 ?>, ['<?php echo $wo['lang']['answer_1'] ?>', '<?php echo $wo['lang']['answer_2'] ?>', '<?php echo $wo['lang']['answer_3'] ?>']));
+		}
+		
 		$('#reply-box-<?php echo $wo['comment']['id']; ?>').on('input', function () {
 			console.log($('#comment_<?php echo $wo['comment']['id'];?> .send_comment_button'));
 			if(!$('#reply-box-<?php echo $wo['comment']['id']; ?>').val().trim().length > 0) {

@@ -528,6 +528,8 @@ header {margin-bottom: 30px;}
 .skel_comm_img {width: 100%;height: 120px;border-radius: 5px;}
 
 /*Empty State*/
+#bdayBox .empty_state {height: 350px;}
+#bdayBox .empty_state img {width: 100%; height: 100%; object-fit: cover;}
 .empty_state {padding: 60px 5px;font-size: 15px;color: #555;text-align: center;font-weight: 500;font-family: 'Readex Pro', sans-serif;width: 100%;}
 .empty_state svg {display: block;margin: 0 auto 15px;width: 70px;height: 70px;border-radius: 50%;}
 .empty_state .btn {font-family: "Roboto", sans-serif;margin-top: 40px;}
@@ -1541,6 +1543,11 @@ input.cusrange[type=range]::-ms-thumb {background-color: var(--main);width:15px;
 .tag_stories_on_home .tag_stories_mobi .status-list li.story_empty span b {margin: 0;width: 100%;height: 100%;border-radius: 50%;background: rgb(0 0 0 / 0.05);display: block;}
 .tag_stories_on_home .tag_stories_mobi .status-list li.story_empty p {height: 20px;background: rgb(0 0 0 / 0.05);margin: 20px 20px 0;border-radius: 5px;}
 
+/*Home Interests*/
+.interest {position: relative; display: flex; justify-content: center; text-align: center;}
+.interest p {position: absolute; font-size: 20px; color: #fff;}
+.interest a {width: 100%;}
+
 /*Greeting*/
 .skel_home_greet {height: 25px;width: 300px;margin: 1.5px 0 30px;}
 .greetalert {position: relative;padding: 0px;margin-bottom: 30px;}
@@ -1568,12 +1575,12 @@ input.cusrange[type=range]::-ms-thumb {background-color: var(--main);width:15px;
 
 /*Birthdays*/
 .tag_bdays {margin-bottom: 20px;padding: 5px;}
-.tag_bdays > .btn {box-shadow: none;width: 100%;background: transparent;color: #E91E63;line-height: 38px;text-align: inherit;padding: 0 8px;}
-.tag_bdays > .btn:hover {background-color: rgba(233, 30, 99, 0.05);}
+.tag_bdays > .btn {box-shadow: none;width: 100%;background: transparent;color: #e94335;line-height: 38px;text-align: inherit;padding: 0 8px;}
+.tag_bdays > .btn:hover {background-color: rgba(233, 67, 53, 0.05);}
 .tag_bdays > .btn img {position: absolute;right: 0;bottom: 0px;transform: rotate(-25deg);width: 40px;opacity: 0.7;}
-.tag_bdays > .btn svg {margin: -4px 5px 0 0;width: 28px;height: 28px;background-color: #E91E63;color: white;border-radius: 50%;padding: 4px;}
+.tag_bdays > .btn svg {margin: -4px 5px 0 0;width: 28px;height: 28px;background-color: #e94335;color: white;border-radius: 50%;padding: 4px;}
 .tag_bday_box.modal-content {padding: 14px 30px 0px;}
-.tag_bday_box > .empty_state {padding: 10px 0 20px;font-size: 25px;color: black;margin: -14px -30px 0;background: linear-gradient(#f8e4ff, #fff 60%);border-radius: 10px;width: calc(100% + 60px);}
+.tag_bday_box > .empty_state {padding: 10px 0 40px;font-size: 25px;color: black;margin: -14px -30px 0;background: #fff;border-radius: 10px;width: calc(100% + 60px);}
 .tag_bday_box > .empty_state img {user-select: none;pointer-events: none;display: block;margin: 0 auto -10px;width: 250px;}
 
 /*People You may Know*/
@@ -3960,6 +3967,7 @@ body.side_open {overflow: hidden !important;}
 @media (max-width:1030px) {
 .tag_hdr_right {left: calc(100vw - 270px);}
 .tag_stories_on_home .tag_stories_mobi .status-list li {width: 16.6666667%;min-width: 16.6666667%;}
+.tag_stories_on_home .tag_stories_mobi .status-list.tag_interests {overflow: auto;}
 }
 
 @media (max-width:1010px) {
