@@ -1,7 +1,8 @@
 <li class="interest pointer">
-    <p><?=$wo['interest']['name']?></p>
 	<a href="/hashtag/<?=mb_strtolower($wo['interest']['name'])?>" class="">
+		<div class="interest_gradient"></div>
+		<p><?=$wo['interest']['name']?></p>
 		<img src="<?=$wo['config']['theme_url'] . $wo['interest']['img']?>">
+		<p class="truncate pointer"></p>
 	</a>
-	<p class="truncate pointer"></p>
 </li>

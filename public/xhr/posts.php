@@ -973,7 +973,7 @@ if ($f == 'posts') {
         exit();
     }
     if ($s == 'load_more_posts') {
-        $html = '';
+        $html = ''; 
         if (!empty($_GET['filter_by_more']) && $_GET['filter_by_more'] == 'story' && isset($_GET['story_id']) && isset($_GET['user_id'])) {
             $args           = array();
             $args['offset'] = Wo_Secure($_GET['story_id']);
@@ -1032,9 +1032,10 @@ if ($f == 'posts') {
                 'ad-id' => $ad_id,
                 'story_id' => $story_id,
                 'placement' => 'multi_image_post'
-            );
-            $get_posts = Wo_GetPosts($postsData);
-            $is_api    = false;
+            ); 
+            
+            $get_posts = Wo_GetPosts($postsData); 
+            $is_api    = false; //pa($get_posts); exit;
             if (!empty($_GET['is_api'])) {
                 $is_api = true;
             }
@@ -1046,19 +1047,24 @@ if ($f == 'posts') {
                 } else if ($_GET['posts_count'] > 29) {
                     echo Wo_GetAd('post_third', false);
                 }
-            }
+            } 
             foreach ($get_posts as $wo['story']) {
                 if ($is_api == true) {
                     echo Wo_LoadPage('story/api-posts');
                 } else {
+                    //pa(Wo_LoadPage('story/content'));
                     echo sanitize_output(Wo_LoadPage('story/content'));
                 }
-            }
+            } //pa($_GET); pa($postsData); pa($get_posts); exit;
         }
         exit();
     }
     if ($s == 'edit_post') {
         $_POST['text'] = trim($_POST['text']);
+        
+        // pa(Wo_GetPostCommentsSortByInteresing($_POST['post_id'])); exit;
+        
+        
         if (!empty($_POST['post_id']) && is_numeric($_POST['post_id']) && (!empty($_POST['text']) || !empty($_FILES['images']))) {
             $post_id    = Wo_Secure($_POST['post_id']);
             $post       = $db->where('id', $post_id)->getOne(T_POSTS);
@@ -1168,6 +1174,7 @@ if ($f == 'posts') {
                                             $post_data['time']             = time();
                                             $new_id                        = Wo_RegisterPost($post_data);
                                             Wo_RegisterAlbumMedia($post_id, $post->postFile);
+                                            Wo_RegisterAlbumMedia($new_id, $post->postFile, $post_id);
                                             $db->where('id', $post_id)->update(T_POSTS, array(
                                                 'multi_image' => '1',
                                                 'postFile' => '',
@@ -1562,6 +1569,7 @@ if ($f == 'posts') {
                 }
             }
         }
+        // pa($text_comment); exit();
         header("Content-type: application/json");
         echo json_encode($data);
         exit();
@@ -1705,7 +1713,10 @@ if ($f == 'posts') {
             if (!empty($_GET['comment_id']) && is_numeric($_GET['comment_id']) && $_GET['comment_id'] > 0) {
                 $offset = Wo_Secure($_GET['comment_id']);
             }
-            $comments = Wo_GetPostComments($_GET['post_id'], 10, $offset);
+/*
+            $comments = Wo_GetPostComments($_GET['post_id'], 10, $offset);* 
+ * //ahilespelid//*/
+            $comments = Wo_GetPostCommentsSortByInteresing($_GET['post_id'], 10, ($_GET['comments_count']) ?? '');
             foreach ($comments as $wo['comment']) {
                 $html .= Wo_LoadPage('comment/content');
             }
@@ -1743,11 +1754,17 @@ if ($f == 'posts') {
         if (!empty($_GET['post_id'])) {
             $html        = '';
             $wo['story'] = Wo_PostData($_GET['post_id']);
-            if (!empty($wo['story'])) {
-                foreach (Wo_GetPostCommentsSort($_GET['post_id'], Wo_CountPostComment($_GET['post_id']), $_GET['type']) as $wo['comment']) {
-                    $html .= Wo_LoadPage('comment/content');
+/*//ahilespelid//*/
+            $countComment = Wo_CountPostComment($_GET['post_id']); //$countCommentAnswer = Wo_CountPostCommentAnswer($_GET['post_id']); pa($countComment); pa($countCommentAnswer); pa($commentInteresing);
+            if(!empty($wo['story'])){
+                if('top' == $_GET['type']){
+                    $commentInteresing = Wo_GetPostCommentsSortByInteresing($_GET['post_id'], $countComment);
+                    foreach(Wo_GetPostCommentsSortByInteresing($_GET['post_id'], $countComment) as $wo['comment']){$html .= Wo_LoadPage('comment/content');}
+                }else{
+                    foreach(Wo_GetPostCommentsSort($_GET['post_id'], $countComment, $_GET['type']) as $wo['comment']){$html .= Wo_LoadPage('comment/content');}
                 }
             }
+/*//ahilespelid//*/
             $data = array(
                 'status' => 200,
                 'html' => $html
@@ -2345,18 +2362,10 @@ if ($f == 'posts') {
         echo json_encode($data);
         exit();
     }
-	if ($s == 'register_view' && isset($_POST['post_id']) && !empty($_POST['post_id']) && is_numeric($_POST['post_id'])) {
-        
+    if($s == 'register_view' && isset($_POST['post_id']) && !empty($_POST['post_id']) && is_numeric($_POST['post_id'])){
         $post_id = Wo_Secure($_POST['post_id']);
         $sql_query  = mysqli_query($sqlConnect, "UPDATE `Wo_Posts` SET `post_views` = `post_views` + 1 WHERE `id` = '$post_id'");
-        
-		$data    = array(
-            'status' => 200,
-			'id' => $post_id
-        );
-		
-		header("Content-type: application/json");
-        echo json_encode($data);
-        exit();
+
+        header("Content-type: application/json"); echo json_encode(['status' => 200, 'id' => $post_id]); exit();
     }
 }

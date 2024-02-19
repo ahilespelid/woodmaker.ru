@@ -27,7 +27,7 @@ function sanitize_output($buffer) {
 }
 function Wo_LoadPage($page_url = '') {
     global $wo, $db;
-    $create_file = false;
+    $create_file = false; 
     if ($page_url == 'sidebar/content' && $wo['loggedin'] == true && $wo['config']['cache_sidebar'] == 1) {
         $file_path = './cache/sidebar-' . $wo['user']['user_id'] . '.tpl';
         if (file_exists($file_path)) {
@@ -40,15 +40,15 @@ function Wo_LoadPage($page_url = '') {
         }
     }
     $page         = './themes/' . $wo['config']['theme'] . '/layout/' . $page_url . '.phtml';
-    $page_content = '';
-    ob_start();
+    $page_content = ''; //pa($create_file); pa($wo['config']['cache_sidebar']); pa($page); exit;
+    ob_start(); 
     require($page);
     $page_content = ob_get_contents();
-    ob_end_clean();
+    ob_end_clean();  
     if ($create_file == true && $wo['config']['cache_sidebar'] == 1) {
         $create_sidebar_file = file_put_contents($file_path, $page_content);
         setcookie("last_sidebar_update", time(), time() + (10 * 365 * 24 * 60 * 60));
-    }
+    } 
     return $page_content;
 }
 function Wo_CleanCache($user_id = '', $where = 'sidebar') {
@@ -941,7 +941,7 @@ function Wo_Time_Elapsed_String($ptime) {
     $etime = (time()) - $ptime;
     if ($etime < 1) {
         //return '0 seconds';
-        return 'Now';
+        return $wo['lang']['now'];
     }
     $seconds = abs($etime);
     $minutes = $seconds / 60;
@@ -2198,3 +2198,9 @@ function Wo_Geoyandex($text=''){if(empty($text)){return null;}
     $api = ($wo['config']['yandex_geo_map_api'] ?? '');
     return null;
 }
+///*/ ahilespelid ///*/
+function array_unique_key($array, $key){ 
+    $ret = $key_array = []; $i = 0; 
+    foreach($array as $val){if(!in_array($val[$key], $key_array)){$key_array[$i] = $val[$key];$ret[$i] = $val;} $i++;} 
+return $ret;}
+///*/ ahilespelid ///*/

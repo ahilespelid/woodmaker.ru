@@ -1,6 +1,12 @@
 <?php
+ini_set('error_reporting', E_ALL);
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+//pa(Wo_GetMutualFriends($wo['user_profile']['user_id'],'profile',100)); exit;
+
 $IsOwner       = Wo_IsOnwer($wo['user_profile']['user_id']);
 $IsOwnerUser   = Wo_IsOnwerUser($wo['user_profile']['user_id']);
+$friendsCount = count(Wo_GetMutualFriends($wo['user_profile']['user_id'],'profile',100));
 
 if ($wo['loggedin'] && $IsOwnerUser) {
    $wo['pr_complition'] = Wo_ProfileCompletion();
@@ -19,6 +25,7 @@ if (mysqli_query($wo['sqlConnect'], "DESCRIBE `wondertage_settings`" )) {
 //pa($wo['user']['user_id']);
 //pa(Wo_GetNotifications([]));
 //pa($wo['user']);
+
 ?>
 
 <div class="page-margin profile wo_user_profile" data-page="timeline" data-id="<?php echo $wo['user_profile']['user_id'];?>">
@@ -329,6 +336,9 @@ if (mysqli_query($wo['sqlConnect'], "DESCRIBE `wondertage_settings`" )) {
 							<li>
 								<a href="<?php echo Wo_SeoLink('index.php?link1=timeline&u=' . $wo['user_profile']['username'] . '&type=followers');?>" data-ajax="?link1=timeline&u=<?php echo $wo['user_profile']['username']?>&type=followers"><?php echo $wo['lang']['followers'];?> <span><?php echo number_format($wo['user_profile']['details']['followers_count']);?></span></a>
 							</li>
+							<li>
+								<a href="<?php echo Wo_SeoLink('index.php?link1=timeline&u=' . $wo['user_profile']['username'] . '&type=friends');?>" data-ajax="?link1=timeline&u=<?php echo $wo['user_profile']['username']?>&type=friends"><?php echo $wo['lang']['my_friends'];?> <span><?php echo number_format($friendsCount);?></span></a>
+							</li>
 						<?php } ?>
 						<li>
 							<a href="<?php echo Wo_SeoLink('index.php?link1=timeline&u=' . $wo['user_profile']['username'] . '&type=photos');?>" data-ajax="?link1=timeline&u=<?php echo $wo['user_profile']['username']?>&type=photos"><?php echo $wo['lang']['photos'];?></a>
@@ -379,7 +389,7 @@ if (mysqli_query($wo['sqlConnect'], "DESCRIBE `wondertage_settings`" )) {
 					<div class="col-md-12">
 						<div class="page-margin wow_content wow_sett_content">
 							<div class="valign wo_page_hdng">
-								<span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><path fill="currentColor" d="M19 17V19H7V17S7 13 13 13 19 17 19 17M16 8A3 3 0 1 0 13 11A3 3 0 0 0 16 8M19.2 13.06A5.6 5.6 0 0 1 21 17V19H24V17S24 13.55 19.2 13.06M18 5A2.91 2.91 0 0 0 17.11 5.14A5 5 0 0 1 17.11 10.86A2.91 2.91 0 0 0 18 11A3 3 0 0 0 18 5M8 10H5V7H3V10H0V12H3V15H5V12H8Z"></path></svg></span> <?php echo $wo['user_profile']['details']['following_count'];?> <?php echo $wo['lang']['following']; ?>
+								<span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><path fill="currentColor" d="M19 17V19H7V17S7 13 13 13 19 17 19 17M16 8A3 3 0 1 0 13 11A3 3 0 0 0 16 8M19.2 13.06A5.6 5.6 0 0 1 21 17V19H24V17S24 13.55 19.2 13.06M18 5A2.91 2.91 0 0 0 17.11 5.14A5 5 0 0 1 17.11 10.86A2.91 2.91 0 0 0 18 11A3 3 0 0 0 18 5M8 10H5V7H3V10H0V12H3V15H5V12H8Z"></path></svg></span><?php echo $wo['lang']['following']; ?> <?php echo $wo['user_profile']['details']['following_count'];?> 
 								<?php if ($wo['config']['website_mode'] != 'instagram') { ?>
 									<a href="<?php echo Wo_SeoLink('index.php?link1=timeline&u=' . $wo['user_profile']['username'] . '&type=family_list');?>" data-ajax="?link1=timeline&u=<?php echo $wo['user_profile']['username']?>&type=family_list"><?php echo $wo['lang']['family_members']; ?></a>
 								<?php } ?>
@@ -427,6 +437,41 @@ if (mysqli_query($wo['sqlConnect'], "DESCRIBE `wondertage_settings`" )) {
 										} else {
 											foreach (Wo_GetFollowers($wo['user_profile']['user_id'],'profile',100) as $wo['UsersList']) {
 											echo Wo_LoadPage('timeline/follow-list');
+											} 
+										}
+									}
+								?>
+							</div>
+						</div>
+						<?php if (Wo_CountFollowers($wo['user_profile']['user_id']) > 10) {  ?>
+							<div class="load-more">
+								<button class="btn btn-default text-center pointer" onclick="Wo_GetMoreFollowers(<?php echo $wo['user_profile']['user_id'];?>);"><span><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z"></path></svg></span> <?php echo $wo['lang']['load_more_users']; ?></button>
+							</div>
+						<?php } ?>
+					</div>
+				<?php } else if ($_GET['type'] == 'friends') { ?>
+					<div class="col-md-12">
+						<div class="page-margin wow_content wow_sett_content">
+							<div class="valign wo_page_hdng">
+								<span>
+									<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><path fill="currentColor" d="M16 17V19H2V17S2 13 9 13 16 17 16 17M12.5 7.5A3.5 3.5 0 1 0 9 11A3.5 3.5 0 0 0 12.5 7.5M15.94 13A5.32 5.32 0 0 1 18 17V19H22V17S22 13.37 15.94 13M15 4A3.39 3.39 0 0 0 13.07 4.59A5 5 0 0 1 13.07 10.41A3.39 3.39 0 0 0 15 11A3.5 3.5 0 0 0 15 4Z"></path></svg>
+								</span> <?php if ($wo['config']['connectivitySystem'] == 1) { ?><?php echo $wo['lang']['friends_btn']; ?> <?php echo $wo['user_profile']['details']['following_count'];?> <?php } else { ?><?php echo $wo['lang']['friends_btn']; ?> <?php echo $friendsCount;?> <?php } ?>
+								<?php if ($wo['config']['website_mode'] != 'instagram') { ?>
+									<a href="<?php echo Wo_SeoLink('index.php?link1=timeline&u=' . $wo['user_profile']['username'] . '&type=family_list');?>" data-ajax="?link1=timeline&u=<?php echo $wo['user_profile']['username']?>&type=family_list"><?php echo $wo['lang']['family_members']; ?></a>
+								<?php } ?>
+							</div>
+							<div class="row" id="followers-list">
+								<?php
+								   if (Wo_FriendPrivacy($wo['user_profile']['id'],$wo['user_profile']['friend_privacy'])) {
+										if (Wo_CountFollowers($wo['user_profile']['user_id']) == 0) {
+											if ($wo['config']['connectivitySystem'] == 1) {
+												echo '<div class="empty_state"><svg xmlns="http://www.w3.org/2000/svg" height="512" viewBox="0 0 32 32" width="512"><path d="m26 32h-20c-3.314 0-6-2.686-6-6v-20c0-3.314 2.686-6 6-6h20c3.314 0 6 2.686 6 6v20c0 3.314-2.686 6-6 6z" fill="#ffe6e2"/><g fill="#fd907e"><circle cx="10.667" cy="14.917" r="1.333"/><path d="m12.447 17.183c-.673.507-1.113 1.32-1.113 2.233v.167h-2.834c-.273 0-.5-.227-.5-.5v-.333c0-1.013.82-1.833 1.833-1.833h1.667c.347 0 .673.1.947.266z"/><circle cx="21.333" cy="14.917" r="1.333"/><path d="m24 18.75v.333c0 .273-.227.5-.5.5h-2.833v-.167c0-.913-.44-1.727-1.113-2.233.273-.167.6-.267.947-.267h1.667c1.012.001 1.832.821 1.832 1.834z"/></g><circle cx="16" cy="14.583" fill="#fc573b" r="2"/><path d="m17.833 17.583h-3.667c-1.011 0-1.833.822-1.833 1.833v1c0 .276.224.5.5.5h6.333c.276 0 .5-.224.5-.5v-1c.001-1.01-.822-1.833-1.833-1.833z" fill="#fc573b"/></svg>' . $wo['lang']['no_friends'] . '</div>';
+											} else {
+												echo '<div class="empty_state"><svg xmlns="http://www.w3.org/2000/svg" height="512" viewBox="0 0 32 32" width="512"><path d="m26 32h-20c-3.314 0-6-2.686-6-6v-20c0-3.314 2.686-6 6-6h20c3.314 0 6 2.686 6 6v20c0 3.314-2.686 6-6 6z" fill="#ffe6e2"/><g fill="#fd907e"><circle cx="10.667" cy="14.917" r="1.333"/><path d="m12.447 17.183c-.673.507-1.113 1.32-1.113 2.233v.167h-2.834c-.273 0-.5-.227-.5-.5v-.333c0-1.013.82-1.833 1.833-1.833h1.667c.347 0 .673.1.947.266z"/><circle cx="21.333" cy="14.917" r="1.333"/><path d="m24 18.75v.333c0 .273-.227.5-.5.5h-2.833v-.167c0-.913-.44-1.727-1.113-2.233.273-.167.6-.267.947-.267h1.667c1.012.001 1.832.821 1.832 1.834z"/></g><circle cx="16" cy="14.583" fill="#fc573b" r="2"/><path d="m17.833 17.583h-3.667c-1.011 0-1.833.822-1.833 1.833v1c0 .276.224.5.5.5h6.333c.276 0 .5-.224.5-.5v-1c.001-1.01-.822-1.833-1.833-1.833z" fill="#fc573b"/></svg>' . $wo['lang']['no_followers'] . '</div>';
+											}
+										} else {
+											foreach (Wo_GetMutualFriends($wo['user_profile']['user_id'],'profile',100) as $wo['UsersList']) {
+												echo Wo_LoadPage('timeline/follow-list');
 											} 
 										}
 									}

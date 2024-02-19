@@ -928,7 +928,16 @@ if (!empty($_COOKIE['mode']) && $_COOKIE['mode'] == 'night') {
                             <li <?php echo ($page == 'pages-categories' || $page == 'pages-sub-categories' || $page == 'groups-sub-categories' || $page == 'products-sub-categories' || $page == 'groups-categories' || $page == 'blogs-categories' || $page == 'products-categories') ? 'class="open"' : ''; ?>>
                                 <a href="javascript:void(0);">Categories</a>
                                 <ul class="ml-menu">
-                                    <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['pages-categories'] == 1)) { ?>
+
+                                    <li>
+                                        <a <?php echo ($page == 'categories') ? 'class="active"' : ''; ?> href="<?=Wo_LoadAdminLinkSettings('categories');?>" data-ajax="?path=categories">
+                                            <span>Manage Categories</span>
+                                        </a>
+                                    </li>
+
+                                    <?php //
+                                    /*/ ahilespelid ///* /
+                                    if ($is_admin || ($is_moderoter && $wo['user']['permission']['pages-categories'] == 1)) { ?>
                                     <li>
                                         <a <?php echo ($page == 'pages-categories') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('pages-categories'); ?>" data-ajax="?path=pages-categories">
                                             <span>Pages Categories</span>
@@ -983,7 +992,7 @@ if (!empty($_COOKIE['mode']) && $_COOKIE['mode'] == 'night') {
                                             <span>Job Categories</span>
                                         </a>
                                     </li>
-                                    <?php } ?>
+                                    <?php } ///* /ahilespelid ///*/ ?>
                                 </ul>
                             </li>
                             <?php } ?>

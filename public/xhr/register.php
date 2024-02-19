@@ -92,10 +92,10 @@ if ($f == 'register') {
         if (!empty($fields) && count($fields) > 0) {
             foreach ($fields as $key => $field) {
                 if (empty($_POST[$field['fid']])) {
-                    $errors = $error_icon . $field['name'] . ' is required';
+                    $errors = $error_icon . $field['name'] . ' ' . $wo['lang']['this_is_required'];
                 }
                 if (mb_strlen($_POST[$field['fid']]) > $field['length']) {
-                    $errors = $error_icon . $field['name'] . ' field max characters is ' . $field['length'];
+                    $errors = $error_icon . $field['name'] . " " . $wo['lang']['fields_max_character_is'] . " " . $field['length'];
                 }
             }
         }

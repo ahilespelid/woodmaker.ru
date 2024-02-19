@@ -781,8 +781,8 @@ function Wo_SortComments(type,post_id) {
 	if (type == 'top') {
 		$('.order-text-'+post_id).text('<?php echo($wo['lang']['top']) ?>');
 	} else if('oldest' === type) {
-        $('.order-text-'+post_id).text('<?php echo($wo['lang']['oldest']) ?>');
-    }
+    $('.order-text-'+post_id).text('<?php echo($wo['lang']['oldest']) ?>');
+  }
 	else{
 		$('.order-text-'+post_id).text('<?php echo($wo['lang']['latest']) ?>');
 	}
@@ -800,6 +800,16 @@ function Wo_SortComments(type,post_id) {
             $('#post-' + post_id).find('.post-comments .msg_progress').hide();
 		}
 	});
+}
+
+function checkCommentsValue(id) {
+  if(!$(`.auto-resize_${id}`).val().trim().length > 0) {
+      $(`#post-comments-${id} .send_comment_button`).css("pointer-events", "none");
+      $(`#post-comments-${id} .send_comment_button path:first-child`).css("fill", "rgb(188 113 114)");
+  } else {
+      $(`#post-comments-${id} .send_comment_button`).css("pointer-events", "all");
+      $(`#post-comments-${id} .send_comment_button path:first-child`).css("fill", "rgb(165, 39, 41)");
+  }
 }
 
 function count_char(self,id) {
@@ -1784,11 +1794,11 @@ async function Wo_Geoyandex(req){
     <?php } ?>
 }
 async function Wo_Mapyandex(req){
-    <?php //if(empty($token = ($wo['config']['yandex_geo_map_api'] ?? ''))){?>
-    <?php if(empty($token = '68e6dfc3-8d9e-4f06-a68c-ff338af9ee97')){?>
+    <?php if(empty($token = ($wo['config']['yandex_map_api'] ?? ''))){?>
+    <?php //if(empty($token = '4cf79ea4-bd3f-4a00-9b07-a25cc913dfe7')){?>
         return;
     <?php }else{ ?>
-    const res = await fetch('https://geocode-maps.yandex.ru/1.x?apikey=<?=$token;?>&lang=ru_RU&format=json&results=1&geocode='+req);
+    const res = await fetch('https://geocode-maps.yandex.ru/1.x/?apikey=<?=$token;?>&lang=ru_RU&format=json&uri='+req);
     const map = await res.json();
     return map;       
     <?php } ?>

@@ -75,7 +75,7 @@ if (!empty($_GET['key']) && in_array($_GET['key'], array_keys($wo['page_categori
                   <div class="row">
                        <div class="col-md-6" style="margin-bottom:0;">
                             <form method="get" action="<?php echo Wo_LoadAdminLinkSettings('pages-sub-categories'); ?>">
-                              <div class="row">
+                              <div class="row"> <?php //pa($wo['page_categories']);?>
                                   <div class="col-lg-6 col-md-6">
                                         <select class="form-control show-tick" name="key">
                                             <?php foreach($wo['page_categories'] as $key => $category) { ?>

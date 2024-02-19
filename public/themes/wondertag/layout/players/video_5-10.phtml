@@ -142,7 +142,11 @@ $postVideos = fixLastVideoLink($postVideo)
                 <?php if ($wo['story']['processing'] > 0 && (Wo_IsModerator() || Wo_IsAdmin() || $wo['story']['user_id'] == $wo['user']['id'])) { ?>
                 <?php } ?>
                 <div class='post_video_lightbox' onclick="Wo_OpenLightBox('<?php echo $wo['story']['id'] ?>', '', <?php echo $i; ?>)"></div>
-                <video class="pr-1 plyr-video" controls="controls" src="<?php echo $postVideos[$i]['filename']; ?>" id="video--<?php echo $postVideos[$i]['filename'] ?>" onplay="Wo_OpenLightBox('<?php echo $wo['story']['id'] ?>', '', <?php echo $ ?>)" playsinline preload="metadata" data-setup="{}" data-post-video="<?php echo $wo['story']['id'];?>"></video>
+                <video class="pr-1 plyr-video" controls="controls" 
+                       src="<?=$postVideos[$i]['filename'];?>" 
+                       id="video--<?=$postVideos[$i]['filename'];?>" 
+                       onplay="Wo_OpenLightBox('<?=$wo['story']['id'];?>', '', <?php echo $i; ?>)" 
+                       playsinline preload="metadata" data-setup="{}" data-post-video="<?=$wo['story']['id'];?>"></video>
             </div>
             <?php } ?>
         </div>

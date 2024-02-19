@@ -62,6 +62,7 @@ jQuery(document).ready(function ($) {
       else if (recorder && _SELF.attr('data-record') == 2) {
        Wo_CleanRecordNodes();
        Wo_StopLocalStream();
+       checkCommentsValue(_SELF.attr('id'), true);
        _SELF.html('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22"><rect x="9" y="2" width="6" height="13" rx="3" fill="currentColor" fill-opacity="0.16"/><path fill-rule="evenodd" clip-rule="evenodd" d="M12 1.25C9.92893 1.25 8.25 2.92893 8.25 5V12C8.25 14.0711 9.92893 15.75 12 15.75C14.0711 15.75 15.75 14.0711 15.75 12V5C15.75 2.92893 14.0711 1.25 12 1.25ZM9.75 5C9.75 3.75736 10.7574 2.75 12 2.75C13.2426 2.75 14.25 3.75736 14.25 5V12C14.25 13.2426 13.2426 14.25 12 14.25C10.7574 14.25 9.75 13.2426 9.75 12V5ZM5.75 12C5.75 11.5858 5.41421 11.25 5 11.25C4.58579 11.25 4.25 11.5858 4.25 12C4.25 14.7248 5.35083 16.6879 6.90007 17.9555C8.19962 19.0187 9.78803 19.5726 11.25 19.7135V22C11.25 22.4142 11.5858 22.75 12 22.75C12.4142 22.75 12.75 22.4142 12.75 22V19.7135C14.212 19.5726 15.8004 19.0187 17.0999 17.9555C18.6492 16.6879 19.75 14.7248 19.75 12C19.75 11.5858 19.4142 11.25 19 11.25C18.5858 11.25 18.25 11.5858 18.25 12C18.25 14.2752 17.3508 15.8121 16.1501 16.7945C14.9259 17.7961 13.3499 18.25 12 18.25C10.6501 18.25 9.07409 17.7961 7.84993 16.7945C6.64917 15.8121 5.75 14.2752 5.75 12Z" fill="currentColor"/></svg>').attr('data-record', '0');  
       }
 
@@ -69,7 +70,6 @@ jQuery(document).ready(function ($) {
         return false;
       }
     }, 500);
-    
   });
 
   $(document).on('click', ".record-chat-audio", function (event) {
@@ -448,34 +448,32 @@ function Wo_RegisterComment(text, post_id, user_id, event, page_id, type,gif_url
     text = $('[id=post-' + post_id + ']').find('.comment-textarea').val();
   }
   
-  
   if (event.keyCode == 13 && event.shiftKey == 0 && recording_node == "comm") {
     Wo_stopRecording(); 
-    if (recorder) { 
-      recorder.exportWAV(function (blob){
-        var comment_src_image = $('#post-' + post_id).find('#comment_src_image');
-        var comment_image = '';
-        if (comment_src_image.length > 0) {
-          comment_image = comment_src_image.val();
-        }       
-        var dataForm = new FormData();                    
-        dataForm.append('post_id', post_id);
-        dataForm.append('text', text);
-        dataForm.append('user_id', user_id);
-        dataForm.append('page_id', page_id);
-        dataForm.append('comment_image', comment_image);
-		dataForm.append('gif_url', gif_url);
-        if (blob.size > 50) {
-          var fileName = (new Date).toISOString().replace(/:|\./g, '-');
-          var file = new File([blob], 'wo-' + fileName + '.wav', { type: 'audio/wav' });
-          dataForm.append('audio-filename', file.name);
-          dataForm.append('audio-blob', file);
-        }
-        Wo_InsertComment(dataForm, post_id);
-      });
-    }
+    // if (recorder) { 
+    //   recorder.exportWAV(function (blob){
+    //     var comment_src_image = $('#post-' + post_id).find('#comment_src_image');
+    //     var comment_image = '';
+    //     if (comment_src_image.length > 0) {
+    //       comment_image = comment_src_image.val();
+    //     }       
+    //     var dataForm = new FormData();                    
+    //     dataForm.append('post_id', post_id);
+    //     dataForm.append('text', text);
+    //     dataForm.append('user_id', user_id);
+    //     dataForm.append('page_id', page_id);
+    //     dataForm.append('comment_image', comment_image);
+		//     dataForm.append('gif_url', gif_url);
+    //     if (blob.size > 50) {
+    //       var fileName = (new Date).toISOString().replace(/:|\./g, '-');
+    //       var file = new File([blob], 'wo-' + fileName + '.wav', { type: 'audio/wav' });
+    //       dataForm.append('audio-filename', file.name);
+    //       dataForm.append('audio-blob', file);
+    //     }
+    //     Wo_InsertComment(dataForm, post_id);
+    //   });
+    // }
 
-    else {
         var comment_src_image = $('#post-' + post_id).find('#comment_src_image');
         var comment_image = '';
         if (comment_src_image.length > 0) {
@@ -487,10 +485,11 @@ function Wo_RegisterComment(text, post_id, user_id, event, page_id, type,gif_url
         dataForm.append('user_id', user_id);
         dataForm.append('page_id', page_id);
         dataForm.append('comment_image', comment_image);
-		dataForm.append('gif_url', gif_url);
+		    dataForm.append('gif_url', gif_url);
         $('#charsLeft_' + post_id).text($('#charsLeft_' + post_id).attr('data_num')); 
-        Wo_InsertComment(dataForm, post_id);
-    }
+        Wo_InsertComment(dataForm, post_id)
+        // Wo_loadPostMoreComments(post_id, `#more-comments-${post_id}`)
+        checkCommentsValue(post_id)
   }
 }
 
@@ -500,31 +499,30 @@ function Wo_RegisterComment2(post_id, user_id, page_id, type,gif_url = '') {
   text = $('[id=post-' + post_id + ']').find('.comment-textarea').val();
   //if (recording_node == "comm") {
     Wo_stopRecording(); 
-    if (recorder) { 
-      recorder.exportWAV(function (blob) {
-        var comment_src_image = $('#post-' + post_id).find('#comment_src_image');
-        var comment_image = '';
-        if (comment_src_image.length > 0) {
-          comment_image = comment_src_image.val();
-        }       
-        var dataForm = new FormData();                    
-        dataForm.append('post_id', post_id);
-        dataForm.append('text', text);
-        dataForm.append('user_id', user_id);
-        dataForm.append('page_id', page_id);
-        dataForm.append('comment_image', comment_image);
-		dataForm.append('gif_url', gif_url);
-        if (blob.size > 50) {
-          var fileName = (new Date).toISOString().replace(/:|\./g, '-');
-          var file = new File([blob], 'wo-' + fileName + '.wav', { type: 'audio/wav' });
-          dataForm.append('audio-filename', file.name);
-          dataForm.append('audio-blob', file);
-        }
-        Wo_InsertComment(dataForm, post_id);
-      });
-    }
+    // if (recorder) { 
+    //   recorder.exportWAV(function (blob) {
+    //     var comment_src_image = $('#post-' + post_id).find('#comment_src_image');
+    //     var comment_image = '';
+    //     if (comment_src_image.length > 0) {
+    //       comment_image = comment_src_image.val();
+    //     }       
+    //     var dataForm = new FormData();                    
+    //     dataForm.append('post_id', post_id);
+    //     dataForm.append('text', text);
+    //     dataForm.append('user_id', user_id);
+    //     dataForm.append('page_id', page_id);
+    //     dataForm.append('comment_image', comment_image);
+		//     dataForm.append('gif_url', gif_url);
+    //     if (blob.size > 50) {
+    //       var fileName = (new Date).toISOString().replace(/:|\./g, '-');
+    //       var file = new File([blob], 'wo-' + fileName + '.wav', { type: 'audio/wav' });
+    //       dataForm.append('audio-filename', file.name);
+    //       dataForm.append('audio-blob', file);
+    //     }
+    //     Wo_InsertComment(dataForm, post_id);
+    //   });
+    // }
 
-    else {
         var comment_src_image = $('#post-' + post_id).find('#comment_src_image');
         var comment_image = '';
         if (comment_src_image.length > 0) {
@@ -536,10 +534,11 @@ function Wo_RegisterComment2(post_id, user_id, page_id, type,gif_url = '') {
         dataForm.append('user_id', user_id);
         dataForm.append('page_id', page_id);
         dataForm.append('comment_image', comment_image);
-		dataForm.append('gif_url', gif_url);
+		    dataForm.append('gif_url', gif_url);
         $('#charsLeft_' + post_id).text($('#charsLeft_' + post_id).attr('data_num'));
-        Wo_InsertComment(dataForm, post_id);
-    }
+        Wo_InsertComment(dataForm, post_id)
+        // Wo_loadPostMoreComments(post_id, `#more-comments-${post_id}`)
+        checkCommentsValue(post_id)
   //}
 }
 
@@ -556,6 +555,7 @@ function Wo_RegisterComment3(post_id, user_id, page_id, type) {
         dataForm.append('comment_image', comment_image);
         Wo_InsertComment(dataForm, post_id);
 	}
+  // Wo_loadPostMoreComments(post_id, `#more-comments-${post_id}`)
 }
 
 function Wo_InsertComment(dataForm, post_id){
@@ -580,23 +580,34 @@ function Wo_InsertComment(dataForm, post_id){
         contentType: false,
     }).done(function (data) {
       if (data.status == 200) {
-		  if (node_socket_flow == "1") {
-        socket.emit("post_notification", { post_id: post_id, user_id: _getCookie("user_id"), type: "added" });
-      }
+        if (node_socket_flow == "1") {
+          socket.emit("post_notification", { post_id: post_id, user_id: _getCookie("user_id"), type: "added" });
+        }
         Wo_CleanRecordNodes();
-        post_wrapper.find('.post-footer .comment-container:last-child').after(data.html);
-        post_wrapper.find('.comments-list-lightbox .comment-container:first').before(data.html);
-		if (post_wrapper.find('.tag_hid_e_com').hasClass("d-none")) {
-			post_wrapper.find('.tag_hid_e_com').removeClass("d-none");
-		}
+
+        console.log(post_wrapper)
+        console.log(post_wrapper.find('.post-footer .comments-list'))
+        console.log($('#more-comments-' + post_id))
+        if($('#more-comments-' + post_id).length <= 0) {
+          post_wrapper.find('.post-footer .comments-list').append(data.html);
+          post_wrapper.find('.comments-list-lightbox .comment:first').append(data.html);
+        }
+        if (post_wrapper.find('.tag_hid_e_com').hasClass("d-none")) {
+          post_wrapper.find('.tag_hid_e_com').removeClass("d-none");
+        }
+
         post_wrapper.find('[id=comments]').html(data.comments_num);
         post_wrapper.find('.lightbox-no-comments').remove();
         Wo_StopLocalStream();
-		if (data.mention.length > 0 && node_socket_flow == "1") {
-        $.each(data.mention, function( index, value ) {
-          socket.emit("user_notification", { to_id: value, user_id: _getCookie("user_id")});
-        });
-      }
+
+        if (data.mention.length > 0 && node_socket_flow == "1") {
+          $.each(data.mention, function( index, value ) {
+            socket.emit("user_notification", { to_id: value, user_id: _getCookie("user_id")});
+          });
+        }
+        if($('#more-comments-' + post_id).length) {
+          Wo_loadPostMoreComments(post_id, `#more-comments-${post_id}`);
+        }
       }
       $('#post-' + post_id).find('.comment-image-con').empty().addClass('hidden');
       $('#post-' + post_id).find('#comment_src_image').val('');

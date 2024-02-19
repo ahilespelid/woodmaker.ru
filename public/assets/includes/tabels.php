@@ -103,6 +103,7 @@ define('T_STICKERS', 'Wo_Stickers');
 define('T_REACTIONS', 'Wo_Reactions');
 define('T_STORY_SEEN', 'Wo_Story_Seen');
 define('T_MANAGE_PRO', 'Wo_Manage_Pro');
+define('T_CATEGORIES', 'Wo_Categories');
 define('T_PAGES_CATEGORY', 'Wo_Pages_Categories');
 define('T_GROUPS_CATEGORY', 'Wo_Groups_Categories');
 define('T_BLOGS_CATEGORY', 'Wo_Blogs_Categories');

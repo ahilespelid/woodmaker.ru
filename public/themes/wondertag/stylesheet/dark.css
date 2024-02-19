@@ -213,6 +213,8 @@ body .sidebar .wo_sidebar_pages .card {background-color: var(--header-background
 .sec_text {color: #e0e0e0 !important}
 .sec_text a {color: #e8e8e8 !important}
 .ajax-time {color: #dbdbdb !important}
+.post .ajax-time {color: #dbdbdb !important;}
+.post .post-footer .comment .ajax-time {color: #dbdbdb !important;}
 /*Jobs*/
 .tag_nearby_places {background-color: #2d3b2d;box-shadow: none;}
 .tag_job_jumbo > div.dropdown > .btn, .tag_job_jumbo > div.search-bar input {border-color: #434343;}
@@ -317,6 +319,7 @@ body .sidebar .wo_sidebar_pages .card {background-color: var(--header-background
 .tag_pub_box_progress .progress {background-color: #3b3b3b;}
 .tag_pub_box_btns {background-color: rgb(255 255 255 / 0.08);color: #dcdcdc;}
 .tag_pub_rectime {background-color: #323232;}
+.answers_btn {color: #d8d8d8;}
 .album-form input, .gif-form > input, .tag_pub_feels_innr > input, .poll-form .answers input, .map-form > input {background-color: rgb(255 255 255 / 6%);}
 .tag_pub_vids .video-poster-image {background-color: rgb(0 0 0 / 80%);}
 .tag_pub_vids .video-poster-image .preview .empty_state {border-color: rgb(255 255 255 / 38%);color: white;}
@@ -409,6 +412,10 @@ body .sidebar .wo_sidebar_pages .card {background-color: var(--header-background
 .wo_ad_header_format {
     background-color: #212121;
     border-color: rgb(255 255 255 / 15%);
+}
+
+.post_location {
+    background: rgb(255 255 255 / 0.06);
 }
 
 .review_list {

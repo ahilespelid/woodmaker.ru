@@ -1,13 +1,13 @@
 <?php
 $hashtag = '';
 $url = '';
+$anonym = false;
 if (isset($_GET['link1']) && $_GET['link1'] == 'hashtag' && !empty($_GET['hash'])) {
   $hashtag = '#' . $_GET['hash'];
 }
 if (!empty($_GET['url'])) {
   $url = urldecode($_REQUEST['url']);
 }
-//pa($_GET);
 ?>
 
 <div class="wow_content valign tag_pub_box_bg">
@@ -16,7 +16,7 @@ if (!empty($_GET['url'])) {
 			<img src="<?php echo (empty($wo['page_profile']['avatar'])) ? $wo['user']['avatar'] : $wo['page_profile']['avatar'];?>">
 		</a>
 	<?php } ?>
-	<button type="button" class="btn btn-default btn-mat text-left tag_pub_box_bg_text" data-toggle="modal" data-target="#tagPostBox" data-backdrop="static" data-keyboard="false"><?php echo TextForMode('publisher_box_placeholder'); ?></button>
+	<button type="button" class="btn btn-default btn-mat text-left tag_pub_box_bg_text" data-toggle="modal" data-target="#tagPostBox" data-backdrop="static" data-keyboard="false"><?php if(true == Wo_IsMobile()) {echo TextForMode('publisher_box_placeholder_mobile');} else {echo TextForMode('publisher_box_placeholder') . ' ' . $wo['user']['first_name'] . '?';}; ?></button>
 	<?php if ($wo['config']['live_video'] == 1 && ($wo['config']['millicast_live_video'] == 1 || $wo['config']['agora_live_video'] == 1) && $wo['config']['can_use_live']) { ?>
 		<a class="btn btn-mat tag_pub_box_bg_camlve live" href="<?php echo($wo['config']['site_url']) ?>/live" title="<?php echo $wo['lang']['live']; ?>">
 			<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M17,10.5L21,6.5V17.5L17,13.5V17A1,1 0 0,1 16,18H4A1,1 0 0,1 3,17V7A1,1 0 0,1 4,6H16A1,1 0 0,1 17,7V10.5M14,16V15C14,13.67 11.33,13 10,13C8.67,13 6,13.67 6,15V16H14M10,8A2,2 0 0,0 8,10A2,2 0 0,0 10,12A2,2 0 0,0 12,10A2,2 0 0,0 10,8Z" /></svg>
@@ -1571,35 +1571,39 @@ $(function () {
 	  });
 /// Вывод карты при клике на местоположение при публикации поста */
 if ($wo['config']['yandex_map'] == 1) { $token = $wo['config']['yandex_map_api']; ?>
-
 $(document).ready(function(){
-    //getUserLocation();
     const searchTextField = document.getElementById("searchTextField");
-
+    
     searchTextField.addEventListener('input', (e) => {$(function(){
-        let self = this;
+        /*
         console.log(searchTextField.value);
-        
-        
-        var myGeodate = Wo_Geoyandex(searchTextField.value);
-            if(myGeodate){
-                myGeodate.then(function(res){
-                    
-                    if(res.results){
-                        console.log(res);
-                        console.log(res.results.length);
-                        for(var key in res.results){
-                            let coord = Wo_Mapyandex(res.results[key].title.text);
-                            
-                            console.log(coord);
-                            console.log(res.results[key].title.text+' -> '+res.results[key].distance.text+' -> '+res.results[key].uri);
-                            console.log(res);
+        let myGeo = Wo_Geoyandex(searchTextField.value);
+        myGeo.then(function(res){
+            $('.yandex_search_publisher').html('<p class="pointer my_location" geo="" onclick="AddYandexResult(\'#searchTextField\',this,\'.yandex_search_publisher\');"><?php echo $wo['lang']['my_location']?></p>'); getUserLocation();
+            if(res.results){ //console.log(res); console.log(res.results.length); console.log(res.results[key].title.text+' -> '+res.results[key].distance.text+' -> '+res.results[key].uri);
+                for(var key in res.results){
+                    Wo_Mapyandex(res.results[key].uri).then((res) => {//console.log(typeof(coord)); console.log(!('undefined' === typeof(coord)));
+                        let el = res.response.GeoObjectCollection.featureMember; 
+                        //console.log(res); console.log(el.length);
+                        if(0 < el.length){
+                            let name = el[0].GeoObject.name +' '+ el[0].GeoObject.description,
+                                geo = el[0].GeoObject.Point.pos.replace(/ /g, ",");
+                            console.log(name, geo);
+                            $('.yandex_search_publisher').append('<p class="pointer" data-name="'+name+'" geo="'+geo+'" onclick="AddYandexResult(\'#searchTextField\',this,\'.yandex_search_publisher\');">'+name+'</p>');
                         }
-                    }else{/*/undefined//*/}
-                    
+                        //for(var i = 0; i < res.geoObjects.getLength(); i++){
+                            //$('.yandex_search_publisher').append('<p class="pointer" data-name="'+res.geoObjects.get(i).properties.get('name')+'" geo="'+res.geoObjects.get(i).geometry.getCoordinates()+'" onclick="AddYandexResult(\'#searchTextField\',this,\'.yandex_search_publisher\');">'+res.geoObjects.get(i).properties.get('name')+'</p>');
+                        //}
+                        //let coord = res.response.GeoObjectCollection.featureMember[0];
+                        //if(!('undefined' === typeof(coord))){
+                        //    $('.yandex_search_publisher').append('<p class="pointer" data-name="'+coord.GeoObject.name+'" geo="'+coord.GeoObject.Point.pos+'" onclick="AddYandexResult(\'#searchTextField\',this,\'.yandex_search_publisher\');">'+coord.GeoObject.name+'</p>');
+                        //    console.log(coord.GeoObject.name, coord.GeoObject.Point.pos,);
+                        //}
+                    });
                 }
-            );}
-        
+            }else{$('.yandex_search_publisher').html('<p class="pointer my_location" geo="" onclick="AddYandexResult(\'#searchTextField\',this,\'.yandex_search_publisher\');"><?php echo $wo['lang']['my_location']?></p>'); getUserLocation();}
+        });
+/**/
         var myGeocoder = ymaps.geocode(searchTextField.value);
         myGeocoder.then(
             function(res){
@@ -1616,6 +1620,7 @@ $(document).ready(function(){
                 $('.yandex_search_publisher').html('');
             }
         );
+
     });});
 });
    
@@ -1746,7 +1751,7 @@ function Wo_RestFeelings() {
 function Wo_AddFeeling(type, text, icon) {
 	$('#feelings-text').val(type);
 	$('.feelings-value').html('<i class="twa-lg twa twa-' + icon + '"></i> ' + text + '')
-	Wo_ShowFeelingType('feelings', 'Feeling', 'What are you feeling ?', 'smile-o');
+	Wo_ShowFeelingType('feelings', '<?php echo $wo["lang"]["feeling"]?>', 'What are you feeling ?', 'smile-o');
 }
 function smokeTheAt(str) {
 	var n = str.search("@");

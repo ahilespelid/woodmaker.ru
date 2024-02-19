@@ -53,7 +53,7 @@ if ($wo['config']['shout_box_system'] == 1 && $wo['story']['postPrivacy'] == 4 &
 								    <?php if ($wo['user']['language'] == 'english'){; ?>
 						    <?php
 						    $string = $wo['comment']['publisher']['name'];
-						    $string = strtr($string, ['Б'=>'B','б'=>'b','В'=>'V','в'=>'v','Г'=>'G','г'=>'g','Д'=>'D','д'=>'d','Е'=>'YE','е'=>'ye','Ё'=>'YO','ё'=>'yo','Ж'=>'Zh','ж'=>'zh','З'=>'Z','з'=>'z','И'=>'I','и'=>'i','Й'=>'Y','й'=>'y','К'=>'K','к'=>'k','Л'=>'L','л'=>'l','Н'=>'N','н'=>'n','П'=>'P','п'=>'p','Р'=>'R','р'=>'r','С'=>'S','c'=>'s ','T'=>'T','т'=>'t','У'=>'U','у'=>'u','Ф'=>'F','ф'=>'f','Х'=>'H','х'=>'h','Ц'=>'TS','ц'=>'ts','Ч'=>'CH','ч'=>'ch','Ш'=>'SH','ш'=>'sh','Ы'=>'I','ы'=>'i','Э'=>'E','э'=>'e','Ю'=>'YU','ю'=>'yu','Я'=>'YA','я'=>'ya']);
+						    // $string = strtr($string, ['Б'=>'B','б'=>'b','В'=>'V','в'=>'v','Г'=>'G','г'=>'g','Д'=>'D','д'=>'d','Е'=>'YE','е'=>'ye','Ё'=>'YO','ё'=>'yo','Ж'=>'Zh','ж'=>'zh','З'=>'Z','з'=>'z','И'=>'I','и'=>'i','Й'=>'Y','й'=>'y','К'=>'K','к'=>'k','Л'=>'L','л'=>'l','Н'=>'N','н'=>'n','П'=>'P','п'=>'p','Р'=>'R','р'=>'r','С'=>'S','c'=>'s ','T'=>'T','т'=>'t','У'=>'U','у'=>'u','Ф'=>'F','ф'=>'f','Х'=>'H','х'=>'h','Ц'=>'TS','ц'=>'ts','Ч'=>'CH','ч'=>'ch','Ш'=>'SH','ш'=>'sh','Ы'=>'I','ы'=>'i','Э'=>'E','э'=>'e','Ю'=>'YU','ю'=>'yu','Я'=>'YA','я'=>'ya']);
 						    
 						     echo $string; ?>
 						    
@@ -75,7 +75,9 @@ if ($wo['config']['shout_box_system'] == 1 && $wo['story']['postPrivacy'] == 4 &
 					<?php } ?>
 				</div>
 				<div class="valign">
-					<div class="comment-text <?php if (!empty($wo['comment']['c_file'])): ?>border_zero<?php endif ?>"><span class="tag_trim_comm_text"><?php echo $wo['comment']['text']?></span></div>
+					<?php if(!empty($wo['comment']['text'])) {?>
+						<div class="comment-text <?php if (!empty($wo['comment']['c_file'])): ?>border_zero<?php endif ?>"><span class="tag_trim_comm_text"><?php echo $wo['comment']['text']?></span></div>
+					<?php }?>
 					<div class="comment_edele_options">
 						<?php if ( $wo['config']['comment_reports'] == 1 && $wo['comment']['onwer'] !== true){ ?>
 							<span class="pointer comment-icons" id="reportComment<?php echo $wo['comment']['id']?>" onclick="Wo_ReportComment(<?php echo $wo['comment']['id']?>);" title="<?php echo $wo['lang']['report_comment']; ?>"><svg xmlns="http://www.w3.org/2000/svg" height="15" viewBox="0 0 24 24" width="15"><path fill="currentColor" opacity=".6" d="M20 2H4.01c-1.1 0-2 .9-2 2v18L6 18h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-7 12h-2v-2h2v2zm0-5c0 .55-.45 1-1 1s-1-.45-1-1V7c0-.55.45-1 1-1s1 .45 1 1v2z"/></svg></span>
@@ -168,7 +170,7 @@ if ($wo['config']['shout_box_system'] == 1 && $wo['story']['postPrivacy'] == 4 &
 			<?php } ?>
 			<?php if (($wo['config']['website_mode'] != 'askfm')) { ?>
 				<span class="middot">·</span>
-				<span class="pointer bold" id="ReplyComment" onclick="Wo_OpenReplyBoxWithAnswers(<?php echo $wo['comment']['id']; ?>, this);" data-id="<?php echo $wo['comment']['id']; ?>" data-curuser="<?php echo $wo['comment']['publisher']['username']; ?>" data-curfullname="<?php echo $wo['comment']['publisher']['name']?>"><?php echo $wo['lang']['reply']?></span>
+				<span class="pointer bold" id="ReplyComment-<?php echo $wo['comment']['id']?>" onclick="Wo_OpenReplyBox(<?php echo $wo['comment']['id']; ?>, this);" data-id="<?php echo $wo['comment']['id']; ?>" data-curuser="<?php echo $wo['comment']['publisher']['username']; ?>" data-curfullname="<?php echo $wo['comment']['publisher']['name']?>"><?php echo $wo['lang']['reply']?></span>
 			<?php } ?>
 			<span class="middot">·</span>
 			
@@ -179,11 +181,19 @@ if ($wo['config']['shout_box_system'] == 1 && $wo['story']['postPrivacy'] == 4 &
 			?>
 				<span class="time pointer" title="<?php echo date('c',$wo['comment']['time']);?>" onclick="go_to_duration(<?php echo($wo['story']['id']) ?>,<?php echo $current_time; ?>)"><?php echo $time ?></span>
 			<?php  }else{ ?>
-					<span class="time ajax-time mr-1" title="<?php echo date('c',$wo['comment']['time']);?>"><?php echo $wo['comment']['time']?>
+					<span class="time ajax-time mr-1" title="<?php echo date('c',$wo['comment']['time']);?>">
+					<?php 
+						$comment_time = Wo_Time_Elapsed_String($wo['comment']['time']);
+						echo $comment_time . (($wo['lang']['now'] !== $comment_time) ? ' ' . $wo['lang']['time_ago'] : '');
+					?>
 			<?php } ?>
 		</span>
         <div class="comment-edit">
-			<textarea onkeydown="textAreaAdjust(this, 26)" class="edit-box form-control" onkeyup="Wo_EditComment(this.value,<?php echo $wo['comment']['id']?>, event)" placeholder="<?php echo $wo['lang']['edit_comment']; ?>" dir="auto" id="edit_comment_<?php echo $wo['comment']['id']?>"><?php echo $wo['comment']['Orginaltext']?></textarea>
+			<textarea onkeydown="textAreaAdjust(this, 26)" class="edit-box form-control" onkeyup="Wo_EditComment(<?php echo $wo['comment']['id']?>, event)" placeholder="<?php echo $wo['lang']['edit_comment']; ?>" dir="auto" id="edit_comment_<?php echo $wo['comment']['id']?>"><?php echo $wo['comment']['Orginaltext']?></textarea>
+			<div class="comment-edit-buttons">
+				<div class="btn btn-main btn-mat" onclick="Wo_OpenCommentEditBox(<?php echo $wo['comment']['id'];?>)">Отмена</div>
+				<div class="btn btn-main btn-mat" onclick="Wo_EditComment(<?php echo $wo['comment']['id']?>, 'click')">Сохранить</div>
+			</div>
 		</div>
 		<?php if($replies > 0) {?>
 			<hr class="comment-reply-separation">
@@ -257,7 +267,7 @@ if ($wo['config']['shout_box_system'] == 1 && $wo['story']['postPrivacy'] == 4 &
 			<?php } ?>
 		</div>
 		<?php if($replies > 2) { ?>
-            <div onclick="Wo_ViewMoreReplies(<?php echo $wo['comment']['id']; ?>, this, document.querySelector('#comment_<?= $wo['comment']['id']?> #ReplyComment'));" class="answers_btn answers_btn-<?php echo $wo['comment']['id'] ?>">
+            <div class="view-more-replies" id="view-more-replies-<?=$wo['comment']['id']?>" onclick="Wo_ViewMoreReplies(<?php echo $wo['comment']['id']; ?>, this, document.querySelector('#comment_<?= $wo['comment']['id']?> #ReplyComment'));" class="answers_btn answers_btn-<?php echo $wo['comment']['id'] ?>">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-corner-down-right" style="margin-top: -3px;"><polyline points="15 10 20 15 15 20"></polyline><path d="M4 4v7a4 4 0 0 0 4 4h12"></path></svg>
                 <span class="mr-1"><?php echo $wo['lang']['view_word'];?></span>
 				<span class="mr-1"><?php echo Wo_CountCommentReplies($wo['comment']['id']) - 2; ?></span>
@@ -271,7 +281,7 @@ if ($wo['config']['shout_box_system'] == 1 && $wo['story']['postPrivacy'] == 4 &
 		if(<?= $replies; ?> > 2) {
 			$('.answer_variation_<?php echo $wo['comment']['id']; ?>').text(declination(<?php echo $replies - 2 ?>, ['<?php echo $wo['lang']['answer_1'] ?>', '<?php echo $wo['lang']['answer_2'] ?>', '<?php echo $wo['lang']['answer_3'] ?>']));
 		}
-		
+
 		$('#reply-box-<?php echo $wo['comment']['id']; ?>').on('input', function () {
 			console.log($('#comment_<?php echo $wo['comment']['id'];?> .send_comment_button'));
 			if(!$('#reply-box-<?php echo $wo['comment']['id']; ?>').val().trim().length > 0) {

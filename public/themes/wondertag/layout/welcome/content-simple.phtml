@@ -43,7 +43,7 @@ if (mysqli_query($wo['sqlConnect'], "DESCRIBE `wondertage_settings`" )) {
 					<?php } ?>
 					<?php
 						//Временное отключение кнопки скачивания приложения, регистрации во всех соц-сетях
-						$off_app = false;
+						$off_app = true;
 					?>
 					<?php if ($off_app AND !empty($wo['config']['native_android_messenger_url']) || !empty($wo['config']['native_android_timeline_url']) || !empty($wo['config']['native_ios_messenger_url']) || !empty($wo['config']['native_ios_timeline_url']) || !empty($wo['config']['native_windows_messenger_url'])) { ?>
 						<div class="tag_wel_widget wo_side_apps">

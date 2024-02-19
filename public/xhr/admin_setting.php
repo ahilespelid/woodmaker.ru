@@ -1832,6 +1832,23 @@ if ($f == 'admin_setting' AND (Wo_IsAdmin() || Wo_IsModerator())) {
         }
     }
     // category
+///*/ ahilespelid ///*/
+
+    if($s == 'update_sort_category'){
+        $data['status'] = 400;
+        if(!empty($cat = Wo_GetCategoriesOne($_REQUEST['id']))){
+            if(empty($cat['sort']) || 0 > $cat['sort']){$cat['sort']=0;}    
+            $cat['sort'] = ('u' == $_REQUEST['sort']) ? $cat['sort']+1 : (('d' == $_REQUEST['sort'] && 0 <> $cat['sort']) ? $cat['sort']-1 : '');
+            if(Wo_UpdateCategoriesOne($cat['id'],$cat)){$data['status'] = 200;}
+        }
+
+        header("Content-type: application/json");
+        echo json_encode($data);
+        exit();    
+    }
+    
+///*/ ahilespelid ///*/
+
     if ($s == 'add_new_category') {
         $data['status']  = 400;
         $data['message'] = 'Please check your details';

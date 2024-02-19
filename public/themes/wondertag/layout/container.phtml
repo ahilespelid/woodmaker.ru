@@ -24,12 +24,33 @@ if (mysqli_query($wo['sqlConnect'], "DESCRIBE `wondertage_settings`" )) {
 		<meta name="keywords" content="<?php echo $wo['keywords'];?>">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
         <meta name="application-name" content="Woodmaker - Социальная сеть для увлеченных деревообработкой">
+
+<?php ///*/ ahilespelid ///*/ ?>
+<link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png">
+<link rel="apple-touch-icon" sizes="60x60" href="/apple-icon-60x60.png">
+<link rel="apple-touch-icon" sizes="72x72" href="/apple-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="76x76" href="/apple-icon-76x76.png">
+<link rel="apple-touch-icon" sizes="114x114" href="/apple-icon-114x114.png">
+<link rel="apple-touch-icon" sizes="120x120" href="/apple-icon-120x120.png">
+<link rel="apple-touch-icon" sizes="144x144" href="/apple-icon-144x144.png">
+<link rel="apple-touch-icon" sizes="152x152" href="/apple-icon-152x152.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-icon-180x180.png">
+<link rel="icon" type="image/png" sizes="192x192"  href="/android-icon-192x192.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<meta name="msapplication-TileColor" content="#ffffff">
+<meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+<meta name="theme-color" content="#ffffff">
+<?php ///*/ ahilespelid ///*/ ?>            
+<?php /*
+
         <link rel="icon" sizes="16x16 32x32 48x48" href="/android-icon-32x32.png">
         <link rel="icon" sizes="512x512" href="/android-icon-512x512.png">    
-
         
         <link rel="manifest" href="/manifest.json">
-		<link rel="apple-touch-icon" href="<?php echo $wo['config']['theme_url'];?>/img/icon.png">
+		<link rel="apple-touch-icon" href="<?php echo $wo['config']['theme_url'];?>/img/icon.png"> */?>
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-title" content="<?php echo $wo['config']['siteName'];?>">
 		
@@ -1753,41 +1774,6 @@ if (mysqli_query($wo['sqlConnect'], "DESCRIBE `wondertage_settings`" )) {
         });
     });
 
-			//	$('body').on('inview', 'js-post-view', function(event, isInView) {
-				//	console.log('hi');
-					var _this 		= $(this);
-					var cur_post_id = $('.js-post-view').data("post-views-id")
-					var counted 	= $('.js-post-view').data("post-views-counted");
-					//console.log(cur_post_id);
-					//console.log(counted);
-					if (counted == "0"){
-						//set counted to true
-						_this.attr("data-post-views-counted", "1");
-				//	  if (isInView) {
-						// element is now visible in the viewport
-						console.log('current post in view is id ' + cur_post_id );
-							var dataForm = new FormData();
-							dataForm.append('post_id', cur_post_id);
-							// $.ajax({
-							// 	url: Wo_Ajax_Requests_File() + '?f=posts&s=register_view&hash=' + $('.main_session').val(),
-							// 	type: 'POST',
-							// 	cache: false,
-							// 	dataType: 'json',
-							// 	data: dataForm,
-							// 	processData: false,
-							// 	contentType: false,
-							// }).done(function (data) {
-							// 	if (data.status == 200) {
-							// 	  console.log(data);
-							// 	}
-							// });
-					  } else {
-						// element has gone out of viewport
-						console.log('nothing in view')
-					  }
-				//	}
-			//	});
-		
 		
 	</script>
     

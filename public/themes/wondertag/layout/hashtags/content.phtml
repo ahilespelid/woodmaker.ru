@@ -30,7 +30,7 @@
 
 <div class="page-margin">
 	<div class="container">
-		<h2 class="tag_page_title m5">#<?php echo $_GET['hash'];?> <span class="badge badge-secondary bold"><?php $stories = Tag_GetHashtagPosts($_GET['hash']); echo count($stories); ?> <?php echo $wo['lang']['posts'];?></span></h2>
+		<h2 class="tag_page_title m5">#<?php echo $_GET['hash'];?> <span class="badge badge-secondary bold"><?php $stories = Tag_GetHashtagPosts($_GET['hash']); ?> <?php echo $wo['lang']['posts'] . ": " . count($stories);;?></span></h2>
 		<ul class="list-unstyled tag_page_nav">
 			<?php 
 				$hashtags = Wa_GetTrendingHashs('popular');

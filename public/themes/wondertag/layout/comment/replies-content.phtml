@@ -9,7 +9,7 @@
    $wo['comment']['publisher']['url'] = 'javascript:void(0)';
 }
 ?>
-<div class="reply reply-container" id="comment_reply_<?php echo $wo['reply']['id'];?>" data-comment-id="<?php echo $wo['reply']['id'];?>">
+<div class="reply reply-container" id="comment_reply_<?php echo $wo['reply']['id'];?>" data-comment-id="<?php echo $wo['reply']['id'];?>">	
 	<?php if (!isset($anonymous)) { ?>
 		<a class="<?php echo Wo_RightToLeft('pull-left'); ?>" href="<?php echo $wo['reply']['publisher']['url']?>" onclick="InjectAPI('{&quot;profile_id&quot; : &quot;<?php echo $wo['reply']['publisher']['id']?>&quot;, &quot;type&quot;:&quot;<?php echo $wo['reply']['publisher']['type']?>&quot;}', event);">
 			<img class="avatar" src="<?php echo $wo['reply']['publisher']['avatar']?>" alt="avatar">
@@ -100,10 +100,10 @@
 						}
 					</style>
 					<?php 
-						$turn_on = false;
+						$turn_on = true;
 						if($turn_on) {
 					?>
-					<span class="pointer reply-to-reply" data-id="<?php echo $wo['reply']['id']; ?>" data-curuser="<?php echo $wo['reply']['publisher']['username']; ?>" data-curfullname="<?php echo $wo['reply']['publisher']['name']?>" onclick="Wo_OpenReplyBox(<?php echo $wo['reply']['id']; ?>, this);" >
+					<span class="pointer reply-to-reply" data-id="<?php echo $wo['reply']['id']; ?>" data-curuser="<?php echo $wo['reply']['publisher']['username']; ?>" data-curfullname="<?php echo $wo['reply']['publisher']['name']?>" onclick="Wo_OpenReplyBox(<?php echo $wo['comment']['id']; ?>, this);" >
 						<?php
 							echo '<span class="replay-reply " style="margin: 10px;" data-id="'.$wo['reply']['publisher']['name'].'">' ?> <?php echo $wo['lang']['reply'] ;?> <?php echo ' </span>';
 						?>
@@ -135,7 +135,11 @@
 			<span class="time ajax-time mr-1" title="<?php echo date('c',$wo['reply']['time']);?>"><?php echo $wo['reply']['time']?></span>
 		</span>
 		<div class="hidden" data-post-comm-reply-edit="<?php echo $wo['reply']['id']?>">
-            <textarea class="edit-box form-control" onkeydown="Wo_UpdatCommReply(<?php echo $wo['reply']['id']?>,event,this)"><?php echo $wo['reply']['Orginaltext']?></textarea>
+            <textarea id="reply-edit-<?php echo $wo['reply']['id']?>" class="edit-box form-control" onkeydown="Wo_UpdatCommReply(<?php echo $wo['reply']['id']?>,event)"><?php echo $wo['reply']['Orginaltext']?></textarea>
+			<div class="comment-edit-buttons">
+				<div class="btn btn-main btn-mat" onclick="Wo_EditReplyComment(<?php echo $wo['reply']['id']?>);">Отмена</div>
+				<div class="btn btn-main btn-mat" onclick="Wo_UpdatCommReply(<?php echo $wo['reply']['id']?>, 'click')">Сохранить</div>
+			</div>
 		</div>
 	  <hr>
 	</div>

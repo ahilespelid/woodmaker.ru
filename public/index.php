@@ -146,7 +146,7 @@ if ((!$wo['loggedin'] || ($wo['loggedin'] && $wo['user']['banned'] != 1))) {
                         include('sources/home.php');
                         break;
                     case 'welcome':
-                        include('sources/welcome.php');
+                        include('sources/welcome.php'); 
                         break;
                     case 'register':
                         include('sources/register.php');
@@ -1171,7 +1171,7 @@ if (empty($wo['content'])) {
         include('sources/404.php');
     }
 } 
-
+//pa(get_defined_constants(true));
 echo Wo_Loadpage('container');
 mysqli_close($sqlConnect);
 unset($wo);

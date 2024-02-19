@@ -61,14 +61,15 @@
                             <thead>
                                 <tr>
                                   <th><input type="checkbox" id="check-all" class="filled-in check-all" ><label for="check-all"></label></th>
-                                      <th>ID</th>
-					                  <th>Category Name</th>
-					                  <th>Action</th>
+                                        <th>ID</th>
+                                        <th>Category Name</th>
+                                        <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php 
                                 $categories_keys = Wo_GetCategoriesKeys(T_PAGES_CATEGORY);
+                                //pa($categories_keys);
                                 foreach ($wo['page_categories'] as $category_id => $category_name) {
                                   $wo['category_key'] = $category_id;
                                   $wo['category_name'] = $category_name;

@@ -2646,6 +2646,7 @@ function Wo_GroupData($group_id = 0) {
     if (empty($fetched_data)) {
         return array();
     }
+
     $fetched_data["group_id"]           = $fetched_data["id"];
     $fetched_data['avatar_org']         = $fetched_data['avatar'];
     $fetched_data['cover_org']          = $fetched_data['cover'];
@@ -2659,10 +2660,10 @@ function Wo_GroupData($group_id = 0) {
     $fetched_data["category"]           = $wo["group_categories"][$fetched_data["category"]];
     $fetched_data["is_reported"]        = Wo_IsReportExists($fetched_data["id"], "group");
     $fetched_data["group_sub_category"] = "";
-
+    
     $explode2                   = @end(explode('.', $fetched_data['cover']));
     $explode3                   = @explode('.', $fetched_data['cover']);
-    $fetched_data['cover_full'] =  mb_substr($explode3[1], 3) . '_full.' . $explode2;
+    $fetched_data['cover_full'] =  mb_substr($explode3[2], 3) . '_full.' . $explode2;
 
     $fetched_data['avatar_full'] = $fetched_data['avatar'];
     $explode2 = @end(explode('.', $fetched_data['avatar']));
@@ -6958,6 +6959,7 @@ function Wo_GetReactionsTypes($type = "page") {
     }
     return $data;
 }
+///*/ ahilespelid ///*/
 function Wo_GetCategories($table) {
     global $sqlConnect, $wo;
     $data       = array();
@@ -6975,10 +6977,44 @@ function Wo_GetCategories($table) {
     }
     return false;
 }
-function Wo_GetCategoriesKeys($table) {
+function Wo_GetCategoriesWithSub($get_sub = true){
+    global $sqlConnect, $wo; $data = [];
+    $query = ($get_sub) ? "SELECT * FROM " . T_CATEGORIES . " ORDER BY `sort` DESC, `id` ASC;" : "SELECT * FROM " . T_CATEGORIES . " WHERE `parent` IS NULL OR `type` <> 'sub' ORDER BY `sort` DESC, `id` ASC;";
+    $cats = $sqlConnect->query($query);
+    if($cats->num_rows > 0){ //pa($query_categories);
+        foreach($cats as $cat){//pa($categorie);
+            $data[$cat['id']] = $cat; $data[$cat['id']]['name'] = $wo['lang'][$cat['lang_key']];
+            $subs = $sqlConnect->query($query_sub = "SELECT * FROM " . T_CATEGORIES . " WHERE `sub`='".$cat["id"]."';");
+            if($subs->num_rows > 0){
+                //foreach($subs as $sub){$sub['name'] = $wo["lang"][$sub["lang_key"]]; $data[$cat["id"]][] = $sub;}
+    }}}//pa($data); 
+return $data ?? false;}
+
+function Wo_GetCategoriesOne($id) {
+    if(empty($id) && !is_numeric($id)){return false;}
     global $sqlConnect, $wo;
-    $data       = array();
-    $categories = mysqli_query($sqlConnect, "SELECT * FROM " . $table);
+    $cat = $sqlConnect->query($query = "SELECT * FROM " . T_CATEGORIES . " WHERE `id`='$id' LIMIT 1;");
+return $cat->fetch_assoc() ?? false;}
+
+function Wo_UpdateCategoriesOne($id, $data) {
+    if(empty($id) && empty($data) && !is_numeric($id) && !is_array($data)){return false;}
+    global $sqlConnect, $wo; $e = [];
+    
+    foreach($data as $k=>$v){
+        $e[] = (is_string($v)) ? $k."='".$sqlConnect->real_escape_string($v)."'" : 
+               ((is_numeric($v)) ? $k.'='.$v : $k.'=NULL');
+    }$string_e  = implode(", ", $e);
+    $query = "UPDATE " . T_CATEGORIES . " SET ".$string_e." WHERE `id`= $id;";
+    
+return $sqlConnect->query($query);}
+
+///*/ ahilespelid ///*/
+function Wo_GetCategoriesKeys($table, $sub = false) {
+    global $sqlConnect, $wo;
+    $data = [];
+    $sql = ($sub) ? "SELECT * FROM $table WHERE `parent` IS NULL OR `type` <> 'sub';" : "SELECT * FROM $table;"; //pa($sql); exit();
+    $categories = mysqli_query($sqlConnect, $sql);
+    
     if (mysqli_num_rows($categories)) {
         while ($fetched_data = mysqli_fetch_assoc($categories)) {
             $data[$fetched_data["id"]] = $fetched_data["lang_key"];

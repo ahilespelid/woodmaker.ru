@@ -541,7 +541,7 @@
 							&& $wo['story']['group_recipient_exists'] != true
 							&& empty($wo['story']['album_name'])) {
 					?>
-						<span class="feeling-text">&nbsp;<?php echo $wo['lang']['is_feeling'];?> <i class="twa-lg twa twa-<?php echo $wo['story']['postFeelingIcon'];?>"></i> <?php echo $wo['lang'][$wo['story']['postFeeling']];?></span>
+						<span class="feeling-text">&nbsp;<?php echo $wo['lang']['is'];?> <i class="twa-lg twa twa-<?php echo $wo['story']['postFeelingIcon'];?>"></i> <?php echo $wo['lang']['just_feeling']; ?> <?php echo $wo['lang'][$wo['story']['postFeeling']];?></span>
 					<?php
 						} else {
 							$extra_exists = 1;
@@ -618,9 +618,6 @@
 							!empty($wo['story']['postDailymotion']) ||
 							!empty($wo['story']['album_name']) || ($wo['config']['google_map'] == 0 && $wo['config']['yandex_map'] == 0)) {
 						?>	
-						<?php if(!$nothing_in_post) {?>
-							<span class="time pointer post_location post_location_<?php echo $wo['story']['id']?>" onclick="openMapModal('<?php echo $wo['story']['postMap'];?>');"><?php echo $wo['story']['postMap'];?></span>
-						<?php }?>
 						<?php } ?>
 					<?php } else { ?>
 						<?php

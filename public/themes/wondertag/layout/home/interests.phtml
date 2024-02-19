@@ -1,20 +1,25 @@
 <?php 
 $interests = array(
-    ['name' => 'Столярка', 'img' => '/img/interests/slolyar.jpg'],
-    ['name' => 'Лайф-хаки', 'img' => '/img/interests/life-hacks.jpg'],
-    ['name' => 'Токарка', 'img' => '/img/interests/tokarka.jpg'],
-    ['name' => 'Резьба', 'img' => '/img/interests/rezba.jpg'],
-    ['name' => 'Чпу', 'img' => '/img/interests/chpu.jpg'],
-    ['name' => 'Заточка', 'img' => '/img/interests/zatochka.jpg'],
-    ['name' => 'Мастерская', 'img' => '/img/interests/masterskaya.jpg']
+    ['name' =>  $wo["lang"]["1419"], 'img' => '/img/interests/slolyar.jpg'],
+    ['name' =>  $wo["lang"]["1422"], 'img' => '/img/interests/tokarka.jpg'],
+    ['name' =>  $wo["lang"]["1425"], 'img' => '/img/interests/samodelki.jpg'],
+    ['name' =>  $wo["lang"]["1428"], 'img' => '/img/interests/rezba.jpg'],
+    ['name' =>  $wo["lang"]["1431"], 'img' => '/img/interests/nachinaushjim.jpg'],
+    ['name' =>  $wo["lang"]["1434"], 'img' => '/img/interests/masterskaya.jpg'],
+    ['name' =>  $wo["lang"]["1437"], 'img' => '/img/interests/ruchnoy-instr.jpg'],
+    ['name' =>  $wo["lang"]["1440"], 'img' => '/img/interests/stanki.jpg'],
+    ['name' =>  $wo["lang"]["1443"], 'img' => '/img/interests/otdelka.jpg'],
+    ['name' =>  $wo["lang"]["1446"], 'img' => '/img/interests/regushjiy-instrument.jpg'],
+    ['name' =>  $wo["lang"]["1449"], 'img' => '/img/interests/zatochka.jpg'],
+    ['name' =>  $wo["lang"]["1452"], 'img' => '/img/interests/razmetka.jpg'],
+    ['name' =>  $wo["lang"]["1455"], 'img' => '/img/interests/rashodka.jpg'],
+    ['name' =>  $wo["lang"]["1458"], 'img' => '/img/interests/chpu.jpg'],
+    ['name' =>  $wo["lang"]["1461"], 'img' => '/img/interests/obyavleniya.jpg'],
 ); ?>
 
 <div class="tag_stories_on_home">
     <div class="tag_lbox_stories tag_stories_mobi">
         <ul class="list-unstyled valign tag_scroll status-list tag_interests" id="storyList">
-                <?php
-                    $get_user_status = Wo_GetFriendsStatus(array('limit' => 6));
-                ?>
                 <?php
                     foreach ($interests as $wo['interest']) {
                         echo Wo_LoadPage('home/one_interest');

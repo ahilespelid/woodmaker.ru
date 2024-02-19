@@ -32,7 +32,8 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
         header("Location: " . $wo['config']['site_url']);
         exit();
     }
-	$sql_query         = mysqli_query($sqlConnect, "UPDATE `Wo_Posts` SET `post_views` = `post_views` + 1 WHERE `id` = '$id'");
+    //Муса: Закомментировал строку снизу т.к она добавляла просмотры каждый раз когда человек открывал пост, пока не привело ни к каким ошибкам но на всякий случай оставлю комментарий
+	// $sql_query         = mysqli_query($sqlConnect, "UPDATE `Wo_Posts` SET `post_views` = `post_views` + 1 WHERE `id` = '$id'");
     $wo['story']['page'] = 1;
     $wo['content']       = Wo_LoadPage('story-content/content');
     $wo['description']   = Wo_Secure(mb_substr($wo['story']['Orginaltext'], 0, 156, "utf-8"));

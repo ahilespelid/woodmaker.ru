@@ -376,11 +376,23 @@ include_once "assets/includes/onesignal_config.php";
 $wo["pro_packages"]       = Wo_GetAllProInfo();
 try {
     $wo["genders"]             = Wo_GetGenders($wo["language"], $langs);
+//
+/*/ ahilespelid ///* /    
+    $wo["categories"]          = Wo_GetCategories(T_CATEGORIES);
     $wo["page_categories"]     = Wo_GetCategories(T_PAGES_CATEGORY);
     $wo["group_categories"]    = Wo_GetCategories(T_GROUPS_CATEGORY);
     $wo["blog_categories"]     = Wo_GetCategories(T_BLOGS_CATEGORY);
     $wo["products_categories"] = Wo_GetCategories(T_PRODUCTS_CATEGORY);
     $wo["job_categories"]      = Wo_GetCategories(T_JOB_CATEGORY);
+/* /// ahilespelid ///*/    
+    $wo["categories"]          = Wo_GetCategoriesWithSub('over');
+//    $wo["page_categories"]     = Wo_GetCategoriesWithSub('page');
+//    $wo["group_categories"]    = Wo_GetCategoriesWithSub('group');
+//    $wo["blog_categories"]     = Wo_GetCategoriesWithSub('blog');
+//    $wo["products_categories"] = Wo_GetCategoriesWithSub('product');
+//    $wo["job_categories"]      = Wo_GetCategoriesWithSub('job');
+///* / ahilespelid /// */    
+
     $wo["reactions_types"]     = Wo_GetReactionsTypes();
 }
 catch (Exception $e) {

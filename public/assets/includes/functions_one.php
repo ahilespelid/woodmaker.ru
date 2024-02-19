@@ -2079,6 +2079,24 @@ function Wo_FeaturedUsers($limit = '', $type = '') {
     }
     return $data;
 }
+
+// function Wo_CountGeneralFriends($id) {
+//     global $wo, $sqlConnect;
+//     $data      = array();
+//     $user_id   = Wo_Secure($wo['user']['user_id']);
+//     $query_one = " SELECT `user_id` FROM " . T_USERS . " WHERE `active` = '1' AND `user_id` NOT IN (SELECT `blocked` FROM " . T_BLOCKS . " WHERE `blocker` = '{$user_id}') AND `user_id` NOT IN (SELECT `blocker` FROM " . T_BLOCKS . " WHERE `blocked` = '{$user_id}') AND `user_id` NOT IN (SELECT `following_id` FROM " . T_FOLLOWERS . " WHERE `follower_id` = {$user_id}) AND `user_id` <> {$user_id}";
+//     if (isset($limit)) {
+//         $query_one .= " ORDER BY RAND() LIMIT {$limit}";
+//     }
+//     $sql = mysqli_query($sqlConnect, $query_one);
+//     if (mysqli_num_rows($sql)) {
+//         while ($fetched_data = mysqli_fetch_assoc($sql)) {
+//             $data[] = Wo_UserData($fetched_data['user_id']);
+//         }
+//     }
+//     return $data;
+// }
+
 function Wo_UserSug($limit = 20) {
     global $wo, $sqlConnect;
     if (!is_numeric($limit)) {
@@ -2098,6 +2116,7 @@ function Wo_UserSug($limit = 20) {
     }
     return $data;
 }
+
 function Wo_ImportImageFromLogin($media, $amazon = 0) {
     global $wo;
     if (!file_exists('upload/photos/' . date('Y'))) {
@@ -2648,6 +2667,7 @@ function Wo_GetFollowing($user_id, $type = '', $limit = '', $after_user_id = '',
             return $data;
         }
     }
+    // pa($query);
     $sql_query = mysqli_query($sqlConnect, $query);
     if (mysqli_num_rows($sql_query)) {
         while ($fetched_data = mysqli_fetch_assoc($sql_query)) {
@@ -2660,54 +2680,46 @@ function Wo_GetFollowing($user_id, $type = '', $limit = '', $after_user_id = '',
     }
     return $data;
 }
+///*/ ahilespelid ///*/
 function Wo_GetMutualFriends($user_id, $type = '', $limit = '', $after_user_id = '', $placement = array()) {
-    global $wo, $sqlConnect;
-    if ($wo['loggedin'] == false) {
-        return false;
-    }
-    $data = array();
-    if (empty($user_id) or !is_numeric($user_id) or $user_id < 1) {
-        return false;
-    }
-    $user_id        = Wo_Secure($user_id);
-    $after_user_id  = Wo_Secure($after_user_id);
-    $logged_user_id = Wo_Secure($wo['user']['user_id']);
-    $query          = "SELECT f1.*
-FROM " . T_FOLLOWERS . " f1 INNER JOIN " . T_FOLLOWERS . " f2
-  ON f1.following_id = f2.following_id
-WHERE f1.follower_id = {$user_id}
-  AND f2.follower_id = {$logged_user_id} AND f1.`following_id` NOT IN (SELECT `blocked` FROM " . T_BLOCKS . " WHERE `blocker` = '{$logged_user_id}') AND f1.`following_id` NOT IN (SELECT `blocker` FROM " . T_BLOCKS . " WHERE `blocked` = '{$logged_user_id}') AND f1.active = 1 GROUP BY following_id ";
-    if (!empty($after_user_id) && is_numeric($after_user_id)) {
-        $query .= " AND f1.id < {$after_user_id}";
-    }
-    if ($type == 'sidebar' && !empty($limit) && is_numeric($limit)) {
-        $query .= " ORDER BY RAND()";
-    }
-    if ($type == 'profile' && !empty($limit) && is_numeric($limit)) {
-        $query .= " ORDER BY f1.id DESC";
-    }
-    $query .= " LIMIT {$limit} ";
-    if (!empty($placement)) {
-        if ($placement['in'] == 'profile_sidebar' && is_array($placement['mutual_friends_data'])) {
-            foreach ($placement['mutual_friends_data'] as $key => $id) {
-                $user_data = Wo_UserData($id, false);
-                if (!empty($user_data)) {
-                    $data[] = $user_data;
-                }
-            }
-            return $data;
-        }
-    }
-    //pa($query); exit;
-    $sql_query = mysqli_query($sqlConnect, $query);
-    if ($sql_query != false && mysqli_num_rows($sql_query)) {
-        while ($fetched_data = mysqli_fetch_assoc($sql_query)) {
-            $user_data = Wo_UserData($fetched_data['following_id'], false);
-            $data[]    = $user_data;
-        }
-    }
-    return $data;
-}
+    global $wo, $sqlConnect; //if($wo['loggedin'] == false){return null;}if(empty($user_id) or !is_numeric($user_id) or $user_id < 1){return null;}
+    $data = [];
+    
+    if(!empty($placement) && $placement['in'] == 'profile_sidebar' && is_array($placement['mutual_friends_data'])){
+        foreach($placement['mutual_friends_data'] as $key => $id){
+            $user_data = Wo_UserData($id, false);
+            if(!empty($user_data)){$data[] = $user_data;}
+    }}else{
+        $user_id        = Wo_Secure($user_id);
+        $after_user_id  = Wo_Secure($after_user_id);
+        $logged_user_id = Wo_Secure($wo['user']['user_id']);
+        $user_id !== $logged_user_id && $logged_user_id = $user_id;
+
+        $query = "SELECT f1.*
+                    FROM " . T_FOLLOWERS . " f1 INNER JOIN " . T_FOLLOWERS . " f2 ON f1.following_id = f2.following_id
+                    WHERE f1.follower_id = {$user_id} AND 
+                    f2.follower_id = {$logged_user_id} AND
+                    f1.`following_id` NOT IN (SELECT `blocked` FROM " . T_BLOCKS . " WHERE `blocker` = '{$logged_user_id}') AND
+                    f1.`following_id` NOT IN (SELECT `blocker` FROM " . T_BLOCKS . " WHERE `blocked` = '{$logged_user_id}') AND
+                    f1.active = 1 GROUP BY following_id ";
+
+        if(!empty($after_user_id) && is_numeric($after_user_id))       {$query .= " AND f1.id < {$after_user_id}";}
+        if($type == 'sidebar' && !empty($limit) && is_numeric($limit)) {$query .= " ORDER BY RAND()";}
+        if($type == 'profile' && !empty($limit) && is_numeric($limit)) {$query .= " ORDER BY f1.id DESC";} $query .= " LIMIT {$limit} ;";
+        //pa($query); exit;
+//        $sql_query = mysqli_query($sqlConnect, $query);
+//        if($sql_query != false && mysqli_num_rows($sql_query)){
+//            while($fetched_data = mysqli_fetch_assoc($sql_query)){
+//                $user_data = Wo_UserData($fetched_data['following_id'], false);
+//                $data[]    = $user_data;
+//            }
+//        }
+        $sql_query = $sqlConnect->query($query);
+        if($sql_query->num_rows > 0){
+            foreach($sql_query->fetch_all(MYSQLI_ASSOC) as $fetched_data){$data[] = Wo_UserData($fetched_data['following_id'], false);}
+    }}//pa($data); exit;
+return $data;}
+///*/ ahilespelid ///*/
 function Wo_GetFollowers($user_id, $type = '', $limit = '', $after_user_id = '', $placement = array()) {
     global $wo, $sqlConnect;
     $data = array();
@@ -5556,7 +5568,7 @@ function Wo_RegisterPost($re_data = array('recipient_id' => 0)){
         $re_data['postFacebook']    = '';
         $re_data['postFacebook']    = '';
         $re_data['postPlaytube']    = '';
-        if (preg_match('%(?:youtube(?:-nocookie)?\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)/|.*[?&]v=)|youtu\.be/)([^"&?/ ]{11})%i', $re_data['postText'], $match)) {
+        if (preg_match('%(?:youtube(?:-nocookie)?\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)|s(?:horts)?)/|.*[?&]v=)|youtu\.be/)([^"&?/ ]{11})%i', $re_data['postText'], $match)) {
             $re_data['postYoutube'] = Wo_Secure($match[1]);
             //$re_data['postText'] = preg_replace('/((?:https?:\/\/)?www\.youtube\.com\/watch\?v=\w+)/', "", $re_data['postText']);
             //$re_data['postText'] = preg_replace($match[0], "", $re_data['postText']);
@@ -6079,9 +6091,11 @@ function Wo_PostData($post_id, $placement = '', $limited = '', $comments_limit =
     $story['postLinkImage']    = Wo_GetMedia($story['postLinkImage']);
     $story['is_post_pinned']   = (Wo_IsPostPinned($story['id']) === true) ? true : false;
     if (!empty($comments_limit) && $comments_limit > 0) {
-        $story['get_post_comments'] = Wo_GetPostCommentsLimited($story['id'], $comments_limit, $pinched);
+        // $story['get_post_comments'] = Wo_GetPostCommentsLimited($story['id'], $comments_limit, $pinched);
+        $story['get_post_comments'] = Wo_GetPostCommentsSortByInteresing($story['id'], $comments_limit, "top");
     } else {
-        $story['get_post_comments'] = ($story['comments_status'] == 1) ? Wo_GetPostComments($story['id'], $story['limit_comments'], 0, $pinched) : array();
+        // $story['get_post_comments'] = ($story['comments_status'] == 1) ? Wo_GetPostComments($story['id'], $story['limit_comments'], 0, $pinched) : array();
+        $story['get_post_comments'] = ($story['comments_status'] == 1) ? Wo_GetPostCommentsSortByInteresing($story['id'], $story['limit_comments'], "top"): array() ;
     }
     $story['photo_album'] = array();
     if (!empty($story['album_name'])) {
@@ -8619,20 +8633,70 @@ function Wo_GetPostCommentsSort($post_id = 0, $limit = 2, $type = 'latest') {
             }
             $ids_line = implode(',', $ids);
 //            $query = "SELECT COUNT(*) AS count,`comment_id` AS id FROM " . T_REACTIONS . " WHERE `comment_id` IN ({$ids_line}) GROUP BY `comment_id` ORDER BY `reaction` DESC";
-            $query = "SELECT COUNT(a.id)-1 AS count, a.id AS id FROM (SELECT r.comment_id AS id FROM " . T_REACTIONS . " r WHERE r.comment_id IN (SELECT c.id FROM " . T_COMMENTS . " c WHERE c.post_id={$post_id}) UNION ALL SELECT cc.id FROM " . T_COMMENTS . " cc WHERE cc.post_id={$post_id}) a GROUP BY a.id ORDER BY count DESC, id ASC;";
+            $query = "SELECT COUNT(a.id)-1 AS count, a.id AS id FROM (SELECT r.comment_id AS id FROM " . T_REACTIONS . " r WHERE r.comment_id IN (SELECT c.id FROM " . T_COMMENTS . " c WHERE c.post_id={$post_id}) UNION ALL SELECT cc.id FROM " . T_COMMENTS . " cc WHERE cc.post_id={$post_id}) a GROUP BY a.id ORDER BY count DESC, id ASC LIMIT $limit;";
         } else {
-            $query = "SELECT COUNT(*) AS count,`comment_id` AS id FROM " . T_COMMENT_LIKES . " WHERE `post_id` = {$post_id} AND `user_id` NOT IN (SELECT `blocked` FROM " . T_BLOCKS . " WHERE `blocker` = '{$logged_user_id}') AND `user_id` NOT IN (SELECT `blocker` FROM " . T_BLOCKS . " WHERE `blocked` = '{$logged_user_id}') GROUP BY `comment_id` ORDER BY count DESC";
+            $query = "SELECT COUNT(*) AS count,`comment_id` AS id FROM " . T_COMMENT_LIKES . " WHERE `post_id` = {$post_id} AND `user_id` NOT IN (SELECT `blocked` FROM " . T_BLOCKS . " WHERE `blocker` = '{$logged_user_id}') AND `user_id` NOT IN (SELECT `blocker` FROM " . T_BLOCKS . " WHERE `blocked` = '{$logged_user_id}') GROUP BY `comment_id` ORDER BY count DESC LIMIT $limit";
         }
     } elseif('oldest' == $type) {
-        $query = "SELECT `id` FROM " . T_COMMENTS . " WHERE `post_id` = {$post_id} AND `user_id` NOT IN (SELECT `blocked` FROM " . T_BLOCKS . " WHERE `blocker` = '{$logged_user_id}') AND `user_id` NOT IN (SELECT `blocker` FROM " . T_BLOCKS . " WHERE `blocked` = '{$logged_user_id}') ORDER BY `id` ASC";
+        $query = "SELECT `id` FROM " . T_COMMENTS . " WHERE `post_id` = {$post_id} AND `user_id` NOT IN (SELECT `blocked` FROM " . T_BLOCKS . " WHERE `blocker` = '{$logged_user_id}') AND `user_id` NOT IN (SELECT `blocker` FROM " . T_BLOCKS . " WHERE `blocked` = '{$logged_user_id}') ORDER BY `id` ASC LIMIT $limit";
     } else {
-        $query = "SELECT `id` FROM " . T_COMMENTS . " WHERE `post_id` = {$post_id} AND `user_id` NOT IN (SELECT `blocked` FROM " . T_BLOCKS . " WHERE `blocker` = '{$logged_user_id}') AND `user_id` NOT IN (SELECT `blocker` FROM " . T_BLOCKS . " WHERE `blocked` = '{$logged_user_id}') ORDER BY `id` DESC";
+        $query = "SELECT `id` FROM " . T_COMMENTS . " WHERE `post_id` = {$post_id} AND `user_id` NOT IN (SELECT `blocked` FROM " . T_BLOCKS . " WHERE `blocker` = '{$logged_user_id}') AND `user_id` NOT IN (SELECT `blocker` FROM " . T_BLOCKS . " WHERE `blocked` = '{$logged_user_id}') ORDER BY `id` DESC LIMIT $limit";
     }
     $query_one = mysqli_query($sqlConnect, $query);
     if (mysqli_num_rows($query_one)) {
         while ($fetched_data = mysqli_fetch_assoc($query_one)) {
             $data[] = Wo_GetPostComment($fetched_data['id']);
         }
+    }
+    return $data;
+}
+function Wo_GetPostCommentsSortByInteresing($post_id = 0, $limit = 0, $offset = 0){
+    global $sqlConnect, $wo;
+    if(false == $wo['loggedin'] && (empty($post_id) || !is_numeric($post_id) || $post_id < 0)){return false;}
+    $limit = (is_numeric($limit) && $limit > 0) ? 'LIMIT '.((is_numeric($offset) && $offset >= 0) ? $offset.', ' : '').$limit : '';
+    
+    $logged_user_id = Wo_Secure($wo['user']['user_id']);
+    $post_id        = Wo_Secure($post_id);
+    $data           = [];
+    /*
+    $query_friends = "SELECT `user_id` FROM " . T_USERS . " WHERE 
+	`user_id` IN (SELECT `follower_id` FROM " . T_FOLLOWERS . " WHERE `follower_id` <> '{$logged_user_id}' AND `following_id` = '{$logged_user_id}' AND `active` = '1') AND 
+	`active` = '1' AND 
+	`user_id` NOT IN (SELECT `blocked` FROM " . T_BLOCKS . " WHERE `blocker` = '{$logged_user_id}') AND 
+	`user_id` NOT IN (SELECT `blocker` FROM " . T_BLOCKS . " WHERE `blocked` = '{$logged_user_id}');"; 
+     * 
+    $friends = $sqlConnect->query($query_friends);
+    if($friends->num_rows > 0){
+        foreach($friends as $friend){
+        $arFriends[] = $friend['user_id'];}}
+     * 
+     * 
+    $query_comments = "SELECT * FROM " . T_COMMENTS . " WHERE 
+        `post_id` = {$post_id} AND
+        `user_id` NOT IN (SELECT `blocked` FROM " . T_BLOCKS . " WHERE `blocker` = '{$logged_user_id}') AND
+        `user_id` NOT IN (SELECT `blocker` FROM " . T_BLOCKS . " WHERE `blocked` = '{$logged_user_id}')".((is_numeric($limit) && $limit > 0) ? " LIMIT $limit;" : ";");
+     * 
+     * 
+     * 
+     * 
+     *      // ahilespelid //*/
+    
+    $comments = $sqlConnect->query($query_comments = "SELECT id, COUNT(`id`) AS `like` FROM (
+	SELECT c.*, a.`id` AS `answer`, r.`id` AS `reaction`, l.`id` AS `answer_reaction` FROM " . T_COMMENTS . " c 
+            LEFT JOIN " . T_REACTIONS . " r 
+            ON r.`comment_id`=c.`id`
+            LEFT JOIN (SELECT * FROM " . T_COMMENTS_REPLIES . " WHERE `comment_id` IN(SELECT `id` FROM " . T_COMMENTS . " WHERE `post_id`='{$post_id}')) a 
+            ON a.`comment_id`=c.`id`
+            LEFT JOIN (SELECT * FROM " . T_REACTIONS . " WHERE `replay_id` IN(SELECT `id` FROM " . T_COMMENTS_REPLIES . " WHERE `comment_id` IN(SELECT `id` FROM " . T_COMMENTS . " WHERE `post_id`='{$post_id}'))) l 
+            ON l.`replay_id`=a.`id`
+	WHERE  
+            c.`post_id` = '{$post_id}' AND
+            c.`user_id` NOT IN (SELECT `blocked` FROM " . T_BLOCKS . " WHERE `blocker` = '{$logged_user_id}') AND
+            c.`user_id` NOT IN (SELECT `blocker` FROM " . T_BLOCKS . " WHERE `blocked` = '{$logged_user_id}')
+        ) z GROUP BY `id` ORDER BY `like` DESC, `reaction` DESC, `answer` DESC, `answer_reaction` DESC, `id` ASC $limit;"); //
+        //pa($query_comments);
+    if($comments->num_rows > 0){
+        foreach($comments as $comment){$data[] = Wo_GetPostComment($comment['id']);}
     }
     return $data;
 }
@@ -8799,6 +8863,18 @@ function Wo_CountPostComment($post_id = '') {
         return false;
     }
     $query = mysqli_query($sqlConnect, "SELECT COUNT(`id`) AS `comments` FROM " . T_COMMENTS . " WHERE `post_id` = {$post_id} ");
+    if (mysqli_num_rows($query)) {
+        $fetched_data = mysqli_fetch_assoc($query);
+        return $fetched_data['comments'];
+    }
+    return false;
+}
+function Wo_CountPostCommentAnswer($post_id = '') {
+    global $sqlConnect;
+    if (empty($post_id) || !is_numeric($post_id) || $post_id < 0) {
+        return false;
+    }
+    $query = mysqli_query($sqlConnect, "SELECT COUNT(*) AS `comments` FROM (SELECT `text` FROM " . T_COMMENTS . " WHERE `post_id` = $post_id UNION ALL SELECT `text` FROM " . T_COMMENTS_REPLIES . " WHERE `comment_id` IN (SELECT `id` FROM " . T_COMMENTS . " WHERE `post_id` = $post_id)) c;");
     if (mysqli_num_rows($query)) {
         $fetched_data = mysqli_fetch_assoc($query);
         return $fetched_data['comments'];
