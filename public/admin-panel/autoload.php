@@ -994,8 +994,26 @@ if (!empty($_COOKIE['mode']) && $_COOKIE['mode'] == 'night') {
                                     </li>
                                     <?php } ///* /ahilespelid ///*/ ?>
                                 </ul>
+                            </li>                            <?php } ?>
+                            
+                            
+                            <?php if ($is_admin || $is_moderoter) {  ?>
+                            <li <?=($page == 'geo') ? 'class="open"' : ''; ?>>
+                                <a href="javascript:void(0);">Geo</a>
+                                <ul class="ml-menu">
+
+                                    <li>
+                                        <a <?=($page == 'geo') ? 'class="active"' : ''; ?> href="<?=Wo_LoadAdminLinkSettings('geo');?>" data-ajax="?path=geo">
+                                            <span>Manage Cities</span>
+                                        </a>
+                                    </li>
+                                </ul>
                             </li>
-                            <?php } ?>
+                            <?php } ?>                            
+                            
+                            
+                            
+                            
                             <?php if ($is_admin || ($is_moderoter && ($wo['user']['permission']['add-new-gift'] == 1 || $wo['user']['permission']['manage-gifts'] == 1 ))) { ?>
                             <?php if ($wo['config']['gift_system'] == 1){?>
                             <li <?php echo ($page == 'manage-gifts' || $page == 'add-new-gift') ? 'class="open"' : ''; ?>>

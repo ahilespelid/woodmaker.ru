@@ -89,7 +89,7 @@ if (mysqli_query($wo['sqlConnect'], "DESCRIBE `wondertage_settings`" )) {
             <div class="valign stat-item commnt tag_post_foot_acticon" onclick="Wo_ShowComments(<?php echo $wo['story']['id']; ?>);">
                 <?php echo GetModeBtn('comments_btn');?>
                 <span class="mobile_post_count">
-                    <?=($post_comments = Wo_CountPostCommentAnswer($wo['story']['id']) ?? 0);?>
+                    <?=(empty($post_comments = Wo_CountPostCommentAnswer($wo['story']['id']) ?? 0)) ? '' : $post_comments;?>
                     <?php //pa($post_comments); //pa($wo['story']); 
                         /*
                           /// ahilespelid //* //
@@ -131,16 +131,18 @@ if (mysqli_query($wo['sqlConnect'], "DESCRIBE `wondertage_settings`" )) {
                 <?php } ?>
             </div>
         </div>
-        <div class="valign post-actions">
+        <div class="valign post-actions post-actions-views">
+            <?php if(!empty($wo['story']['post_views'])){ ?>
             <div class="valign stat-item tag_post_foot_acticon  post-wonders-status js-post-view" data-post-views-id="<?php echo $wo['story']['id']; ?>" data-post-views-counted="0">
-                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"><path fill="currentColor" d="M12 4C7 4 2.73 7.11 1 11.5 2.73 15.89 7 19 12 19s9.27-3.11 11-7.5C21.27 7.11 17 4 12 4zm0 12.5c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"></path></svg> <?php echo $wo['story']['post_views'];?>
-                <span class="d-none" data-post-video-views="<?php echo $wo['story']['id']; ?>">
+                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"><path fill="currentColor" d="M12 4C7 4 2.73 7.11 1 11.5 2.73 15.89 7 19 12 19s9.27-3.11 11-7.5C21.27 7.11 17 4 12 4zm0 12.5c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"></path></svg> 
+                <span class="" data-post-video-views="<?php echo $wo['story']['id']; ?>">
                     <?php echo $wo['story']['post_views'];?>
                 </span>
                 <span class="hide-word-stat d-none">
                     <?php echo $wo['lang']['views'];?>
                 </span>
             </div>
+            <?php } ?>
         </div>
 	</div>
 <!--	<div>-->
@@ -286,18 +288,21 @@ if (mysqli_query($wo['sqlConnect'], "DESCRIBE `wondertage_settings`" )) {
 <?php } ?>
 
 <script type="text/javascript">
-	function Wo_PostCommentGif_<?php echo $wo['story']['id']; ?>(self,id) {
-		Wo_RegisterComment2(<?php echo $wo['story']['id']; ?>,<?php echo $wo['story']['publisher']['user_id']; ?>, <?php echo (!empty($wo['story']['publisher']['page_id'])) ? $wo['story']['publisher']['page_id'] : '0'; ?>,'',$(self).attr('src'));
-		$('.chat-gif-toggle').dropdown('hide');
-		$('#publisher-box-stickers-cont-'+id).empty();
-	}
-	function Wo_PostCommentSticker_<?php echo $wo['story']['id']; ?>(self,id) {
-		Wo_RegisterComment2(<?php echo $wo['story']['id']; ?>,<?php echo $wo['story']['publisher']['user_id']; ?>, <?php echo (!empty($wo['story']['publisher']['page_id'])) ? $wo['story']['publisher']['page_id'] : '0'; ?>,'',$(self).attr('src'));
-	}
 
-    checkForCommentBeforeSend(!$('.auto-resize_<?php echo $wo['story']['id']; ?>').val().trim().length > 0, <?php echo $wo['story']['id']; ?>);
+$('.post-actions-views')
 
-    $('.auto-resize_<?php echo $wo['story']['id']; ?>').on('input', (e) => checkForCommentBeforeSend(!e.target.value.trim().length > 0 ,<?php echo $wo['story']['id']; ?>));
+function Wo_PostCommentGif_<?php echo $wo['story']['id']; ?>(self,id) {
+    Wo_RegisterComment2(<?php echo $wo['story']['id']; ?>,<?php echo $wo['story']['publisher']['user_id']; ?>, <?php echo (!empty($wo['story']['publisher']['page_id'])) ? $wo['story']['publisher']['page_id'] : '0'; ?>,'',$(self).attr('src'));
+    $('.chat-gif-toggle').dropdown('hide');
+    $('#publisher-box-stickers-cont-'+id).empty();
+}
+function Wo_PostCommentSticker_<?php echo $wo['story']['id']; ?>(self,id) {
+    Wo_RegisterComment2(<?php echo $wo['story']['id']; ?>,<?php echo $wo['story']['publisher']['user_id']; ?>, <?php echo (!empty($wo['story']['publisher']['page_id'])) ? $wo['story']['publisher']['page_id'] : '0'; ?>,'',$(self).attr('src'));
+}
+
+checkForCommentBeforeSend(!$('.auto-resize_<?php echo $wo['story']['id']; ?>').val().trim().length > 0, <?php echo $wo['story']['id']; ?>);
+
+$('.auto-resize_<?php echo $wo['story']['id']; ?>').on('input', (e) => checkForCommentBeforeSend(!e.target.value.trim().length > 0 ,<?php echo $wo['story']['id']; ?>));
 
 $.fn.inView = function (inViewType) {
     var offset = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;

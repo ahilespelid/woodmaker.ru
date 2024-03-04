@@ -11,8 +11,8 @@
 	<?php 
 		if ($wo['field']['select_type'] == 'yes') {
 		$options = @explode(',', $wo['field']['type']); ?>
-		<select name="<?php echo $wo['field']['fid'];?>">
-			<option value=""><?php echo $wo['field']['name']; ?></option>
+		<select id="<?php echo $wo['field']['fid'];?>" name="<?php echo $wo['field']['fid'];?>">
+			<option value=""><?php echo $wo['lang']['none_selected']; ?></option>
 			<?php
 				foreach ($options as $key => $value) {
 				$selected = (($key + 1) == $fid) ? 'selected' : '';

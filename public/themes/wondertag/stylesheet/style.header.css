@@ -38,7 +38,7 @@ body.tag_header_top_p .tag_live_sidebar {top: 56px;box-shadow: 0 0 10px rgba(0, 
 .tag_navbar_top_right .tag_hdr_right > .dropdown .dropdown-menu .tag_switch_noti > li > a {color: #000;}
 .tag_navbar_top_right .tag_hdr_right > .dropdown .dropdown-menu .tag_switch_noti {background: #ecf0f5;color: #212529;}
 .tag_navbar_top .tag_header_shadow {visibility: visible;opacity: 1;}
-.navbar svg:not(.search_result_badge svg, .search-advanced-container svg) path {fill: #000}
+.navbar svg:not(.search_result_badge svg, .search-advanced-container svg, .verified-color svg) path {fill: #000}
 #navbar-searchbox svg path {fill: none}
 #navbar-searchbox svg path:nth-child(2) {fill: currentColor}
 @keyframes tag_prem_animation {

@@ -1,4 +1,5 @@
 <?php
+///*/ ahilespelid ///*/
 if(!function_exists('dd')){
     function dd($a,$br=0,$mes='',$t='pre'):bool{$backtrace = debug_backtrace(); $fileinfo = '';$sbr='';
         
@@ -38,4 +39,11 @@ function is_date($value){ // */  проверка строки на дату  //
     if(!$value){return null;}
     try{return $d = (new \DateTime($value));}catch(\Exception $e){return null;}}
 }
+if(!function_exists('array_unique_key')){
+function array_unique_key($array, $key){ 
+    $ret = $key_array = []; $i = 0; 
+    foreach($array as $val){if(!in_array($val[$key], $key_array)){$key_array[$i] = $val[$key];$ret[$i] = $val;} $i++;} 
+return $ret;}
+}
+///*/ ahilespelid ///*/
 ?>

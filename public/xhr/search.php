@@ -9,6 +9,26 @@ if ($f == "search") {
             $data['html'] .= Wo_LoadPage('messages/messages-recipients-list');
         }
     }
+    if($s == 'search_page') {
+        if($_GET['type'] == 'users') {
+            $search_query = Wo_GetSearchFilter($_GET, 30);
+            if (count($search_query) != 0) {
+                foreach ($search_query as $wo['result']) {
+                    if (!empty($wo['result']['avatar_full'])) {
+                        $wo['result']['avatar'] = Wo_GetMedia($wo['result']['avatar_full']);
+                    }
+                    $data['html'] .= Wo_LoadPage('search/user-result');
+                }
+            }
+        } else {
+            $response = Wo_SearchForSearchPage($_GET['type'], $_GET['query'], 30);
+            if (count($response) != 0) {
+                foreach ($response as $wo['result']) {
+                    $data['html'] .= Wo_LoadPage('search/user-result');
+                }
+            }
+        }
+    }
     if ($s == 'normal' && isset($_GET['query']) || isset($_GET['name'])) {
         if($_GET["p"] == "chat") {
             foreach (Wo_GetSearch($_GET['query'], true) as $wo['part']) {

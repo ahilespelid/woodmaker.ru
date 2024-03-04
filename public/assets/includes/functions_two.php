@@ -1888,14 +1888,14 @@ function Wo_PageData($page_id = 0) {
     $fetched_data["page_sub_category"] = "";
     $fetched_data["is_reported"]       = Wo_IsReportExists($fetched_data["page_id"], "page");
 
-    $explode2                   = @end(explode('.', $fetched_data['cover']));
-    $explode3                   = @explode('.', $fetched_data['cover']);
-    $fetched_data['cover_full'] =  mb_substr($explode3[1], 3) . '_full.' . $explode2;
+    $explode2                   = @end(explode('.', $fetched_data['cover_org']));
+    $explode3                   = @explode('.', $fetched_data['cover_org']);
+    $fetched_data['cover_full'] =  $explode3[0] . '_full.' . $explode2;
 
-    $fetched_data['avatar_full'] = $fetched_data['avatar'];
-    $explode2 = @end(explode('.', $fetched_data['avatar']));
+    $fetched_data['avatar_full'] = $fetched_data['avatar_org'];
+    $explode2 = @end(explode('.', $fetched_data['avatar_org']));
     $explode3 = @explode('.', $fetched_data['avatar']);
-    $fetched_data['avatar_full'] = mb_substr($explode3[1], 3) . '_full.' . $explode2;
+    $fetched_data['avatar_full'] = $explode3[0] . '_full.' . $explode2;
     if (!empty($wo["page_categories"][$fetched_data["page_category"]])) {
         $fetched_data["category"] = $wo["page_categories"][$fetched_data["page_category"]];
     }
@@ -2539,7 +2539,7 @@ function Wo_GetMyGroups() {
     $query_text = "SELECT `id` FROM " . T_GROUPS . " WHERE `user_id` = {$user_id}
                    OR `id` IN (SELECT `group_id` FROM " . T_GROUP_ADMINS . " WHERE `user_id` = {$user_id})";
     $query_one  = mysqli_query($sqlConnect, $query_text);
-    if (mysqli_num_rows($query_one)) {
+    if(mysqli_num_rows($query_one)) {
         while ($fetched_data = mysqli_fetch_assoc($query_one)) {
             if (is_array($fetched_data)) {
                 $data[] = Wo_GroupData($fetched_data["id"]);
@@ -2661,14 +2661,14 @@ function Wo_GroupData($group_id = 0) {
     $fetched_data["is_reported"]        = Wo_IsReportExists($fetched_data["id"], "group");
     $fetched_data["group_sub_category"] = "";
     
-    $explode2                   = @end(explode('.', $fetched_data['cover']));
-    $explode3                   = @explode('.', $fetched_data['cover']);
-    $fetched_data['cover_full'] =  mb_substr($explode3[2], 3) . '_full.' . $explode2;
+    $explode2                   = @end(explode('.', $fetched_data['cover_org']));
+    $explode3                   = @explode('.', $fetched_data['cover_org']);
+    $fetched_data['cover_full'] =  $explode3[0] . '_full.' . $explode2;
 
-    $fetched_data['avatar_full'] = $fetched_data['avatar'];
-    $explode2 = @end(explode('.', $fetched_data['avatar']));
-    $explode3 = @explode('.', $fetched_data['avatar']);
-    $fetched_data['avatar_full'] = mb_substr($explode3[1], 3) . '_full.' . $explode2;
+    $fetched_data['avatar_full'] = $fetched_data['avatar_org'];
+    $explode2 = @end(explode('.', $fetched_data['avatar_org']));
+    $explode3 = @explode('.', $fetched_data['avatar_org']);
+    $fetched_data['avatar_full'] = $explode3[0] . '_full.' . $explode2;
 
     if (!empty($fetched_data["sub_category"]) && !empty($wo["group_sub_categories"][$fetched_data["category_id"]])) {
         foreach ($wo["group_sub_categories"][$fetched_data["category_id"]] as $key => $value) {
@@ -6977,17 +6977,19 @@ function Wo_GetCategories($table) {
     }
     return false;
 }
-function Wo_GetCategoriesWithSub($get_sub = true){
+function Wo_GetCategoriesWithSub($type = 'all', $get_sub = true){
     global $sqlConnect, $wo; $data = [];
-    $query = ($get_sub) ? "SELECT * FROM " . T_CATEGORIES . " ORDER BY `sort` DESC, `id` ASC;" : "SELECT * FROM " . T_CATEGORIES . " WHERE `parent` IS NULL OR `type` <> 'sub' ORDER BY `sort` DESC, `id` ASC;";
+    $query = "SELECT * FROM " . T_CATEGORIES . (('all' != $type) ? " WHERE `type`='{$type}'" : '') . " ORDER BY `sort` DESC, `id` ASC;"; //pa($query);
     $cats = $sqlConnect->query($query);
     if($cats->num_rows > 0){ //pa($query_categories);
         foreach($cats as $cat){//pa($categorie);
             $data[$cat['id']] = $cat; $data[$cat['id']]['name'] = $wo['lang'][$cat['lang_key']];
+            if($get_sub){
             $subs = $sqlConnect->query($query_sub = "SELECT * FROM " . T_CATEGORIES . " WHERE `sub`='".$cat["id"]."';");
             if($subs->num_rows > 0){
-                //foreach($subs as $sub){$sub['name'] = $wo["lang"][$sub["lang_key"]]; $data[$cat["id"]][] = $sub;}
-    }}}//pa($data); 
+                foreach($subs as $sub){$sub['name'] = $wo["lang"][$sub["lang_key"]]; $data[$cat["id"]][] = $sub;}
+            }}
+    }}//pa($data); 
 return $data ?? false;}
 
 function Wo_GetCategoriesOne($id) {
@@ -7007,6 +7009,17 @@ function Wo_UpdateCategoriesOne($id, $data) {
     $query = "UPDATE " . T_CATEGORIES . " SET ".$string_e." WHERE `id`= $id;";
     
 return $sqlConnect->query($query);}
+
+function Wo_GetGeoObjects($type = 'all'){
+    global $sqlConnect, $wo; $data = [];
+    $query = "SELECT * FROM " . T_GEO . (('all' != $type) ? " WHERE `type`='{$type}'" : '') . " ORDER BY `sort` DESC, `id` ASC;"; //pa($query);
+    $cities = $sqlConnect->query($query);
+    if($cities->num_rows > 0){
+        foreach($cities as $city){//pa($cities);
+            $data[$city['id']] = $city;
+    }}//pa($data); 
+return $data ?? false;}
+
 
 ///*/ ahilespelid ///*/
 function Wo_GetCategoriesKeys($table, $sub = false) {
@@ -7167,6 +7180,19 @@ function Wo_GetSubCategories() {
     }
     return false;
 }
+function Wo_GetSubCategoriesWithArray($arCategories){
+    global $wo; 
+    
+    foreach($arCategories as $cat){
+        $arSub = [];
+        $type = (!empty($cat['type']) ? $cat['type'] : false);
+        array_walk($cat, function($value, $key) use(&$arSub) {if(is_int($key)){$arSub[] = $value;}});
+        
+        if($type && is_array($arSub) && !empty($arSub)){
+            $wo["{$type}_sub_categories"] = $arSub;
+    }} //$wo["{$type}_sub_categories"]     = [];
+return false;}
+
 function Wo_GetCustomFields($type = "all") {
     global $wo, $sqlConnect;
     $data       = array();

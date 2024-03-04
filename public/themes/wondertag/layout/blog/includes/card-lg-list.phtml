@@ -3,7 +3,8 @@
 		<div class="avatar">
 			<img src="<?php echo $wo['blog']['thumbnail']; ?>" alt="<?php echo $wo['blog']['title']; ?>">
 			<div class="wow_main_blogs_info">
-				<a class="postCategory" href="<?php echo $wo['blog']['category_link']; ?>" data-ajax="?link1=blog-category&id=<?php echo $wo['blog']['category']; ?>"><?php echo $wo['blog_categories'][$wo['blog']['category']]; ?></a>
+			<?php $blog_category_name = $wo['lang'][$wo['blog_categories'][$wo['blog']['category']]['lang_key']];?>
+				<a class="postCategory" href="<?php echo $wo['blog']['category_link']; ?>" data-ajax="?link1=blog-category&id=<?php echo $wo['blog']['category']; ?>"><?php echo $blog_category_name; ?></a>
 				<h2 class="art-title"><a href="<?php echo $wo['blog']['url']; ?>"><?php echo $wo['blog']['title']; ?></a></h2>
 				<div class="postMeta--author-text">
 					<span><?php echo $wo['blog']['view']; ?> <?php echo $wo['lang']['views'] ?></span>

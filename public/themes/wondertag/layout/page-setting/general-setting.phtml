@@ -12,7 +12,7 @@
 					$category_id = $wo['setting']['page_category'];
 					$selected_contry = ($categories == $category_id) ? ' selected' : '' ;
 				?>
-					<option value="<?php echo $categories;?>" <?php echo $selected_contry;?> ><?php echo $category;?></option>
+					<option value="<?php echo $categories;?>" <?php echo $selected_contry;?> ><?php echo $wo['lang'][$category['lang_key']];?></option>
 				<?php } ?>
 			</select>
 			<span><?php echo $wo['lang']['category']; ?></span>

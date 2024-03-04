@@ -1,0 +1,56 @@
+<?php 
+    $fid = $wo['field']['fid'];
+?>
+<div id="<?php echo $fid;?>" class="tag_srch_fltr_country post_themes_dropdown dropdown_categories">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M3,3H11V7.34L16.66,1.69L22.31,7.34L16.66,13H21V21H13V13H16.66L11,7.34V11H3V3M3,13H11V21H3V13Z" /></svg>
+    <div class="d-flex align-items-center category_dropdown_header" data-original-title="<?php echo $wo['lang']['choose_topic']; ?>" data-toggle="tooltip" data-placement="bottom">                                    
+    <span><?php echo $fid == 'fid_3' ? $wo["lang"]["choose_directions_woodworking"] : $wo["lang"]["status"]; ?></span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+            <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+        </svg>
+    </div>
+    <div class="themes_dropdown_body dropdown-menu">
+        <p class="dropdown-menu_desc">
+            <?php $wo['lang']['search_categories_prompt'] ?>
+        </p>
+        <ul>
+            <li class="themes_dropdown_item none_selected"><?php echo $wo["lang"]["none_selected"]; ?></li>
+            <?php foreach($wo["blog_categories"] as $category_id => $category) { ?>
+                <li data-id="<?= $category_id?>" class="themes_dropdown_item"><?= $wo['lang'][$category['lang_key']]; ?></li>
+            <?php }; ?>
+        </ul>
+    </div>
+</div>
+
+<script>
+$("#dropdown-<?php echo $wo['field']['fid'];?> .category_dropdown_header").on("click", function (e) {
+    e.stopPropagation()
+    if($("#dropdown-<?php echo $wo['field']['fid'];?> .themes_dropdown_body").hasClass("show")) {
+        $("#dropdown-<?php echo $wo['field']['fid'];?> .themes_dropdown_body").removeClass("show")
+    } else {
+        $("#dropdown-<?php echo $wo['field']['fid'];?> .themes_dropdown_body").addClass("show")
+    }
+})
+
+$("dropdown-<?php echo $wo['field']['fid'];?> .themes_dropdown_item").each((i, item) => {
+	const categorySelectField = $('#fid_3');
+
+    $(item).on("click", function () {
+		categorySelectField.val($(item).data('id'))
+
+        if($(item).hasClass("none_selected")) {
+            $("#dropdown-<?php echo $wo['field']['fid'];?> .post_themes_dropdown span").text(topic)
+        } else {
+            $("#dropdown-<?php echo $wo['field']['fid'];?> .post_themes_dropdown span").text($(item).text())
+        }
+
+        $("#dropdown-<?php echo $wo['field']['fid'];?> .themes_dropdown_item").each((index, category) => {
+            $(category).removeClass('active')
+        })
+        if(!$(item).hasClass("active")) {
+            $(item).addClass("active")
+        }
+        $("#dropdown-<?php echo $wo['field']['fid'];?> .themes_dropdown_body").removeClass("show")
+    })
+})
+</script>

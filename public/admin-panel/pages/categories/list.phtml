@@ -1,4 +1,4 @@
-<tr id="list-<?=$wo['category_data']['lang_key'];?>" data_selected="<?=$wo['category_data']['lang_key'];?>">
+<tr id="list-<?=$wo['category_data']['id'];?>" data_selected="<?=$wo['category_data']['lang_key'];?>">
 	<?php if(1 <> $wo['category_id']){ ?>
             <td><input type="checkbox" id="check-data-<?=$wo['category_data']['lang_key'];?>" class="delete-checkbox filled-in"><label for="check-data-<?=$wo['category_data']['lang_key'];?>"><?=$wo['category_id'];?></label></td>
 	<?php }else{ ?>
@@ -17,7 +17,7 @@
             <button class="btn bg-danger admn_table_btn " onclick="update_sort_category(<?=$wo['category_id'];?>, 'd')">&#9660;</button>
             <button class="btn bg-success admn_table_btn" onclick="edit_category('<?=$wo['category_data']['lang_key'];?>')">Edit</button>
             <?php if(1 <> $wo['category_id']){ ?>
-                    <button class="btn bg-danger admn_table_btn delete-content" data-id="<?=$wo['category_data']['lang_key'];?>" onclick="Wo_DeleteCat('<?=$wo['category_data']['lang_key'];?>','hide');">Delete</button>
+                    <button class="btn bg-danger admn_table_btn delete-content catdel" data-id="<?=$wo['category_id'];?>" data-type="<?=$wo['category_data']['type'];?>" data-lang_key="<?=$wo['category_data']['lang_key'];?>">Delete</button>
             <?php } ?>
         </nobr>
   </td>

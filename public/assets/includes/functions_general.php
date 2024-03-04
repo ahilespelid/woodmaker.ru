@@ -2198,9 +2198,3 @@ function Wo_Geoyandex($text=''){if(empty($text)){return null;}
     $api = ($wo['config']['yandex_geo_map_api'] ?? '');
     return null;
 }
-///*/ ahilespelid ///*/
-function array_unique_key($array, $key){ 
-    $ret = $key_array = []; $i = 0; 
-    foreach($array as $val){if(!in_array($val[$key], $key_array)){$key_array[$i] = $val[$key];$ret[$i] = $val;} $i++;} 
-return $ret;}
-///*/ ahilespelid ///*/

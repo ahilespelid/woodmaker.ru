@@ -36,7 +36,8 @@
 			<div class="container">
 				<div class="wow_read_blog_hdr_img">
 					<div class="wow_read_blog_hdr_img_innr">
-						<a class="postCategory" href="<?php echo $wo['article']['category_link']; ?>" data-ajax="?link1=blog-category&id=<?php echo $wo['article']['category']; ?>"><?php echo $wo['blog_categories'][$wo['article']['category']]; ?></a>
+            <?php $blog_category_name = $wo['lang'][$wo['blog_categories'][$wo['article']['category']]['lang_key']];?>
+						<a class="postCategory" href="<?php echo $wo['article']['category_link']; ?>" data-ajax="?link1=blog-category&id=<?php echo $wo['article']['category']; ?>"><?php echo $blog_category_name; ?></a>
 						<h2 itemprop="headline"><?php echo $wo['article']['title']?></h2>
 						<div class="read-blog-info-user">
 							<div class="postMeta--author-avatar">

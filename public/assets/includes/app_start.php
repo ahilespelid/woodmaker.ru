@@ -372,7 +372,7 @@ if (!empty($_GET["mode"])) {
 }
 include_once "assets/includes/onesignal_config.php";
 
-// manage packages
+
 $wo["pro_packages"]       = Wo_GetAllProInfo();
 try {
     $wo["genders"]             = Wo_GetGenders($wo["language"], $langs);
@@ -385,10 +385,12 @@ try {
     $wo["products_categories"] = Wo_GetCategories(T_PRODUCTS_CATEGORY);
     $wo["job_categories"]      = Wo_GetCategories(T_JOB_CATEGORY);
 /* /// ahilespelid ///*/    
-    $wo["categories"]          = Wo_GetCategoriesWithSub('over');
-//    $wo["page_categories"]     = Wo_GetCategoriesWithSub('page');
-//    $wo["group_categories"]    = Wo_GetCategoriesWithSub('group');
-//    $wo["blog_categories"]     = Wo_GetCategoriesWithSub('blog');
+    $wo["categories"]          = Wo_GetCategoriesWithSub();
+    $wo["status_categories"]          = Wo_GetCategoriesWithSub('status');
+    $wo["page_categories"]     = Wo_GetCategoriesWithSub('page');
+    $wo["group_categories"]    = Wo_GetCategoriesWithSub('group');
+    //$wo["group_sub_categories"]='';
+    $wo["blog_categories"]     = Wo_GetCategoriesWithSub('blog');
 //    $wo["products_categories"] = Wo_GetCategoriesWithSub('product');
 //    $wo["job_categories"]      = Wo_GetCategoriesWithSub('job');
 ///* / ahilespelid /// */    
@@ -404,7 +406,114 @@ catch (Exception $e) {
     $wo["job_categories"]      = array();
     $wo["reactions_types"]     = array();
 }
+
+try{
+    
+//
+/*/ ahilespelid Старые функционал подкатегорий ///* /
 Wo_GetSubCategories();
+///* / ahilespelid ///*/
+    
+    Wo_GetSubCategoriesWithArray($wo["categories"]);
+    $wo["page_sub_categories"]     = ($wo["page_sub_categories"]     ?? []);
+    $wo["group_sub_categories"]    = ($wo["group_sub_categories"]    ?? []);
+    $wo["products_sub_categories"] = ($wo["products_sub_categories"] ?? []);
+}catch (Exception $e) {
+    $wo["page_sub_categories"]     = [];
+    $wo["group_sub_categories"]    = [];
+    $wo["products_sub_categories"] = [];
+}
+
+// manage geo
+try{
+    $wo["cities"] = Wo_GetGeoObjects();
+}catch(Exception $e){
+    $wo['cities'] = [
+    ['id' =>  '1', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Абакан',                        'area' => 'Республика Хакасия',                             'district' => 'Сибирский',                  'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:25:48'],
+    ['id' =>  '2', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Анадырь',                       'area' => 'Чукотский автономный округ',                     'district' => 'Дальневосточный',            'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:25:49'],
+    ['id' =>  '3', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Архангельск',                   'area' => 'Архангельская область',                          'district' => 'Северо-Западный',            'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:25:49'],
+    ['id' =>  '4', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Астрахань',                     'area' => 'Астраханская область',                           'district' => 'Южный',                      'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:25:49'],
+    ['id' =>  '5', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Барнаул',                       'area' => 'Алтайский край',                                 'district' => 'Сибирский',                  'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:25:49'],
+    ['id' =>  '6', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Белгород',                      'area' => 'Белгородская область',                           'district' => 'Центральный',                'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:25:49'],
+    ['id' =>  '7', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Биробиджан',                    'area' => 'Еврейская автономная область',                   'district' => 'Дальневосточный',            'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:25:49'],
+    ['id' =>  '8', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Благовещенск',                  'area' => 'Амурская область',                               'district' => 'Дальневосточный',            'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:25:50'],
+    ['id' =>  '9', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Брянск',                        'area' => 'Брянская область',                               'district' => 'Центральный',                'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:25:50'],
+    ['id' => '10', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Великий Новгород',              'area' => 'Новгородская область',                           'district' => 'Северо-Западный',            'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:25:50'],
+    ['id' => '11', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Владивосток',                   'area' => 'Приморский край',                                'district' => 'Дальневосточный',            'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:25:50'],
+    ['id' => '12', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Владикавказ',                   'area' => 'Республика Северная Осетия - Алания',            'district' => 'Северо-Кавказский',          'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:25:50'],
+    ['id' => '13', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Владимир',                      'area' => 'Владимирская область',                           'district' => 'Центральный',                'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:25:50'],
+    ['id' => '14', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Волгоград',                     'area' => 'Волгоградская область',                          'district' => 'Южный',                      'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:25:50'],
+    ['id' => '15', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Вологда',                       'area' => 'Вологодская область',                            'district' => 'Северо-Западный',            'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:25:51'],
+    ['id' => '16', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Воронеж',                       'area' => 'Воронежская область',                            'district' => 'Центральный',                'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:25:51'],
+    ['id' => '17', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Горно-Алтайск',                 'area' => 'Республика Алтай',                               'district' => 'Сибирский',                  'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:25:51'],
+    ['id' => '18', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Грозный',                       'area' => 'Республика Чечня',                               'district' => 'Северо-Кавказский',          'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:25:51'],
+    ['id' => '19', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Екатеринбург',                  'area' => 'Свердловская область',                           'district' => 'Уральский',                  'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:25:51'],
+    ['id' => '20', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Иваново',                       'area' => 'Ивановская область',                             'district' => 'Центральный',                'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:25:51'],
+    ['id' => '21', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Ижевск',                        'area' => 'Республика Удмуртия',                            'district' => 'Приволжский',                'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:25:52'],
+    ['id' => '22', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Иркутск',                       'area' => 'Иркутская область',                              'district' => 'Сибирский',                  'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:25:52'],
+    ['id' => '23', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Йошкар-Ола',                    'area' => 'Республика Марий Эл',                            'district' => 'Приволжский',                'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:25:52'],
+    ['id' => '24', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Казань',                        'area' => 'Республика Татарстан',                           'district' => 'Приволжский',                'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:25:52'],
+    ['id' => '25', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Калининград',                   'area' => 'Калининградская область',                        'district' => 'Северо-Западный',            'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:25:52'],
+    ['id' => '26', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Калуга',                        'area' => 'Калужская область',                              'district' => 'Центральный',                'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:25:52'],
+    ['id' => '27', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Кемерово',                      'area' => 'Кемеровская область',                            'district' => 'Сибирский',                  'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:25:52'],
+    ['id' => '28', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Киров',                         'area' => 'Кировская область',                              'district' => 'Приволжский',                'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:25:53'],
+    ['id' => '29', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Кострома',                      'area' => 'Костромская область',                            'district' => 'Центральный',                'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:25:53'],
+    ['id' => '30', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Краснодар',                     'area' => 'Краснодарский край',                             'district' => 'Южный',                      'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:25:53'],
+    ['id' => '31', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Красноярск',                    'area' => 'Красноярский край',                              'district' => 'Сибирский',                  'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:25:53'],
+    ['id' => '32', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Курган',                        'area' => 'Курганская область',                             'district' => 'Уральский',                  'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:25:53'],
+    ['id' => '33', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Курск',                         'area' => 'Курская область',                                'district' => 'Центральный',                'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:25:53'],
+    ['id' => '34', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Кызыл',                         'area' => 'Республика Тыва (Тува)',                         'district' => 'Сибирский',                  'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:25:54'],
+    ['id' => '35', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Липецк',                        'area' => 'Липецкая область',                               'district' => 'Центральный',                'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:25:54'],
+    ['id' => '36', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Магадан',                       'area' => 'Магаданская область',                            'district' => 'Дальневосточный',            'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:25:54'],
+    ['id' => '37', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Магас',                         'area' => 'Республика Ингушетия',                           'district' => 'Северо-Кавказский',          'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:25:54'],
+    ['id' => '38', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Майкоп',                        'area' => 'Республика Адыгея',                              'district' => 'Южный',                      'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:25:54'],
+    ['id' => '39', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Махачкала',                     'area' => 'Республика Дагестан',                            'district' => 'Северо-Кавказский',          'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:25:54'],
+    ['id' => '40', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Москва',                        'area' => 'Московская область',                             'district' => 'Центральный',                'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:25:55'],
+    ['id' => '41', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Мурманск',                      'area' => 'Мурманская область',                             'district' => 'Северо-Западный',            'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:25:55'],
+    ['id' => '42', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Нальчик',                       'area' => 'Республика Кабардино-Балкария',                  'district' => 'Северо-Кавказский',          'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:25:55'],
+    ['id' => '43', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Нарьян-Мар',                    'area' => 'Ненецкий автономный округ',                      'district' => 'Северо-Западный',            'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:25:55'],
+    ['id' => '44', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Нижний Новгород',               'area' => 'Нижегородская область',                          'district' => 'Приволжский',                'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:25:55'],
+    ['id' => '45', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Новосибирск',                   'area' => 'Новосибирская область',                          'district' => 'Сибирский',                  'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:25:55'],
+    ['id' => '46', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Омск',                          'area' => 'Омская область',                                 'district' => 'Сибирский',                  'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:25:55'],
+    ['id' => '47', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Оренбург',                      'area' => 'Оренбургская область',                           'district' => 'Приволжский',                'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:25:56'],
+    ['id' => '48', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Орёл',                          'area' => 'Орловская область',                              'district' => 'Центральный',                'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:25:56'],
+    ['id' => '49', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Пенза',                         'area' => 'Пензенская область',                             'district' => 'Приволжский',                'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:25:56'],
+    ['id' => '50', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Пермь',                         'area' => 'Пермский край',                                  'district' => 'Приволжский',                'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:25:56'],
+    ['id' => '51', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Петрозаводск',                  'area' => 'Республика Карелия',                             'district' => 'Северо-Западный',            'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:25:56'],
+    ['id' => '52', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Петропавловск-Камчатский',      'area' => 'Камчатский край',                                'district' => 'Дальневосточный',            'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:25:56'],
+    ['id' => '53', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Псков',                         'area' => 'Псковская область',                              'district' => 'Северо-Западный',            'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:25:57'],
+    ['id' => '54', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Ростов-на-Дону',                'area' => 'Ростовская область',                             'district' => 'Южный',                      'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:25:57'],
+    ['id' => '55', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Рязань',                        'area' => 'Рязанская область',                              'district' => 'Центральный',                'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:25:57'],
+    ['id' => '56', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Салехард',                      'area' => 'Ямало-Ненецкий автономный округ',                'district' => 'Уральский',                  'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:25:57'],
+    ['id' => '57', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Самара',                        'area' => 'Самарская область',                              'district' => 'Приволжский',                'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:25:57'],
+    ['id' => '58', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Санкт-Петербург',               'area' => 'Ленинградская область',                          'district' => 'Северо-Западный',            'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:25:57'],
+    ['id' => '59', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Саранск',                       'area' => 'Республика Мордовия',                            'district' => 'Приволжский',                'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:25:57'],
+    ['id' => '60', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Саратов',                       'area' => 'Саратовская область',                            'district' => 'Приволжский',                'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:25:58'],
+    ['id' => '61', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Севастополь',                   'area' => 'Севастополь',                                    'district' => 'Южный',                      'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:25:58'],
+    ['id' => '62', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Симферополь',                   'area' => 'Республика Крым',                                'district' => 'Южный',                      'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:25:58'],
+    ['id' => '63', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Смоленск',                      'area' => 'Смоленская область',                             'district' => 'Центральный',                'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:25:58'],
+    ['id' => '64', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Ставрополь',                    'area' => 'Ставропольский край',                            'district' => 'Северо-Кавказский',          'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:25:58'],
+    ['id' => '65', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Сыктывкар',                     'area' => 'Республика Коми',                                'district' => 'Северо-Западный',            'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:25:58'],
+    ['id' => '66', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Тамбов',                        'area' => 'Тамбовская область',                             'district' => 'Центральный',                'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:25:59'],
+    ['id' => '67', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Тверь',                         'area' => 'Тверская область',                               'district' => 'Центральный',                'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:25:59'],
+    ['id' => '68', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Томск',                         'area' => 'Томская область',                                'district' => 'Сибирский',                  'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:25:59'],
+    ['id' => '69', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Тула',                          'area' => 'Тульская область',                               'district' => 'Центральный',                'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:25:59'],
+    ['id' => '70', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Тюмень',                        'area' => 'Тюменская область',                              'district' => 'Уральский',                  'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:25:59'],
+    ['id' => '71', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Улан-Удэ',                      'area' => 'Республика Бурятия',                             'district' => 'Дальневосточный',            'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:25:59'],
+    ['id' => '72', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Ульяновск',                     'area' => 'Ульяновская область',                            'district' => 'Приволжский',                'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:25:59'],
+    ['id' => '73', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Уфа',                           'area' => 'Республика Башкортостан',                        'district' => 'Приволжский',                'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:26:00'],
+    ['id' => '74', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Хабаровск',                     'area' => 'Хабаровский край',                               'district' => 'Дальневосточный',            'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:26:00'],
+    ['id' => '75', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Ханты-Мансийск',                'area' => 'Ханты-Мансийский автономный округ - Югра',       'district' => 'Уральский',                  'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:26:00'],
+    ['id' => '76', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Чебоксары',                     'area' => 'Республика Чувашия',                             'district' => 'Приволжский',                'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:26:00'],
+    ['id' => '77', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Челябинск',                     'area' => 'Челябинская область',                            'district' => 'Уральский',                  'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:26:01'],
+    ['id' => '78', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Черкесск',                      'area' => 'Республика Карачаево-Черкессия',                 'district' => 'Северо-Кавказский',          'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:26:01'],
+    ['id' => '79', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Чита',                          'area' => 'Забайкальский край',                             'district' => 'Дальневосточный',            'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:26:01'],
+    ['id' => '80', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Элиста',                        'area' => 'Республика Калмыкия',                            'district' => 'Южный',                      'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:26:01'],
+    ['id' => '81', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Южно-Сахалинск',                'area' => 'Сахалинская область',                            'district' => 'Дальневосточный',            'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:26:02'],
+    ['id' => '82', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Якутск',                        'area' => 'Республика Саха (Якутия)',                       'district' => 'Дальневосточный',            'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:26:02'],
+    ['id' => '83', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Ярославль',                     'area' => 'Ярославская область',                            'district' => 'Центральный',                'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:26:02']];    
+}//pa($wo["cities"]);
+
 $wo["config"]["currency_array"]        = (array) json_decode($wo["config"]["currency_array"]);
 $wo["config"]["currency_symbol_array"] = (array) json_decode($wo["config"]["currency_symbol_array"]);
 $wo["config"]["providers_array"]       = (array) json_decode($wo["config"]["providers_array"]);
@@ -555,6 +664,6 @@ if (!empty($wo['config']['reserved_usernames'])) {
     $wo['reserved_usernames'] = explode(',', $wo['config']['reserved_usernames']);
 }
 
-$wo['config']['maxCharacters'] = 5000;
+$wo['config']['maxCharacters'] = 5000;   
 
-//echo $sql_db_user; //exit;
+//echo $sql_db_user; //exit; pa($wo['config']);

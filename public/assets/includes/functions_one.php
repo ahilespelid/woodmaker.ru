@@ -3494,6 +3494,42 @@ function Wo_GetRecentSerachs() {
     }
     return $data;
 }
+
+function Wo_SearchForSearchPage($type, $query, $limit) {
+    global $sqlConnect, $wo;
+    $data        = array();
+    if ($wo['loggedin'] == false) {
+        return false;
+    }
+    if(empty($type)) {
+        return;
+    }
+    $search_qeury = '';
+    if(!empty($query)) {
+        $search_qeury = Wo_Secure($query);
+    }
+    if(!empty($limit)) {
+        $limit = Wo_Secure($limit);
+    }
+
+    if('pages' == $type) {
+        $query = mysqli_query($sqlConnect, " SELECT `page_id` FROM " . T_PAGES . " WHERE ((`page_name` LIKE '%$search_qeury%') OR `page_title` LIKE '%$search_qeury%') AND `active` = '1' LIMIT $limit");
+        if (mysqli_num_rows($query)) {
+            while ($fetched_data = mysqli_fetch_assoc($query)) {
+                $data[] = Wo_PageData($fetched_data['page_id']);
+            }
+        } 
+    } elseif('groups' == $type) {
+        $query = mysqli_query($sqlConnect, " SELECT `id` FROM " . T_GROUPS . " WHERE ((`group_name` LIKE '%$search_qeury%') OR `group_title` LIKE '%$search_qeury%') AND `active` = '1' LIMIT $limit");
+        if (mysqli_num_rows($query)) {
+            while ($fetched_data = mysqli_fetch_assoc($query)) {
+                $data[] = Wo_GroupData($fetched_data['id']);
+            }
+        }
+    }
+
+    return $data;
+}
 function Wo_GetSearchFilter($result, $limit = 30, $offset = 0) {
     global $wo, $sqlConnect, $db;
     $data        = array();

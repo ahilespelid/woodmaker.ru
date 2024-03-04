@@ -36,11 +36,11 @@
 					<div class="col-xl-7">
 						<label class="tag_field">
 							<input id="event-name" name="event-name" type="text" placeholder=" ">
-							<span><?php echo $wo['lang']['event']; ?> <?php echo $wo['lang']['name']; ?></span>
+							<span><?php echo $wo['lang']['event_name']; ?></span>
 						</label>
 						<label class="tag_field">
 							<textarea name="event-description" id="event-description" placeholder=" " rows="5"></textarea>
-							<span><?php echo $wo['lang']['event']; ?> <?php echo $wo['lang']['description']; ?></span>
+							<span><?php echo $wo['lang']['event_desc']; ?></span>
 						</label>
 						
 						<label class="tag_field">
@@ -55,6 +55,26 @@
 							<textarea name="event-organizer-contact" id="event-organizer-contact" placeholder=" " rows="5"></textarea>
 							<span><?php echo $wo['lang']['event_organizer_contact']; ?></span>
 						</label>
+						<div class="d-flex">
+							<label class="tag_field">
+								<select name="event_category">
+									<option value=""><?php echo $wo['lang']['none'];?></option>
+									<?php foreach ($wo['blog_categories']  as $key => $value) { ?>
+										<option value="<?php echo $value['id'];?>"><?php echo $wo['lang'][$value['lang_key']];?></option>
+									<?php } ?>
+								</select>
+								<span><?php echo $wo['lang']['event_category']; ?></span>
+							</label>
+							<label class="tag_field">
+								<select name="event_city">
+									<option value=""><?php echo $wo['lang']['none'];?></option>
+									<?php foreach ($wo['blog_categories']  as $key => $value) { ?>
+										<option value="<?php echo $value['id'];?>"><?php echo $wo['lang'][$value['lang_key']];?></option>
+									<?php } ?>
+								</select>
+								<span><?php echo $wo['lang']['event_category']; ?></span>
+							</label>
+						</div>
 						
 						
 						<label class="tag_field">
@@ -189,7 +209,7 @@
         //Get the geocoder container from the leaflet map
         var geocoderContainer = geocoderControl.getContainer();
         //Append the geocoder container to the "search-box" div
-        searchBoxControl.appendChild(geocoderContainer);        
+        // searchBoxControl.appendChild(geocoderContainer);        
 
         //Displays the geocoding response in the "result" div
         function displayLatLon(display_name, lat, lng) {

@@ -3,6 +3,7 @@ if ($f == 'posts') {
     if ($s == 'fetch_url') {
         if (preg_match('%(?:youtube(?:-nocookie)?\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)/|.*[?&]v=)|youtu\.be/)([^"&?/ ]{11})%i', $_POST["url"], $match)) {
             $youtube_video = Wo_Secure($match[1]);
+            pa($youtube_video);
             $api_request   = file_get_contents('https://www.googleapis.com/youtube/v3/videos?id=' . $youtube_video . '&key=' . $wo['config']['youtube_api_key'] . '&part=snippet,contentDetails,statistics,status');
             $thumbnail     = '';
             if (!empty($api_request)) {
@@ -269,7 +270,8 @@ if ($f == 'posts') {
         
         $not_video = true;
         if(isset($_FILES['postVideo']['name']) && empty($mediaFilename) && 0 < $c = count($_FILES['postVideo']['name'])){//
-        //pa($_FILES);
+        //
+        pa($_FILES);
             $videoTypes           = ['mp4','m4v','webm','flv','mov','mpeg','mkv'];
             $ffmpeg_b             = $wo['config']['ffmpeg_binary_file'];
             for($i=0; $i<$c; $i++){
@@ -306,7 +308,8 @@ if ($f == 'posts') {
                         $wo['config']['spaces']            = 0;
                         $wo['config']['cloud_upload']      = 0;
                     }
-                    //pa($fileInfo);
+                    //
+                    pa($fileInfo);
                     $video[$i] = $media = Wo_ShareFile($fileInfo);
                     if('on' == $wo['config']['ffmpeg_system']){
                         $wo['config']['amazone_s3']        = $amazone_s3;
@@ -325,7 +328,8 @@ if ($f == 'posts') {
                             'image/jpeg',
                             'image/jpg',
                             'image/gif'
-                        ]; //pa($_FILES['video_thumb']);
+                        ]; //
+                        pa($_FILES['video_thumb']);
                         if(!empty($_FILES['video_thumb']) && in_array($_FILES["video_thumb"]["type"][$i], $img_types)){
                             $fileInfo = [
                                 'file' => $_FILES["video_thumb"]["tmp_name"][$i],

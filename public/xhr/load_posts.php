@@ -1,4 +1,4 @@
-<?php 
+<?php
 if ($f == 'load_posts') {
     if(empty($wo['user']['email'])){}
     

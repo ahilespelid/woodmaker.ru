@@ -25,7 +25,7 @@
 					foreach ($wo['group_categories'] as $categorie_id => $category) {
 					$selected_contry = ($categorie_id == $wo['setting']['category_id']) ? ' selected' : '' ;
 				?>
-					<option value="<?php echo $categorie_id;?>" <?php echo $selected_contry;?> ><?php echo $category;?></option>
+					<option value="<?php echo $categorie_id;?>" <?php echo $selected_contry;?> ><?php echo $wo['lang'][$category['lang_key']];?></option>
 				<?php } ?>
 			</select>
 			<span><?php echo $wo['lang']['category'];?></span>

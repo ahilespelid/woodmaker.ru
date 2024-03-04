@@ -2085,7 +2085,7 @@ function Wo_CloseLightbox() {
 function Wo_OpenLightBox(post_id, pinched = '', videoId = 0) {
   $('body').addClass('no_scroll');
   $('#contnet').append(`<div class="lightbox-container" data-video="${videoId}"><div class="tag_lboxside_skel"><div class="valign tag_lbox_toolbar"><div class="valign"><div class="btn btn-mat close-lightbox" onclick="Wo_CloseLightbox();"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="currentColor" d="M7.828 11H20v2H7.828l5.364 5.364-1.414 1.414L4 12l7.778-7.778 1.414 1.414z"></path></svg></div></div></div><div class="tag_lboxside_skel_white"><div class="valign"><div class="skel skel_50 skel_avatar"></div><div><div class="skel skel_2 skel_noti_name"></div><div class="skel skel_2 skel_noti_time"></div></div></div><hr class="style-two tag_lbox_skel_hr"><div class="valign tag_lbox_skel_foot"><div class="skel skel_50 skel_avatar"></div><div class="skel skel_2 tag_lbox_skel_tbox"></div></div></div></div></div>`);
-  $.get(Wo_Ajax_Requests_File(), {f:'open_lightbox', s: pinched, post_id:post_id}, function(data) {
+  $.get(Wo_Ajax_Requests_File(), {f:'open_lightbox', s: pinched, post_id: post_id}, function(data) {
     if (data.status == 200) {
 	  $('body').addClass('no_scroll');
       $('.lightbox-container').html(data.html);

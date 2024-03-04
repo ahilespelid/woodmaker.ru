@@ -56,8 +56,8 @@
 			<label class="tag_field">
 				<select name="blog_category" id="blog_category">
 					<option value="0"><?php echo $wo['lang']['category'];?></option>
-					<?php foreach ($wo['blog_categories'] as $category_id => $category_name): ?>
-						<option value="<?php echo $category_id?>"><?php echo $category_name; ?></option>
+					<?php foreach ($wo['blog_categories'] as $category): ?>
+						<option value="<?php echo $category['id']?>"><?php echo $wo['lang'][$category['lang_key']]; ?></option>
 					<?php endforeach; ?>
 				</select>
 				<span><?php echo $wo['lang']['category'] ?></span>

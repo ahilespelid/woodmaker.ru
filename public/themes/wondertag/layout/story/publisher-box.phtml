@@ -365,8 +365,8 @@ if (!empty($_GET['url'])) {
                                     </p>
                                     <ul>
                                         <li class="themes_dropdown_item none_selected"><?php echo $wo["lang"]["none_selected"]; ?></li>
-                                        <?php foreach($wo["blog_categories"] as $category_id => $category_name) { ?>
-                                            <li class="themes_dropdown_item"><?= $category_name; ?></li>
+                                        <?php foreach($wo["blog_categories"] as $category_id => $category) { ?>
+                                            <li class="themes_dropdown_item"><?= $wo['lang'][$category['lang_key']]; ?></li>
                                         <?php }; ?>
                                     </ul>
                                 </div>

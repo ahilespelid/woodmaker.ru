@@ -1833,7 +1833,6 @@ if ($f == 'admin_setting' AND (Wo_IsAdmin() || Wo_IsModerator())) {
     }
     // category
 ///*/ ahilespelid ///*/
-
     if($s == 'update_sort_category'){
         $data['status'] = 400;
         if(!empty($cat = Wo_GetCategoriesOne($_REQUEST['id']))){
@@ -1846,53 +1845,38 @@ if ($f == 'admin_setting' AND (Wo_IsAdmin() || Wo_IsModerator())) {
         echo json_encode($data);
         exit();    
     }
-    
 ///*/ ahilespelid ///*/
-
-    if ($s == 'add_new_category') {
+    if($s == 'add_new_category'){//pa($_GET);pa($_POST); exit;
         $data['status']  = 400;
         $data['message'] = 'Please check your details';
-        $types           = array(
-            'page' => T_PAGES_CATEGORY,
-            'group' => T_GROUPS_CATEGORY,
-            'blog' => T_BLOGS_CATEGORY,
-            'product' => T_PRODUCTS_CATEGORY,
-            'job' => T_JOB_CATEGORY
-        );
-        if (!empty($_GET['type']) && in_array($_GET['type'], array_keys($types))) {
-            $add         = false;
-            $insert_data = array();
-            foreach (Wo_LangsNamesFromDB() as $key => $lang) {
-                if (!empty($_POST[$lang])) {
-                    $insert_data[$lang] = Wo_Secure($_POST[$lang]);
-                    $add                = true;
-                }
-            }
-            if ($add == true && !empty($insert_data)) {
-                $insert_data['type'] = 'category';
-                $id                  = $db->insert(T_LANGS, $insert_data);
-                $db->insert($types[$_GET['type']], array(
-                    'lang_key' => $id
-                ));
-                $db->where('id', $id)->update(T_LANGS, array(
-                    'lang_key' => $id
-                ));
-                $data = array(
-                    'status' => 200
-                );
-            }
-        }
+        
+        if(Wo_CheckMainSession($_GET['hash']) && !empty($_POST['type'] ?? '')){
+            foreach(Wo_LangsNamesFromDB() as $lang){
+                if(!empty($_POST[$lang])){
+                    $insert_data[$lang] = Wo_Secure($_POST[$lang]); 
+            }}
+            if(!empty($insert_data ?? '')){
+                $insert_data['type']   = 'category';
+                $cDdata['lang_key']    = $db->insert(T_LANGS, $insert_data);
+                $cDdata['type']        = htmlentities(trim($_POST['type']));
+                $cDdata['sub']         = (is_numeric($_POST['sub'])) ? $_POST['sub'] : null;
+            
+                $db->insert(T_CATEGORIES, $cDdata);
+                $db->where('id', $cDdata['lang_key'])->update(T_LANGS, ['lang_key' => $cDdata['lang_key']]);
+                $data = ['status' => 200];
+        }}
         header("Content-type: application/json");
         echo json_encode($data);
         exit();
     }
-    if ($s == 'get_category_langs' && !empty($_POST['lang_key'])) {
+///*/ ahilespelid ///*/   
+    if($s == 'get_category_langs' && !empty($_POST['lang_key'])){
         $data['status'] = 400;
         $html           = '';
         $langs          = Wo_GetLangDetails($_POST['lang_key']);
-        if (count($langs) > 0) {
+        if(count($langs) > 0){
             foreach ($langs as $key => $wo['langs']) {
-                foreach ($wo['langs'] as $wo['key_'] => $wo['lang_vlaue']) {
+                foreach ($wo['langs'] as $wo['key_'] => $wo['lang_vlaue']){
                     $html .= Wo_LoadAdminPage('edit-lang/form-list');
                 }
             }
@@ -1903,53 +1887,50 @@ if ($f == 'admin_setting' AND (Wo_IsAdmin() || Wo_IsModerator())) {
         echo json_encode($data);
         exit();
     }
-    if ($s == 'delete_category' && !empty($_POST['lang_key'])) {
-        $types = array(
-            'page' => T_PAGES_CATEGORY,
-            'group' => T_GROUPS_CATEGORY,
-            'blog' => T_BLOGS_CATEGORY,
-            'product' => T_PRODUCTS_CATEGORY,
-            'job' => T_JOB_CATEGORY
-        );
-        if (!empty($_GET['type']) && in_array($_GET['type'], array_keys($types))) {
-            if ($_POST['lang_key'] != 'other' && $_POST['lang_key'] != 'all_') {
-                $lang_key = Wo_Secure($_POST['lang_key']);
-                $category = $db->where('lang_key', $lang_key)->getOne($types[$_GET['type']]);
-                if (!empty($category)) {
-                    $db->where('lang_key', $lang_key)->delete(T_LANGS);
-                    $db->where('lang_key', $lang_key)->delete($types[$_GET['type']]);
-                    if ($_GET['type'] == 'page') {
-                        $db->where('page_category', $category->id)->update(T_PAGES, array(
-                            'page_category' => 1
-                        ));
-                    }
-                    if ($_GET['type'] == 'group') {
-                        $db->where('category', $category->id)->update(T_GROUPS, array(
-                            'category' => 1
-                        ));
-                        resetCache("groups");
-                    }
-                    if ($_GET['type'] == 'blog') {
-                        $db->where('category', $category->id)->update(T_BLOG, array(
-                            'category' => 1
-                        ));
-                    }
-                    if ($_GET['type'] == 'product') {
-                        $db->where('category', $category->id)->update(T_PRODUCTS, array(
-                            'category' => 0
-                        ));
-                    }
-                    $data['status'] = 200;
-                }
-            }
-        }
-        header("Content-type: application/json");
-        echo json_encode($data);
-        exit();
+///*/ ahilespelid ///*/
+    if($s == 'delete_category' ){//pa($_GET); pa($lang); exit;
+        $data['status']  = 400;
+        $data['message'] = 'Please check your details';
+        
+        if(Wo_CheckMainSession($_GET['hash']) && $_POST['lang_key'] != 'other' && $_POST['lang_key'] != 'all_'){
+            $id = Wo_Secure($_POST['id']);
+            $lang_key = Wo_Secure($_POST['lang_key']);
+            $lang = $db->where('lang_key', $lang_key)->getOne(T_LANGS);
+            $category = $db->where('id', $id)->getOne(T_CATEGORIES);
+            
+            if(!empty($category)){
+                $db->where('lang_key', $lang_key)->delete(T_LANGS);
+                $db->where('id', $id)->delete(T_CATEGORIES);
+            
+                if('page' == $_GET['type']){
+                    $db->where('page_category', $category->id)->update( T_PAGES,    ['page_category' => 1]);
+                }else
+                if('group' == $_GET['type']) {
+                    $db->where('category', $category->id)->update(      T_GROUPS,   ['category' => 1]); resetCache("groups");
+                }else
+                if('blog' == $_GET['type']) {
+                    $db->where('category', $category->id)->update(      T_BLOG,     ['category' => 1]);
+                }else
+                if('products' == $_GET['type']) {
+                    $db->where('category', $category->id)->update(      T_PRODUCTS, ['category' => 0]);
+                } 
+                
+                $data['status'] = 200;
+                $data['message'] = 'Categorie: '.(
+                (empty($lang->russian ?? '')) ? 
+                    (
+                    (empty($lang->english ?? '')) ? $id : $lang->english 
+                    ) : 
+                $lang->russian).' alredy deleted';     
+        }}  
+    header("Content-type: application/json");
+    echo json_encode($data);
+    exit();
     }
+///*/ ahilespelid ///*/    
     // category
     // manage packages
-    if ($s == 'add_pro_package') {
+    if ($s == 'add_pro_package'){
         $data['status'] = 400;
         if (!empty($_POST['name']) && !empty($_POST['color']) && !empty($_POST['time']) && in_array($_POST['time'], array('day','week','month','year','unlimited')) && !empty($_FILES['icon']) && !empty($_FILES['night_icon']) && !empty($_POST['max_upload'])) {
             $night_icon = '';

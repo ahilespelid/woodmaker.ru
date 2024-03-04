@@ -375,7 +375,7 @@
 						<div class="event-friends-invition-list">
 							<?php 
 							
-								$event_users = Wo_SearchFollowers($wo['user']['id'], '', 10, $wo['event']['id']);
+								$event_users = Wo_SearchFollowers($wo['user']['id'], '', 99999, $wo['event']['id']);
 								if (count($event_users) > 0) {
 									foreach ($event_users as $wo['event_inv_user']) {
 										$html .= Wo_LoadPage('events/includes/invitation-friends-list');

@@ -11,7 +11,7 @@
 					foreach ($wo['blog_categories'] as $key => $category) {
 						$active = ($category_id == $key) ? 'active' : '';
 				?>
-					<a href="<?php echo Wo_SeoLink('index.php?link1=blog-category&id=' . $key) ?>" data-ajax="?link1=blog-category&id=<?php echo $key?>" class="<?php echo $active?>"><?php echo $category;?></a>
+					<a href="<?php echo Wo_SeoLink('index.php?link1=blog-category&id=' . $key) ?>" data-ajax="?link1=blog-category&id=<?php echo $key?>" class="<?php echo $active?>"><?php echo $wo['lang'][$category['lang_key']];?></a>
 				<?php } ?>
 			</div>
 		</div>

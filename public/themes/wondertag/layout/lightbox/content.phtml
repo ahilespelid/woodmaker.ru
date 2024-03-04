@@ -16,6 +16,9 @@ if (!empty($wo['story']['postSticker'])) {
 if (!empty($wo['story']['postFile']) && (strpos($wo['story']['postFile'], '.mp4') !== false || strpos($wo['story']['postFile'], '.mkv') !== false || strpos($wo['story']['postFile'], '.avi') !== false || strpos($wo['story']['postFile'], '.webm') || strpos($wo['story']['postFile'], '.mov') || strpos($wo['story']['postFile'], '.m3u8') !== false )) {
 	$wo['story']['model_type'] = 'video';
 }
+if (!empty($wo['story']['postYoutube'])) {
+	$wo['story']['model_type'] = 'youtube';
+}
 if ($wo['config']['shout_box_system'] == 1 && $wo['story']['postPrivacy'] == 4) {
 	$anonymous = true;
 	$wo['story']['publisher']['username'] = 'anonymous';
@@ -27,7 +30,6 @@ if ($wo['config']['shout_box_system'] == 1 && $wo['story']['postPrivacy'] == 4) 
 }
 ?>
 
-<h1><?php var_dump($wo['story']['photo_multi']);?></h1>
 <div class="lightbox-backgrond" onclick="Wo_CloseLightbox();"></div>
 <div class="lightbox-content post wo_imagecombo_lbox lightpost-<?php echo $wo['story']['id'];?>" id="post-<?php echo $wo['story']['id'];?>" data-post-id="<?php echo $wo['story']['id'];?>">
     <div class="story-img">
@@ -91,7 +93,7 @@ if ($wo['config']['shout_box_system'] == 1 && $wo['story']['postPrivacy'] == 4) 
 					<?php } else { ?>
 						<img src="<?php echo $image. "?cache=" . time();?>" alt="media" class="" id="wo_zoom_<?php echo $wo['story']['id'];?>">
 					<?php } ?>
-				<?php } else { ?>
+				<?php } elseif($wo['story']['model_type'] == 'video') { ?>
 <!--					--><?php //
 //						$media = array(
 //							'type' => 'post',
@@ -105,7 +107,47 @@ if ($wo['config']['shout_box_system'] == 1 && $wo['story']['postPrivacy'] == 4) 
                     <div class="lightbox-video-wrapper tag-vid-plyr">
 
                     </div>
-				<?php } ?>
+				<?php } else { ?>
+					<?php if(!empty($wo['story']['postYoutube'])) {  ?>
+						<div class="post-youtube embed-responsive embed-responsive-16by9">
+							<iframe type="text/html" width="100%" class="embed-responsive-item" src="https://www.youtube.com/embed/<?php echo $wo['story']['postYoutube']; ?>?modestbranding=1&showinfo=0&rel=0&autoplay=0" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+						</div>
+					<?php } ?>
+					
+					<?php if(!empty($wo['story']['postPlaytube'])) {  ?>
+						<div class="post-youtube embed-responsive embed-responsive-16by9">
+							<iframe type="text/html" width="100%" class="embed-responsive-item" src="<?php echo $wo['config']['playtube_url']; ?>/embed/<?php echo $wo['story']['postPlaytube']; ?>?autoplay=0&fullscreen=1" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+						</div>
+					<?php } ?>
+					
+					<?php if(!empty($wo['story']['postDeepsound'])) {  ?>
+						<div class="post-youtube">
+							<iframe type="text/html" width="100%" height="136" src="<?php echo $wo['config']['deepsound_url']; ?>/embed/<?php echo $wo['story']['postDeepsound']; ?>?autoplay=0&fullscreen=1" frameborder="0"></iframe>
+						</div>
+					<?php } ?>
+					
+					<?php if(!empty($wo['story']['postVimeo'])) {  ?>
+						<div class="post-youtube embed-responsive embed-responsive-16by9">
+							<iframe src="https://player.vimeo.com/video/<?php echo $wo['story']['postVimeo'];?>?byline=0&portrait=0" width="100%" class="embed-responsive-item" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+						</div>
+					<?php } ?>
+					
+					<?php if(!empty($wo['story']['postFacebook'])) {  ?>
+						<div class="post-youtube embed-responsive embed-responsive-16by9">
+							<iframe src="https://www.facebook.com/plugins/video.php?href=https://www.facebook.com/<?php echo $wo['story']['postFacebook'];?>&show_text=0" width="100%" class="embed-responsive-item" frameborder="0" allowfullscreen></iframe>
+						</div>
+					<?php } ?>
+					
+					<?php if(!empty($wo['story']['postDailymotion'])) {  ?>
+						<div class="post-youtube embed-responsive embed-responsive-16by9">
+							<iframe frameborder="0" width="100%" class="embed-responsive-item" src="https://www.dailymotion.com/embed/video/<?php echo $wo['story']['postDailymotion']?>" allowfullscreen></iframe>
+						</div>
+					<?php } ?>
+					
+					<?php if(!empty($wo['story']['postVine'])) {  ?>
+						<iframe src="https://vine.co/v/<?php echo $wo['story']['postVine']; ?>/embed/simple" width="100%" height="400" frameborder="0"></iframe>
+					<?php } ?>
+				<?php }?>
 			</div>
 		</div>
 		<div class="tag_mobi_lbox_foot">

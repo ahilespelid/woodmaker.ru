@@ -3,7 +3,8 @@
 		<a href="<?php echo $wo['article']['url']; ?>" class="avatar">
 			<img src="<?php echo $wo['article']['thumbnail']; ?>" alt="<?php echo $wo['article']['title']; ?>">
 		</a>
-		<a class="postCategory" href="<?php echo $wo['article']['category_link']; ?>" data-ajax="?link1=blog-category&id=<?php echo $wo['article']['category']; ?>"><?php echo $wo['blog_categories'][$wo['article']['category']]; ?></a>
+		<?php $blog_category_name = $wo['lang'][$wo['blog_categories'][$wo['article']['category']]['lang_key']];?>
+		<a class="postCategory" href="<?php echo $wo['article']['category_link']; ?>" data-ajax="?link1=blog-category&id=<?php echo $wo['article']['category']; ?>"><?php echo $blog_category_name; ?></a>
 		<div class="info">
 			<h2 class="art-title"><a href="<?php echo $wo['article']['url']; ?>"><?php echo $wo['article']['title']; ?></a></h2>
 			<div class="postMeta--author-text truncate">

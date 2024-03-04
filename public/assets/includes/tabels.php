@@ -148,5 +148,6 @@ define('T_LANG_ISO', 'Wo_LangIso');
 define('T_PENDING_PAYMENTS', 'Wo_PendingPayments');
 define('T_UPLOADED_MEDIA', 'Wo_UploadedMedia');
 define('T_BACKUP_CODES', 'Wo_Backup_Codes');
+define('T_GEO', 'Wo_GeoObjects');
 
 ?>

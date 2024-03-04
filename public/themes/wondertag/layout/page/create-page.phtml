@@ -21,10 +21,11 @@
 					<span><?php echo $wo['lang']['page_description']; ?></span>
 				</label>
 				<div class="help-block"><?php echo $wo['lang']['page_description_info'];?></div>
+				<?php $page_categories = Wo_GetCategoriesWithSub('page', false);?>
 				<label class="tag_field">
 					<select name="page_category" id="page_category" onchange="GetPageSubCategory(this)">
-						<?php foreach ($wo['page_categories'] as $category_id => $category_name) {?>
-							<option value="<?php echo $category_id?>"><?php echo $category_name; ?></option>
+						<?php foreach ($page_categories as $category) {?>
+							<option value="<?php echo $category['id']?>"><?php echo $wo['lang'][$category['lang_key']]; ?></option>
 						<?php } ?>
 					</select>
 					<span><?php echo $wo['lang']['page_category']; ?></span>

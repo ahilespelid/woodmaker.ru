@@ -3560,9 +3560,9 @@ function Wo_EventData($id = false) {
             $fetched_data['end_edit_date']   = date($fetched_data['end_date']);
             $fetched_data['end_date']        = date($wo['config']['date_style'], strtotime($fetched_data['end_date']));
             $fetched_data['url']             = Wo_SeoLink("index.php?link1=show-event&eid=" . $fetched_data['id']);
-            $explode2                   = @end(explode('.', $fetched_data['cover']));
-            $explode3                   = @explode('.', $fetched_data['cover']);
-            $fetched_data['cover_full'] =  mb_substr($explode3[1], 3) . '_full.' . $explode2;
+            $explode2                   = @end(explode('.', $fetched_data['cover_org']));
+            $explode3                   = @explode('.', $fetched_data['cover_org']);
+            $fetched_data['cover_full'] =  $explode3[0] . '_full.' . $explode2;
             return $fetched_data;
         }
     }

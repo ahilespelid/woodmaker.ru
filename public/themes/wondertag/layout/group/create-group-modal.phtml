@@ -28,11 +28,12 @@
 						<div class="col-lg-6">
 							<label class="tag_field">
 								<select name="category" id="category" onchange="GetGroupSubCategory(this)">
-									<?php foreach ($wo['group_categories'] as $category_id => $category_name) {?>
-										<option value="<?php echo $category_id?>"><?php echo $category_name; ?></option>
+									<option value=""><?php echo $wo['lang']['none_selected']?></option>
+									<?php foreach ($wo['group_categories'] as $category) {?>
+										<option value="<?php echo $category['id']?>"><?php echo $wo['lang'][$category['lang_key']]; ?></option>
 									<?php } ?>
 								</select>
-								<span><?php echo $wo['lang']['category'];?></span>
+								<span><?php echo $wo['lang']['group_select_category']?></span>
 							</label>
 						</div>
 					</div>
