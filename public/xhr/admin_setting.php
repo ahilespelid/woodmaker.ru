@@ -1831,8 +1831,7 @@ if ($f == 'admin_setting' AND (Wo_IsAdmin() || Wo_IsModerator())) {
             exit();
         }
     }
-    // category
-///*/ ahilespelid ///*/
+///*/ ahilespelid ///*/ // category
     if($s == 'update_sort_category'){
         $data['status'] = 400;
         if(!empty($cat = Wo_GetCategoriesOne($_REQUEST['id']))){
@@ -1845,7 +1844,6 @@ if ($f == 'admin_setting' AND (Wo_IsAdmin() || Wo_IsModerator())) {
         echo json_encode($data);
         exit();    
     }
-///*/ ahilespelid ///*/
     if($s == 'add_new_category'){//pa($_GET);pa($_POST); exit;
         $data['status']  = 400;
         $data['message'] = 'Please check your details';
@@ -1868,8 +1866,7 @@ if ($f == 'admin_setting' AND (Wo_IsAdmin() || Wo_IsModerator())) {
         header("Content-type: application/json");
         echo json_encode($data);
         exit();
-    }
-///*/ ahilespelid ///*/   
+    }   
     if($s == 'get_category_langs' && !empty($_POST['lang_key'])){
         $data['status'] = 400;
         $html           = '';
@@ -1887,7 +1884,6 @@ if ($f == 'admin_setting' AND (Wo_IsAdmin() || Wo_IsModerator())) {
         echo json_encode($data);
         exit();
     }
-///*/ ahilespelid ///*/
     if($s == 'delete_category' ){//pa($_GET); pa($lang); exit;
         $data['status']  = 400;
         $data['message'] = 'Please check your details';
@@ -1927,8 +1923,106 @@ if ($f == 'admin_setting' AND (Wo_IsAdmin() || Wo_IsModerator())) {
     echo json_encode($data);
     exit();
     }
-///*/ ahilespelid ///*/    
-    // category
+///*/ ahilespelid ///*/ // category   
+///*/ ahilespelid ///*/ // geo
+    if($s == 'update_sort_geo'){
+        $data['status'] = 400;
+        if(!empty($cat = Wo_GetGeoObjectOne($_REQUEST['id']))){
+            if(empty($cat['sort']) || 0 > $cat['sort']){$cat['sort']=0;}    
+            $cat['sort'] = ('d' == $_REQUEST['sort']) ? $cat['sort']+1 : (('u' == $_REQUEST['sort'] && 0 <> $cat['sort']) ? $cat['sort']-1 : '');
+            if(Wo_UpdateGeoObjectOne($cat['id'],$cat)){$data['status'] = 200;}
+        }
+
+        header("Content-type: application/json");
+        echo json_encode($data);
+        exit();    
+    }
+    if($s == 'add_new_geo'){//pa($_GET);pa($_POST); exit;
+        $data['status']  = 400;
+        $data['message'] = 'Please check your details';
+        
+        if(Wo_CheckMainSession($_GET['hash'])){
+            foreach(Wo_LangsNamesFromDB() as $lang){
+                if(!empty($_POST[$lang])){
+                    $insert_data[$lang] = Wo_Secure($_POST[$lang]); 
+            }}
+            if(!empty($insert_data ?? '')){
+                $insert_data['type']    = 'geo';
+                $cDdata['lang_key']     = $db->insert(T_LANGS, $insert_data);
+                $cDdata['type']         = htmlentities(trim($_POST['type']));
+                $cDdata[$_POST['type']] = (!empty($_POST['russian'])) ? Wo_Secure($_POST['russian']) : 'NULL';
+            
+                $db->insert(T_GEO, $cDdata);
+                $db->where('id', $cDdata['lang_key'])->update(T_LANGS, ['lang_key' => $cDdata['lang_key']]);
+                $data = ['status' => 200];
+        }}
+        header("Content-type: application/json");
+        echo json_encode($data);
+        exit();
+    }   
+    if($s == 'get_geo_langs' && !empty($_POST['lang_key'])){
+        $data['status'] = 400;
+        $html           = '';
+        $langs          = Wo_GetLangDetails($_POST['lang_key']);
+        //pa($langs);exit;
+        if(count($langs) > 0){
+            foreach ($langs as $key => $wo['langs']) {
+                foreach ($wo['langs'] as $wo['key_'] => $wo['lang_vlaue']){
+                    $html .= Wo_LoadAdminPage('edit-lang/form-list');
+                }
+            }
+            $data['status'] = 200;
+            $data['html']   = $html;
+        }
+        header("Content-type: application/json");
+        echo json_encode($data);
+        exit();
+    }
+    if($s == 'delete_geo'){//pa($_REQUEST); pa($lang); pa($geo); exit;
+        $data['status']  = 400;
+        $data['message'] = 'Please check your details';
+        
+        if(Wo_CheckMainSession($_GET['hash']) && $_POST['lang_key'] != 'other' && $_POST['lang_key'] != 'all_'){
+            $id = Wo_Secure($_POST['id']);
+            $lang_key = Wo_Secure($_POST['lang_key']);
+            $lang = $db->where('lang_key', $lang_key)->getOne(T_LANGS);
+            $geo = $db->where('id', $id)->getOne(T_GEO);
+            
+            if(!empty($geo)){
+                $db->where('id', $id)->delete(T_GEO);
+                if(!empty($geo)){
+                    $db->where('lang_key', $lang_key)->delete(T_LANGS);
+                } 
+                
+                $data['status'] = 200;
+                $data['message'] = 'Geo Obgect : '.(
+                (empty($lang->russian ?? '')) ? 
+                    (
+                    (empty($lang->english ?? '')) ? $id : $lang->english 
+                    ) : 
+                $lang->russian).' alredy deleted';     
+        }}  
+    header("Content-type: application/json");
+    echo json_encode($data);
+    exit();
+    }
+    if ($s == 'remove_multi_geo'){
+        $data['status'] = 400;
+        if(Wo_CheckMainSession($_GET['hash']) && !empty($_POST['ids'])){
+            foreach($_POST['ids'] as $key => $value){ 
+                if(!empty($value) && $value != 'other' && $value != 'all_'){ 
+                    $id = Wo_Secure($value);
+                    if(!empty($geo = (array) $db->where('id', $id)->getOne(T_GEO))){
+                        if(!empty($geo['lang_key']) && $db->where('id', $geo['lang_key'])->delete(T_LANGS)){
+                            $data['status'] = ($db->where('id', $id)->delete(T_GEO)) ? 200 : $data['status']; 
+            }}}}
+
+            header("Content-type: application/json");
+            echo json_encode($data);
+            exit();
+        }
+    }
+///*/ ahilespelid ///*/ // cities   
     // manage packages
     if ($s == 'add_pro_package'){
         $data['status'] = 400;
@@ -2455,22 +2549,23 @@ if ($f == 'admin_setting' AND (Wo_IsAdmin() || Wo_IsModerator())) {
         echo json_encode($data);
         exit();
     }
-    if ($s == 'update_lang_key') {
-        if (Wo_CheckSession($hash_id) === true) {
-            $array_langs = array();
-            $lang_key    = Wo_Secure($_POST['id_of_key']);
+    if ($s == 'update_lang_key'){
+///*/ ahilespelid 09.03.24///*/
+        $lang_key = $id = Wo_Secure($_POST['id_of_key']);
+        $data['status'] = 400;
+        if(Wo_CheckSession($hash_id) && !empty($id)){
+            $array_langs = [];
             $langs       = Wo_LangsNamesFromDB();
-            foreach ($_POST as $key => $value) {
-                if (in_array($key, $langs)) {
-                    $key   = Wo_Secure($key);
-                    //$value = Wo_Secure($value);
-                    $value = mysqli_real_escape_string($sqlConnect, $value);
-                    $query = mysqli_query($sqlConnect, "UPDATE " . T_LANGS . " SET `{$key}` = '{$value}' WHERE `lang_key` = '{$lang_key}'");
-                    if ($query) {
-                        $data['status'] = 200;
-                    }
-                }
-            }
+            
+            $i = 0; foreach($_POST as $key => $value){if(in_array($key, $langs)){
+                $key    = Wo_Secure($key);
+                $value  = $sqlConnect->real_escape_string(Wo_Secure($value)); //$value = Wo_Secure($value);
+                $data_sql .= ((0 == $i) ? '' : ', ')."`{$key}` = '{$value}'";
+            }$i++;}
+            
+            $data['status'] = (!empty($data_sql) && $sqlConnect->query($q = "UPDATE " . T_LANGS . " SET " . $data_sql . " WHERE `id` = '{$id}';")) ? 200 : $data['status'];
+            // pa($q); "UPDATE " . T_LANGS . " SET `{$key}` = '{$value}' WHERE `lang_key` = '{$lang_key}';" 
+///*/ ahilespelid ///*/           
             $image = '';
             if (!empty($_FILES['icon'])) {
                 $fileInfo = array(

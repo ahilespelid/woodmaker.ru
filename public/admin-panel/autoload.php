@@ -998,13 +998,18 @@ if (!empty($_COOKIE['mode']) && $_COOKIE['mode'] == 'night') {
                             
                             
                             <?php if ($is_admin || $is_moderoter) {  ?>
-                            <li <?=($page == 'geo') ? 'class="open"' : ''; ?>>
+                            <li <?=($page == 'geo_city' || $page == 'geo_country') ? 'class="open"' : ''; ?>>
                                 <a href="javascript:void(0);">Geo</a>
                                 <ul class="ml-menu">
 
                                     <li>
-                                        <a <?=($page == 'geo') ? 'class="active"' : ''; ?> href="<?=Wo_LoadAdminLinkSettings('geo');?>" data-ajax="?path=geo">
+                                        <a <?=($page == 'geo_city') ? 'class="active"' : ''; ?> href="<?=Wo_LoadAdminLinkSettings('geo_city');?>" data-ajax="?path=geo_city">
                                             <span>Manage Cities</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a <?=($page == 'geo_country') ? 'class="active"' : ''; ?> href="<?=Wo_LoadAdminLinkSettings('geo_country');?>" data-ajax="?path=geo_country">
+                                            <span>Manage Country</span>
                                         </a>
                                     </li>
                                 </ul>

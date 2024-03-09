@@ -1,0 +1,39 @@
+<div class="tag_srch_fltr_country">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M12,11.5A2.5,2.5 0 0,1 9.5,9A2.5,2.5 0 0,1 12,6.5A2.5,2.5 0 0,1 14.5,9A2.5,2.5 0 0,1 12,11.5M12,2A7,7 0 0,0 5,9C5,14.25 12,22 12,22C12,22 19,14.25 19,9A7,7 0 0,0 12,2Z" /></svg>
+    <select name="country" id="country">
+        <option value="all" selected><?php echo $wo['lang']['all'];?> <?php echo $wo['lang']['country'];?></option>
+        <?php 
+            foreach ($wo['countries_name'] as $country_ids => $country) { 
+            $selected_c = (!empty($_GET['country']) && $_GET['country'] == $country_ids) ? ' selected': '';
+        ?>
+            <option value="<?php echo $country_ids;?>" <?php echo $selected_c?>><?php echo $country;?></option>
+        <?php } ?>
+    </select>
+    <span class="caret"></span>
+</div>
+<?php
+    $fields = Wo_GetUserCustomFields();
+    if (count($fields) > 0) {
+        unset($fields[1]);
+        foreach ($fields as $key => $wo['field']) {
+            $wo['field']['issearch'] = true;
+            echo Wo_LoadPage('search/custom_select');
+        }
+    }
+?>
+<div class="dropdown">
+    <div class="valign dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M7.5,2A2,2 0 0,1 9.5,4A2,2 0 0,1 7.5,6A2,2 0 0,1 5.5,4A2,2 0 0,1 7.5,2M6,7H9A2,2 0 0,1 11,9V14.5H9.5V22H5.5V14.5H4V9A2,2 0 0,1 6,7M14.5,12A2,2 0 0,1 16.5,10A2,2 0 0,1 18.5,12A2,2 0 0,1 16.5,14A2,2 0 0,1 14.5,12M13.5,15H19.5V19H18V22H15V19H13.5V15Z"></path></svg> <?php echo $wo['lang']['group_type']; ?> <span class="caret"></span></div>
+    <div class="dropdown-menu dropdown-static-menu tag_create_menu" role="menu">
+        <div class="tag_srch_fltr_age">
+            <div class="round-check">
+                <input checked type="radio" name="privacy" id="privacy-0" value="1">
+                <label for="privacy-0"><?php echo $wo['lang']['public_type']; ?></label> 
+            </div>
+            <div class="round-check">
+                <input type="radio" name="privacy" id="privacy-1" value="2">
+                <label for="privacy-1"><?php echo $wo['lang']['closed_type']; ?></label>
+            </div>
+            <input type="text" id="amount" class="agefilter_hide age_number" readonly style="display:none;">
+        </div>
+    </div>
+</div>

@@ -6977,50 +6977,6 @@ function Wo_GetCategories($table) {
     }
     return false;
 }
-function Wo_GetCategoriesWithSub($type = 'all', $get_sub = true){
-    global $sqlConnect, $wo; $data = [];
-    $query = "SELECT * FROM " . T_CATEGORIES . (('all' != $type) ? " WHERE `type`='{$type}'" : '') . " ORDER BY `sort` DESC, `id` ASC;"; //pa($query);
-    $cats = $sqlConnect->query($query);
-    if($cats->num_rows > 0){ //pa($query_categories);
-        foreach($cats as $cat){//pa($categorie);
-            $data[$cat['id']] = $cat; $data[$cat['id']]['name'] = $wo['lang'][$cat['lang_key']];
-            if($get_sub){
-            $subs = $sqlConnect->query($query_sub = "SELECT * FROM " . T_CATEGORIES . " WHERE `sub`='".$cat["id"]."';");
-            if($subs->num_rows > 0){
-                foreach($subs as $sub){$sub['name'] = $wo["lang"][$sub["lang_key"]]; $data[$cat["id"]][] = $sub;}
-            }}
-    }}//pa($data); 
-return $data ?? false;}
-
-function Wo_GetCategoriesOne($id) {
-    if(empty($id) && !is_numeric($id)){return false;}
-    global $sqlConnect, $wo;
-    $cat = $sqlConnect->query($query = "SELECT * FROM " . T_CATEGORIES . " WHERE `id`='$id' LIMIT 1;");
-return $cat->fetch_assoc() ?? false;}
-
-function Wo_UpdateCategoriesOne($id, $data) {
-    if(empty($id) && empty($data) && !is_numeric($id) && !is_array($data)){return false;}
-    global $sqlConnect, $wo; $e = [];
-    
-    foreach($data as $k=>$v){
-        $e[] = (is_string($v)) ? $k."='".$sqlConnect->real_escape_string($v)."'" : 
-               ((is_numeric($v)) ? $k.'='.$v : $k.'=NULL');
-    }$string_e  = implode(", ", $e);
-    $query = "UPDATE " . T_CATEGORIES . " SET ".$string_e." WHERE `id`= $id;";
-    
-return $sqlConnect->query($query);}
-
-function Wo_GetGeoObjects($type = 'all'){
-    global $sqlConnect, $wo; $data = [];
-    $query = "SELECT * FROM " . T_GEO . (('all' != $type) ? " WHERE `type`='{$type}'" : '') . " ORDER BY `sort` DESC, `id` ASC;"; //pa($query);
-    $cities = $sqlConnect->query($query);
-    if($cities->num_rows > 0){
-        foreach($cities as $city){//pa($cities);
-            $data[$city['id']] = $city;
-    }}//pa($data); 
-return $data ?? false;}
-
-
 ///*/ ahilespelid ///*/
 function Wo_GetCategoriesKeys($table, $sub = false) {
     global $sqlConnect, $wo;

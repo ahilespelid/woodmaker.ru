@@ -10,6 +10,10 @@ if ($f == "search") {
         }
     }
     if($s == 'search_page') {
+        $offset = 0;
+        if(!empty($_GET['offset'])) {
+            $offset = $_GET['offset'];
+        }
         if($_GET['type'] == 'users') {
             $search_query = Wo_GetSearchFilter($_GET, 30);
             if (count($search_query) != 0) {
@@ -21,7 +25,7 @@ if ($f == "search") {
                 }
             }
         } else {
-            $response = Wo_SearchForSearchPage($_GET['type'], $_GET['query'], 30);
+            $response = Wo_SearchForSearchPage($_GET['type'], $_GET['query'], 30, $offset);
             if (count($response) != 0) {
                 foreach ($response as $wo['result']) {
                     $data['html'] .= Wo_LoadPage('search/user-result');

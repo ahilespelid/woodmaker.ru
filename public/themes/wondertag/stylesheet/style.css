@@ -2238,6 +2238,8 @@ body.tag_call_incoming {overflow-y: auto !important;}
 .tag_srch_fltr_country .themes_dropdown_body {top: 30px;}
 .tag_srch_fltr_country .themes_dropdown_body p, .tag_srch_fltr_country .themes_dropdown_body li {line-height: 20px;}
 
+.category_dropdown_header {width: 100%;}
+
 /*Settings*/
 .tag_sett_sidebar {position: fixed;left: 0;top: 80px;bottom: 0;width: 350px;background-color: #fff;z-index: 950;box-shadow: none;border-radius: 0;max-height: 100%;overflow-y: auto;overscroll-behavior-y: contain;padding: 2px 0;margin: 0;}
 .tag_sett_sidebar > hr {margin: 12px 0;}

@@ -179,7 +179,8 @@ function Wo_GetLangDetails($lang_key = '') {
     }
     $lang_key = Wo_Secure($lang_key);
     $data     = array();
-    $query    = mysqli_query($sqlConnect, "SELECT * FROM " . T_LANGS . " WHERE `lang_key` = '{$lang_key}'");
+    $query    = mysqli_query($sqlConnect, $q = "SELECT * FROM " . T_LANGS . " WHERE `id` = '{$lang_key}'");
+    //pa($q);
     if (mysqli_num_rows($query)) {
         while ($fetched_data = mysqli_fetch_assoc($query)) {
             unset($fetched_data['lang_key']);
@@ -3495,7 +3496,7 @@ function Wo_GetRecentSerachs() {
     return $data;
 }
 
-function Wo_SearchForSearchPage($type, $query, $limit) {
+function Wo_SearchForSearchPage($type, $query, $limit = 30, $offset = 0) {
     global $sqlConnect, $wo;
     $data        = array();
     if ($wo['loggedin'] == false) {
@@ -3511,16 +3512,34 @@ function Wo_SearchForSearchPage($type, $query, $limit) {
     if(!empty($limit)) {
         $limit = Wo_Secure($limit);
     }
+    $category = '';
+    if(!empty($_GET['fid_3'])) {
+        $category = Wo_Secure($_GET['fid_3']);
+    }
+
+    $privacy = '';
+    if(!empty($_GET['privacy'])) {
+        $privacy = Wo_Secure($_GET['privacy']);
+    }
 
     if('pages' == $type) {
-        $query = mysqli_query($sqlConnect, " SELECT `page_id` FROM " . T_PAGES . " WHERE ((`page_name` LIKE '%$search_qeury%') OR `page_title` LIKE '%$search_qeury%') AND `active` = '1' LIMIT $limit");
+        $query = mysqli_query($sqlConnect, " SELECT `page_id` FROM " . T_PAGES . " WHERE ((`page_name` LIKE '%$search_qeury%') OR `page_title` LIKE '%$search_qeury%') AND `active` = '1' LIMIT $limit OFFSET $offset");
         if (mysqli_num_rows($query)) {
             while ($fetched_data = mysqli_fetch_assoc($query)) {
                 $data[] = Wo_PageData($fetched_data['page_id']);
             }
         } 
     } elseif('groups' == $type) {
-        $query = mysqli_query($sqlConnect, " SELECT `id` FROM " . T_GROUPS . " WHERE ((`group_name` LIKE '%$search_qeury%') OR `group_title` LIKE '%$search_qeury%') AND `active` = '1' LIMIT $limit");
+        $query = "SELECT `id` FROM " . T_GROUPS . " WHERE ((`group_name` LIKE '%$search_qeury%') OR `group_title` LIKE '%$search_qeury%')";
+        if(!empty($category)) {
+            $query = $query . " AND `category_lang_key` = '$category'";
+        }
+
+        if(!empty($privacy)) {
+            $query = $query . " AND `privacy` = '$privacy'";
+        }
+        $query = $query .  " AND `active` = '1' LIMIT $limit OFFSET $offset";
+        $query = mysqli_query($sqlConnect, $query);        
         if (mysqli_num_rows($query)) {
             while ($fetched_data = mysqli_fetch_assoc($query)) {
                 $data[] = Wo_GroupData($fetched_data['id']);
@@ -3541,26 +3560,42 @@ function Wo_GetSearchFilter($result, $limit = 30, $offset = 0) {
     $custom_query       = '';
     $profile_search_sql = "";
     $profile_search     = array();
-    foreach ($_GET as $key => $val) {
-        if (substr($key, 0, 4) == 'fid_' && !empty($val)) {
-            $custom_type = $db->where('id', substr($key, 4))->getOne(T_FIELDS);
-            if (!empty($custom_type)) {
-                $profile_search[$key] = Wo_Secure($val);
-                $profile_search_sql   = "AND (SELECT COUNT(*) FROM " . T_USERS_FIELDS . " WHERE ";
-                if (!empty($custom_type) && ($custom_type->type == 'textbox' || $custom_type->type == 'textarea')) {
-                    $profile_search_sql .= "`" . Wo_Secure($key) . "` LIKE '%" . Wo_Secure($val) . "%' AND";
-                } else {
-                    $profile_search_sql .= "`" . Wo_Secure($key) . "` = '" . Wo_Secure($val) . "' AND";
-                }
-            }
-        }
+    // foreach ($_GET as $key => $val) {
+    //     if (substr($key, 0, 4) == 'fid_' && !empty($val)) {
+    //         $custom_type = $db->where('id', substr($key, 4))->getOne(T_FIELDS);
+    //         if (!empty($custom_type)) {
+    //             $profile_search[$key] = Wo_Secure($val);
+    //             $profile_search_sql   = "AND (SELECT COUNT(*) FROM " . T_USERS_FIELDS . " WHERE ";
+    //             if (!empty($custom_type) && ($custom_type->type == 'textbox' || $custom_type->type == 'textarea')) {
+    //                 $profile_search_sql .= "`" . Wo_Secure($key) . "` LIKE '%" . Wo_Secure($val) . "%' AND";
+    //             } else {
+    //                 $profile_search_sql .= "`" . Wo_Secure($key) . "` = '" . Wo_Secure($val) . "' AND";
+    //             }
+    //         }
+    //     }
+    // }
+
+    $category = '';
+    if(!empty($_GET["fid_3"])) {
+        $category = $_GET["fid_3"];
+        $profile_search["fid_3"] = Wo_Secure($_GET["fid_3"]);
     }
+
+    $status = '';
+    if(!empty($_GET["fid_4"])) {
+        $status = $_GET["fid_4"];
+        $profile_search["fid_4"] = Wo_Secure($_GET["fid_4"]);
+    }
+
+    $profile_search_sql = "AND (SELECT count(*) FROM " . T_USERS_FIELDS . " WHERE `category_lang_key` = '$category' AND `status_lang_key` = '$status' AND";
+
     if (substr($profile_search_sql, -3) == "AND") {
         $profile_search_sql = substr($profile_search_sql, 0, -3);
     }
     if (!empty($profile_search)) {
         $custom_query = $profile_search_sql . ' AND ' . T_USERS . '.user_id = user_id) > 0 ';
     }
+
     $query = '';
     if (!empty($result['query'])) {
         $query = Wo_Secure($result['query']);
@@ -3693,6 +3728,7 @@ function Wo_GetSearchFilter($result, $limit = 30, $offset = 0) {
             $data[$fetched_data['user_id']] = Wo_UserData($fetched_data['user_id']);
         }
     }
+
     // if( !empty( $profile_search ) ){
     //     $profile_sql_query_one = mysqli_query($sqlConnect, $profile_search_sql);
     //     while ($profile_fetched_data = mysqli_fetch_assoc($profile_sql_query_one)) {

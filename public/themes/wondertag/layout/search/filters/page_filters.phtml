@@ -1,0 +1,22 @@
+<div class="tag_srch_fltr_country">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M12,11.5A2.5,2.5 0 0,1 9.5,9A2.5,2.5 0 0,1 12,6.5A2.5,2.5 0 0,1 14.5,9A2.5,2.5 0 0,1 12,11.5M12,2A7,7 0 0,0 5,9C5,14.25 12,22 12,22C12,22 19,14.25 19,9A7,7 0 0,0 12,2Z" /></svg>
+    <select name="country" id="country">
+        <option value="all" selected><?php echo $wo['lang']['all'];?> <?php echo $wo['lang']['country'];?></option>
+        <?php 
+            foreach ($wo['countries_name'] as $country_ids => $country) { 
+            $selected_c = (!empty($_GET['country']) && $_GET['country'] == $country_ids) ? ' selected': '';
+        ?>
+            <option value="<?php echo $country_ids;?>" <?php echo $selected_c?>><?php echo $country;?></option>
+        <?php } ?>
+    </select>
+    <span class="caret"></span>
+</div>
+<?php
+    $fields = Wo_GetUserCustomFields();
+    if (count($fields) > 0) {
+        foreach ($fields as $key => $wo['field']) {
+            $wo['field']['issearch'] = true;
+            echo Wo_LoadPage('search/custom_select');
+        }
+    }
+?>

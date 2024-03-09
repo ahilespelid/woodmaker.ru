@@ -1,16 +1,17 @@
-<tr id="list-<?=$wo['city_data']['id'];?>" data_selected="<?=$wo['city_data']['lang_key'];?>">
+<tr id="list-<?=$wo['city_data']['id'];?>" data_selected="<?=$wo['city_data']['id'];?>">
 
     <td><input type="checkbox" id="check-data-<?=$wo['city_data']['lang_key'];?>" class="delete-checkbox filled-in"><label for="check-data-<?=$wo['city_data']['lang_key'];?>"><?=$wo['city_id'];?></label></td>
     <!--td><?=$wo['city_data']['lang_key'];?></td-->
     <td class="cities_type"><?=$wo['city_data']['type'];?></td>
-    <td><?=$wo['city_data']['city'];?></td>
+    <td><?=$wo['city_data']['name'];?></td>
+    <td><?=$wo['city_data']['nameEN'];?></td>
     <!--td><?=$wo['city_data']['sort'];?></td-->
 
     <td>
         <nobr>
-        <button class="btn bg-success admn_table_btn" onclick="update_sort_category(<?=$wo['city_id'];?>, 'u')">&#9650;</button>
-        <button class="btn bg-danger admn_table_btn " onclick="update_sort_category(<?=$wo['city_id'];?>, 'd')">&#9660;</button>
-        <button class="btn bg-success admn_table_btn" onclick="edit_category('<?=$wo['city_data']['lang_key'];?>')">Edit</button>
+        <button class="btn bg-success admn_table_btn" onclick="update_sort_city(<?=$wo['city_id'];?>, 'u')">&#9650;</button>
+        <button class="btn bg-danger admn_table_btn " onclick="update_sort_city(<?=$wo['city_id'];?>, 'd')">&#9660;</button>
+        <button class="btn bg-success admn_table_btn" onclick="edit_city('<?=$wo['city_data']['lang_key'];?>')">Edit</button>
         <?php if(1 <> $wo['city_id']){ ?>
         <button class="btn bg-danger admn_table_btn delete-content catdel" data-id="<?=$wo['city_id'];?>" data-type="<?=$wo['city_data']['type'];?>" data-lang_key="<?=$wo['city_data']['lang_key'];?>">Delete</button>
         <?php } ?>

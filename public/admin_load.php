@@ -50,7 +50,7 @@ if (!empty($wo['user']['permission'][$page])) {
       header("Location: " . Wo_SeoLink('index.php?link1=welcome'));
       exit();
   }
-}
+} 
 $wo['decode_android_v']  = $wo['config']['footer_background'];
 $wo['decode_android_value']  = base64_decode('I2FhYQ==');
 
@@ -64,7 +64,8 @@ $wo['decode_windwos_v']  = $wo['config']['footer_text_color'];
 $wo['decode_windwos_value']  = base64_decode('I2RkZA==');
 $data = array();
 $wo['script_root'] = dirname(__FILE__);
-$text = Wo_LoadAdminPage($page . '/content');
+$text = @Wo_LoadAdminPage($page . '/content');
+
 ?>
 <input type="hidden" id="json-data" value='<?php
 echo htmlspecialchars(json_encode($data));

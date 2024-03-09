@@ -45,5 +45,6 @@ function array_unique_key($array, $key){
     foreach($array as $val){if(!in_array($val[$key], $key_array)){$key_array[$i] = $val[$key];$ret[$i] = $val;} $i++;} 
 return $ret;}
 }
+
 ///*/ ahilespelid ///*/
 ?>

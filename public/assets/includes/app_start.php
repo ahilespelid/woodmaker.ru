@@ -1,7 +1,7 @@
 <?php
-ini_set('display_errors', 0);
-ini_set('display_startup_errors', 0);
-error_reporting(0);
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(1);
 @ini_set("max_execution_time", 0);
 @ini_set("memory_limit", "-1");
 @set_time_limit(0);
@@ -386,7 +386,7 @@ try {
     $wo["job_categories"]      = Wo_GetCategories(T_JOB_CATEGORY);
 /* /// ahilespelid ///*/    
     $wo["categories"]          = Wo_GetCategoriesWithSub();
-    $wo["status_categories"]          = Wo_GetCategoriesWithSub('status');
+    $wo["status_categories"]   = Wo_GetCategoriesWithSub('status');
     $wo["page_categories"]     = Wo_GetCategoriesWithSub('page');
     $wo["group_categories"]    = Wo_GetCategoriesWithSub('group');
     //$wo["group_sub_categories"]='';
@@ -426,9 +426,10 @@ Wo_GetSubCategories();
 
 // manage geo
 try{
-    $wo["cities"] = Wo_GetGeoObjects();
+    $wo["geo"]["cities"] = $wo["cities"] = Wo_GetGeoObjects('city');
+    $wo["geo"]["countries"] = $wo["countries"] = Wo_GetGeoObjects('country');
 }catch(Exception $e){
-    $wo['cities'] = [
+    $wo["geo"]["cities"] = $wo['cities'] = [
     ['id' =>  '1', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Абакан',                        'area' => 'Республика Хакасия',                             'district' => 'Сибирский',                  'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:25:48'],
     ['id' =>  '2', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Анадырь',                       'area' => 'Чукотский автономный округ',                     'district' => 'Дальневосточный',            'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:25:49'],
     ['id' =>  '3', 'lang_key' => NULL, 'sort' => '100', 'type' => 'city', 'country' => 'Россия', 'city' => 'Архангельск',                   'area' => 'Архангельская область',                          'district' => 'Северо-Западный',            'longitude' => NULL, 'latitude' => NULL, 'created_at' => '2024-02-27 21:25:49'],

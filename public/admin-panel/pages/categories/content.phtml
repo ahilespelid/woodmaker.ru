@@ -215,7 +215,22 @@ $(document).ready(()=>{
                 add_category_form.find('.waves-effect').text('Save');
                 $('.add_category_form_alert').html('<div class="alert alert-success"><i class="fa fa-check"></i> Category successfully added</div>');
                 setTimeout(function (){$('.add_category_form_alert').empty();}, 2000);
-                window.location.reload();
+                
+                let url = '?path=categories';
+                $.post(Wo_Ajax_Requests_File_load() + url, {url:url}, function(data){
+                    $(".barloading").css("display","none");
+                    if($('#redirect_link')[0].hasAttribute("data-sent")){
+                        $('#redirect_link').attr('data-sent', "0");
+                    }
+                    json_data = JSON.parse($(data).filter('#json-data').val());
+                    $('.content').html(data);
+                    setTimeout(function(){
+                      $(".content").getNiceScroll().resize()
+                    }, 500);
+                    $(".content").animate({ scrollTop: 0 }, "slow");
+                });                
+                
+                //window.location.reload();
             }else{
                 $('.add_category_form_alert').html('<div class="alert alert-danger"><i class="fa fa-check"></i> '+data.message+'</div>');
                 setTimeout(function (){$('.add_category_form_alert').empty();}, 2000);
