@@ -50,9 +50,9 @@ if (mysqli_query($wo['sqlConnect'], "DESCRIBE `wondertage_settings`" )) {
 							<?php if (!empty($wo['config']['native_android_timeline_url']) || !empty($wo['config']['native_ios_timeline_url'])) { ?>
 								<p><?php echo $wo['lang']['get_mobile_apps'];?></p>
 								<?php if (!empty($wo['config']['native_android_timeline_url'])) { ?>
-									<a href="<?php echo($wo['config']['native_android_timeline_url']) ?>" target="_blank">
-										<img width="130" src="<?php echo $wo['config']['theme_url'];?>/img/google.png"/>
-									</a>
+									<!--<a href="<?php// echo($wo['config']['native_android_timeline_url']) ?>" target="_blank">
+										<img width="130" src="<?php// echo $wo['config']['theme_url'];?>/img/google.png"/>
+									</a>-->
 								<?php } ?>
 								<?php if (!empty($wo['config']['native_ios_timeline_url'])) { ?>
 									<a href="<?php echo($wo['config']['native_ios_timeline_url']) ?>" target="_blank">

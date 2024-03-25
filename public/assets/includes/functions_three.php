@@ -6335,7 +6335,7 @@ function Wo_GetNearbyUsers($args = array()) {
     $user         = $wo['user']['id'];
     $t_users      = T_USERS;
     $t_followers  = T_FOLLOWERS;
-    $distance     = 25;
+    $distance     = 10000;
     $data         = array();
     $sub_sql      = "";
     if ($loc_distance && is_numeric($loc_distance) && $loc_distance > 0) {
@@ -6378,7 +6378,7 @@ function Wo_GetNearbyUsers($args = array()) {
     sin(radians('$user_lat')) * sin(radians(lat ))) ) AS distance
     FROM $t_users WHERE `user_id` <> '$user'   {$sub_sql}
     AND `lat` <> 0 AND `lng` <> 0
-    HAVING distance > '$distance' ORDER BY `user_id` DESC LIMIT 0, $limit ";
+    HAVING distance < '$distance' ORDER BY `user_id` DESC LIMIT 0, $limit ";
     $query = mysqli_query($sqlConnect, $sql);
     if (mysqli_num_rows($query)) {
         while ($fetched_data = mysqli_fetch_assoc($query)) {

@@ -168,6 +168,7 @@ if ($f == "update_general_settings") {
                             'email' => $_POST['email'],
                             'birthday' => $age_data,
                             'gender' => $gender,
+                            'city_id' => $_POST['city'],
                             'country_id' => $_POST['country'],
                             'active' => $active,
                             'admin' => $type,
@@ -210,7 +211,7 @@ if ($f == "update_general_settings") {
                         if (Wo_UpdateUserData($_POST['user_id'], $Update_data, $unverify)) {
                             $field_data = array();
                             if (!empty($_POST['custom_fields'])) {
-                                $fields = Wo_GetProfileFields('general');
+                                $fields = Wo_GetProfileFields('search');
                                 foreach ($fields as $key => $field) {
                                     $name = $field['fid'];
                                     if (isset($_POST[$name])) {
@@ -224,6 +225,12 @@ if ($f == "update_general_settings") {
                                 }
                             }
                             if (!empty($field_data)) {
+                                if(!empty($_POST['category_lang_key'])) {
+                                    $field_data[0]['category_lang_key'] = $_POST['category_lang_key'];
+                                }
+                                if(!empty($_POST['status_lang_key'])) {
+                                    $field_data[0]['status_lang_key'] = $_POST['status_lang_key'];
+                                }
                                 $insert = Wo_UpdateUserCustomData($_POST['user_id'], $field_data);
                             }
                             if (empty($errors)) {

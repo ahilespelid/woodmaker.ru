@@ -179,8 +179,8 @@ function Wo_GetLangDetails($lang_key = '') {
     }
     $lang_key = Wo_Secure($lang_key);
     $data     = array();
-    $query    = mysqli_query($sqlConnect, $q = "SELECT * FROM " . T_LANGS . " WHERE `id` = '{$lang_key}'");
-    //pa($q);
+    $query    = mysqli_query($sqlConnect, $q = "SELECT * FROM " . T_LANGS . " WHERE `lang_key` = '{$lang_key}'");
+    // pa($lang_key);
     if (mysqli_num_rows($query)) {
         while ($fetched_data = mysqli_fetch_assoc($query)) {
             unset($fetched_data['lang_key']);
@@ -627,6 +627,13 @@ function Wo_UserData($user_id, $password = true) {
             $fetched_data['cover_post_id'] = $query_avatar_data['id'];
         }
     }
+
+    $user_fields = @Wo_UserFieldsAll($user_id);
+
+    foreach($user_fields as $key => $fields) {
+        $fetched_data[$key] = $fields;
+    }
+
     $fetched_data['avatar_org'] = $fetched_data['avatar'];
     $fetched_data['cover_org']  = $fetched_data['cover'];
     $explode2                   = @end(explode('.', $fetched_data['cover']));
@@ -3505,6 +3512,7 @@ function Wo_SearchForSearchPage($type, $query, $limit = 30, $offset = 0) {
     if(empty($type)) {
         return;
     }
+    $user_id = Wo_Secure($wo['user']['user_id']);
     $search_qeury = '';
     if(!empty($query)) {
         $search_qeury = Wo_Secure($query);
@@ -3517,27 +3525,69 @@ function Wo_SearchForSearchPage($type, $query, $limit = 30, $offset = 0) {
         $category = Wo_Secure($_GET['fid_3']);
     }
 
+    $city_id = '';
+    if(!empty($_GET['city'])) {
+        $city_id = Wo_Secure($_GET['city']);
+    }
+
+    $country_id = '';
+    if(!empty($_GET['country'])) {
+        $country_id = Wo_Secure($_GET['country']);
+    }
+
     $privacy = '';
     if(!empty($_GET['privacy'])) {
         $privacy = Wo_Secure($_GET['privacy']);
     }
 
     if('pages' == $type) {
-        $query = mysqli_query($sqlConnect, " SELECT `page_id` FROM " . T_PAGES . " WHERE ((`page_name` LIKE '%$search_qeury%') OR `page_title` LIKE '%$search_qeury%') AND `active` = '1' LIMIT $limit OFFSET $offset");
+        $query = "SELECT `page_id` FROM " . T_PAGES . " WHERE `user_id` <> '$user_id' AND ((`page_name` LIKE '%$search_qeury%') OR `page_title` LIKE '%$search_qeury%')";
+        
+        if(!empty($city_id)) {
+            $query = $query . " AND `geo_city_id` = '$city_id'";
+        }
+
+        if(!empty($country_id)) {
+            $query = $query . " AND `geo_country_id` = '$country_id'";
+        }
+
+        if(!empty($category)) {
+            $query = $query . " AND `category_lang_key` = '$category'";
+        }
+
+        // $query = $query . " AND " . T_FOLLOWERS . " WHERE `following_id` = {$user_id} AND `follower_id` = {$user_id} ";
+
+        $query = $query .  " AND `active` = '1' LIMIT $limit OFFSET $offset";
+        
+        // pa($query); exit;
+
+        $query = mysqli_query($sqlConnect, $query);
         if (mysqli_num_rows($query)) {
             while ($fetched_data = mysqli_fetch_assoc($query)) {
                 $data[] = Wo_PageData($fetched_data['page_id']);
             }
         } 
     } elseif('groups' == $type) {
-        $query = "SELECT `id` FROM " . T_GROUPS . " WHERE ((`group_name` LIKE '%$search_qeury%') OR `group_title` LIKE '%$search_qeury%')";
-        if(!empty($category)) {
-            $query = $query . " AND `category_lang_key` = '$category'";
-        }
+        $query = "SELECT `id` FROM " . T_GROUPS . " WHERE `user_id` <> '$user_id' AND ((`group_name` LIKE '%$search_qeury%') OR `group_title` LIKE '%$search_qeury%')";
 
         if(!empty($privacy)) {
             $query = $query . " AND `privacy` = '$privacy'";
         }
+
+        if(!empty($city_id)) {
+            $query = $query . " AND `geo_city_id` = '$city_id'";
+        }
+
+        if(!empty($country_id)) {
+            $query = $query . " AND `geo_country_id` = '$country_id'";
+        }
+
+        if(!empty($category)) {
+            $query = $query . " AND `category_lang_key` = '$category'";
+        }
+
+        // $query = $query . " AND ". T_FOLLOWERS . " WHERE `following_id` = {$user_id} AND `follower_id` = {$user_id} AND ";
+
         $query = $query .  " AND `active` = '1' LIMIT $limit OFFSET $offset";
         $query = mysqli_query($sqlConnect, $query);        
         if (mysqli_num_rows($query)) {
@@ -3587,7 +3637,13 @@ function Wo_GetSearchFilter($result, $limit = 30, $offset = 0) {
         $profile_search["fid_4"] = Wo_Secure($_GET["fid_4"]);
     }
 
-    $profile_search_sql = "AND (SELECT count(*) FROM " . T_USERS_FIELDS . " WHERE `category_lang_key` = '$category' AND `status_lang_key` = '$status' AND";
+    if(!empty($category)) {
+        $profile_search_sql = "AND (SELECT count(*) FROM " . T_USERS_FIELDS . " WHERE `category_lang_key` = '$category'";
+    }
+
+    if(!empty($status)) {
+        $profile_search_sql .= " AND `status_lang_key` = '$status'";
+    }
 
     if (substr($profile_search_sql, -3) == "AND") {
         $profile_search_sql = substr($profile_search_sql, 0, -3);
@@ -3602,6 +3658,9 @@ function Wo_GetSearchFilter($result, $limit = 30, $offset = 0) {
     }
     if (!empty($result['country'])) {
         $country = Wo_Secure($result['country']);
+    }
+    if (!empty($result['city'])) {
+        $city = Wo_Secure($result['city']);
     }
     if (!empty($result['status'])) {
         $result['status'] = Wo_Secure($result['status']);
@@ -3678,6 +3737,11 @@ function Wo_GetSearchFilter($result, $limit = 30, $offset = 0) {
             $query .= " AND (`country_id` = '{$country}')";
         }
     }
+    if (!empty($result['city'])) {
+        if ($result['city'] != 'all') {
+            $query .= " AND (`city_id` = '{$city}')";
+        }
+    }
     if (isset($result['verified'])) {
         if ($result['verified'] == 'on') {
             $query .= " AND (`verified` = 1 ) ";
@@ -3722,6 +3786,8 @@ function Wo_GetSearchFilter($result, $limit = 30, $offset = 0) {
         $limit = Wo_Secure($limit);
         $query .= " ORDER BY `user_id` DESC LIMIT {$limit}";
     }
+
+    // pa($query);
     $sql_query_one = mysqli_query($sqlConnect, $query);
     if (mysqli_num_rows($sql_query_one)) {
         while ($fetched_data = mysqli_fetch_assoc($sql_query_one)) {

@@ -55,24 +55,27 @@
 							<textarea name="event-organizer-contact" id="event-organizer-contact" placeholder=" " rows="5"></textarea>
 							<span><?php echo $wo['lang']['event_organizer_contact']; ?></span>
 						</label>
-						<div class="d-flex">
+						<div class="">
 							<label class="tag_field">
 								<select name="event_category">
 									<option value=""><?php echo $wo['lang']['none'];?></option>
-									<?php foreach ($wo['blog_categories']  as $key => $value) { ?>
-										<option value="<?php echo $value['id'];?>"><?php echo $wo['lang'][$value['lang_key']];?></option>
+									<?php foreach ($wo['blog_categories'] as $key => $value) { ?>
+										<option value="<?php echo $value['id'];?>"><?= $wo['lang'][$value['lang_key']];?></option>
 									<?php } ?>
 								</select>
-								<span><?php echo $wo['lang']['event_category']; ?></span>
+								<span><?=$wo['lang']['events_category_title']?></span>
 							</label>
 							<label class="tag_field">
 								<select name="event_city">
 									<option value=""><?php echo $wo['lang']['none'];?></option>
-									<?php foreach ($wo['blog_categories']  as $key => $value) { ?>
-										<option value="<?php echo $value['id'];?>"><?php echo $wo['lang'][$value['lang_key']];?></option>
-									<?php } ?>
+									<?php foreach ($wo['cities'] as $key => $value) { 
+										$event_lang_key = Wo_GetLangOne($value['lang_key'])['lang_key'];
+										if(!empty($event_lang_key)) {
+									?>
+										<option value="<?php echo $value['id'];?>"><?=$wo['lang'][$event_lang_key];?></option>
+									<?php } } ?>
 								</select>
-								<span><?php echo $wo['lang']['event_category']; ?></span>
+								<span><?php echo $wo['lang']['located_in']; ?></span>
 							</label>
 						</div>
 						

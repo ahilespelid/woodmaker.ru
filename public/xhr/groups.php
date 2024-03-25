@@ -42,6 +42,7 @@ if ($f == 'groups') {
                 'group_title' => Wo_Secure($_POST['group_title'],1),
                 'about' => Wo_Secure($_POST['about'],1),
                 'category' => Wo_Secure($_POST['category']),
+                'category_lang_key' => Wo_Secure($_POST['category_lang_key']),
                 'sub_category' => $sub_category,
                 'privacy' => Wo_Secure($privacy),
                 'active' => '1',
@@ -251,10 +252,20 @@ if ($f == 'groups') {
                         $Update_data = array(
                             'group_name' => $_POST['group_name'],
                             'group_title' => $_POST['group_title'],
+                            'category_lang_key' => Wo_Secure($_POST['category_lang_key']),
                             'category' => $_POST['group_category'],
                             'sub_category' => $sub_category,
                             'about' => $_POST['about']
                         );
+                        if(!empty($_POST['category_lang_key'])) {
+                            $Update_data['category_lang_key'] = $_POST['category_lang_key'];
+                        }
+                        if(!empty($_POST['country'])) {
+                            $Update_data['geo_country_id'] = $_POST['country'];
+                        }
+                        if(!empty($_POST['city'])) {
+                            $Update_data['geo_city_id'] = $_POST['city'];
+                        }
                         $fields      = Wo_GetCustomFields('group');
                         if (!empty($fields)) {
                             foreach ($fields as $key => $field) {

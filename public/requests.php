@@ -42,7 +42,7 @@ $allow_array     = array(
     'aamarpay',
     'pay_with_bitcoin',
     //'re_cover',
-    //'load_posts',
+    'load_posts',
     'posts',
     //'update_data',
     //'update_lastseen',

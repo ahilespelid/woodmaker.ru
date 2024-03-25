@@ -49,7 +49,7 @@ $wo['user_profile']['fields'] = Wo_UserFieldsData($wo['user']['user_id']);
     </div>
 </div>
 
-<form action="#" method="post" class="profile-avatar-changer hidden">
+<form class="profile-avatar-changer hidden">
     <input type="file" id="avatar" name="avatar" accept="image/x-png, image/jpeg">
     <input type="hidden" name="user_id" id="user-id" value="<?php echo $wo['user']['user_id'];?>">
 </form>
@@ -120,10 +120,10 @@ $wo['user_profile']['fields'] = Wo_UserFieldsData($wo['user']['user_id']);
                 processData: false, contentType: false,
                 beforeSend: () => {$('.user-avatar-uploading-container').fadeIn(200);},
                 success: (data) => {
+                    Wo_NextStep()
                     console.log(data);
             }});
 
-            Wo_NextStep()
         };
 
         $('#saveButton').on("click", sendImage);

@@ -30,12 +30,12 @@
 			</div>
 			<label class="tag_field">
 				<select name="blog_category" id="blog_category">
-					<option value="0"><?php echo $wo['lang']['category'];?></option>
-					<?php foreach ($wo['blog_categories'] as $category_id => $category_name):?>
-						<option value="<?php echo $category_id?>" <?php if($category_id == $wo['article']['category']) echo "selected='selected'" ;?> ><?php echo $category_name;?></option>
+					<option value="0"><?php echo $wo['lang']['none_selected'];?></option>
+					<?php foreach ($wo['blog_categories'] as $category_id => $category):?>
+						<option value="<?php echo $category['id']?>" <?php if($category_id == $wo['article']['category']) echo "selected='selected'" ;?> ><?php echo $wo['lang'][$category['lang_key']];?></option>
 					<?php endforeach;?>
 				</select>
-				<span><?php echo $wo['lang']['category'] ?></span>
+				<span><?php echo $wo['lang']['directions_for_blog'] ?></span>
 			</label>
 			<label class="tag_field">
 				<input data-role="tagsinput" value="<?php echo $wo['article']['tags']?>" id="blog_tags" name="blog_tags" type="text" placeholder=" ">

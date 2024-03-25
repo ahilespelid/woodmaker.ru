@@ -12,7 +12,7 @@ if ($f == 'update_new_logged_user_details') {
         if (strlen($_POST['username']) > 32) {
             $errors[] = $error_icon . $wo['lang']['username_characters_length'];
         }
-        if (strlen($_POST['username']) < 5) {
+        if (strlen($_POST['username']) < 3) {
             $errors[] = $error_icon . $wo['lang']['username_characters_length'];
         }
         if (!preg_match('/^[\w]+$/', $_POST['username'])) {

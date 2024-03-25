@@ -1,4 +1,5 @@
 <div class="wow_sett_content">
+	<p><?php var_dump($wo['setting']);?></p>
 	<form class="setting-general-form form-horizontal" method="post">
 		<div class="setting-general-alert setting-update-alert"></div>
 		<label class="tag_field">
@@ -7,6 +8,7 @@
 		</label>
 		<label class="tag_field">
 			<select id="page_category" name="page_category" onchange="GetPageSubCategory(this)">
+				<option value="" <?php echo $selected_contry;?> ><?php echo $wo['lang']['none_selected'];?></option>
 				<?php 
 					foreach ($wo['page_categories'] as $categories => $category) { 
 					$category_id = $wo['setting']['page_category'];
@@ -15,7 +17,7 @@
 					<option value="<?php echo $categories;?>" <?php echo $selected_contry;?> ><?php echo $wo['lang'][$category['lang_key']];?></option>
 				<?php } ?>
 			</select>
-			<span><?php echo $wo['lang']['category']; ?></span>
+			<span><?php echo $wo['lang']['direction_for_page']; ?></span>
 		</label>
 		<label class="tag_field page_sub_category_c" style="<?php echo (!empty($wo['page_sub_categories'][$wo['setting']['page_category']]) ? '' : 'display: none;'); ?>">
 			<select name="page_sub_category" id="page_sub_category">
@@ -56,6 +58,9 @@
 				</label>
 			</div>
 		</div>
+		<?php echo Wo_LoadPage('reusable_dropdown/countries_dropdown');?>
+		<?php echo Wo_LoadPage('reusable_dropdown/cities_dropdown');?>
+		<br>
 		<?php $fields = Wo_GetCustomFields('page'); 
 		if (!empty($fields)) {
 			foreach ($fields as $key => $wo['field']) {
@@ -78,7 +83,6 @@
 					<label for="users_post-1"><?php echo $wo['lang']['disable']; ?></label>
 				</div>
 			</div>
-
 		<?php if (Wo_IsAdmin() || Wo_IsModerator()) { ?>
 			<?php
 				$selected_verified_yes = ($wo['setting']['verified'] == 1)   ? ' checked' : '';
@@ -107,17 +111,22 @@
 		</div>
 		<input type="hidden" name="page_id" value="<?php echo $wo['setting']['page_id'];?>">
 		<input type="hidden" name="hash_id" value="<?php echo Wo_CreateSession();?>">
+		<input type="hidden" name="category_lang_key" value="">
 	</form>
 </div>
 
 <script type="text/javascript">
 		<?php 
+$js_array = json_encode($wo['page_categories']);
+echo "var categories_array_edit = ". $js_array . ";\n";
 $js_array = json_encode($wo['page_sub_categories']);
 echo "var sub_categories_array = ". $js_array . ";\n";
 ?>
 	function GetPageSubCategory(self) {
 		id = $(self).val();
 		var text = "";
+		console.log(categories_array_edit[id].lang_key)
+		$('input[name="category_lang_key"]').val(categories_array_edit[id].lang_key)
 		if (typeof(sub_categories_array[id]) == 'undefined') {
 		    $('#page_sub_category').html('');
 			$('.page_sub_category_c').slideUp();

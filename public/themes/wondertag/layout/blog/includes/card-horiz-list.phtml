@@ -10,7 +10,9 @@
 			<div class="postMeta--author-text truncate">
 				<a href="<?php echo $wo['blog']['author']['url']; ?>" data-ajax="?link1=timeline&u=<?php echo $wo['blog']['author']['username']; ?>"><?php echo $wo['blog']['author']['name']; ?></a>
 				<span class="middot">·</span>
-				<time><?php echo date("d M Y",$wo['blog']['posted']); ?></time>
+				<time>
+					<?php Wo_SetDateLangBlog();?>
+				</time>
 			</div>
 		</div>
 	</div>

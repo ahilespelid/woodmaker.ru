@@ -16,20 +16,23 @@ $type_to_find = '<div class="empty_state"><svg enable-background="new 0 0 32 32"
 </style>
 
 <div class="page-margin">
-	<div class="container">
+	<div class="container search_container">
 		<form action="<?php echo Wo_SeoLink('index.php?link1=search') ?>" method="get" class="search-filter-form" id="search_form">
 			<div class="wow_content p20">
 				<div class="valign tag_srch_input">
-					<input type="text" class="text-center width-dynamic" name="query" id="query" placeholder="<?php echo $wo['lang']['keyword'];?>" value="<?php echo (isset($_GET['query'])) ? Wo_Secure($_GET['query']): '';?>" autocomplete="off">
+					<input type="text" name="query" id="query" placeholder="<?php echo $wo['lang']['enter_request'];?>" value="<?php echo (isset($_GET['query'])) ? Wo_Secure($_GET['query']): '';?>" autocomplete="off">
+					<svg style="display: none" class="clear_input" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000" height="16px" width="16px" version="1.1" id="Capa_1" viewBox="0 0 460.775 460.775" xml:space="preserve">
+						<path d="M285.08,230.397L456.218,59.27c6.076-6.077,6.076-15.911,0-21.986L423.511,4.565c-2.913-2.911-6.866-4.55-10.992-4.55  c-4.127,0-8.08,1.639-10.993,4.55l-171.138,171.14L59.25,4.565c-2.913-2.911-6.866-4.55-10.993-4.55  c-4.126,0-8.08,1.639-10.992,4.55L4.558,37.284c-6.077,6.075-6.077,15.909,0,21.986l171.138,171.128L4.575,401.505  c-6.074,6.077-6.074,15.911,0,21.986l32.709,32.719c2.911,2.911,6.865,4.55,10.992,4.55c4.127,0,8.08-1.639,10.994-4.55  l171.117-171.12l171.118,171.12c2.913,2.911,6.866,4.55,10.993,4.55c4.128,0,8.081-1.639,10.992-4.55l32.709-32.719  c6.074-6.075,6.074-15.909,0-21.986L285.08,230.397z"/>
+					</svg>
 					<button type="button" class="search_btn btn btn-main btn-mat" title="<?php echo $wo['lang']['search'];?>"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z"></path></svg></button>
 				</div>
-				<div class="valign tag_srch_filters">
+				<div class="tag_srch_filters">
 					<?php echo Wo_LoadPage('search/filters/user_filters');?>
 				</div>
 			</div>
 		</form>
 	
-		<div class="page-margin wow_content">
+		<div class="wow_content">
 			<div class="valign mb-15">
 				<ul class="valign nav nav-tabs tag_switch_noti switch_search_category" role="tablist">
 					<li role="presentation"><a onclick="searchType('users')" href="" class="active" aria-controls="users" role="tab" data-toggle="tab"><?php echo $wo['lang']['users'];?></a></li>
@@ -164,19 +167,37 @@ $.fn.textWidth = function(text, font) {
     return $.fn.textWidth.fakeEl.width();
 };
 
-$('.width-dynamic').on('input', function() {
-    var inputWidth = $(this).textWidth();
-    $(this).css({
-        width: inputWidth
-    })
-}).trigger('input');
+// $('.width-dynamic').on('input', function() {
+//     var inputWidth = $(this).textWidth();
+//     $(this).css({
+//         width: inputWidth
+//     })
+// }).trigger('input');
 
-function inputWidth(elem, minW, maxW) {
-    elem = $(this);
-    console.log(elem)
-}
+// function inputWidth(elem, minW, maxW) {
+//     elem = $(this);
+//     console.log(elem)
+// }
+
+// var targetElem = $('.width-dynamic');
+
+// inputWidth(targetElem);
 
 let search_type = 'users'
+
+$('.clear_input').on('mousedown', function() {
+	$('#query').val('');
+	$(this).hide();
+	search();
+})
+
+$('#query').on('input', function() {
+	if($(this).val()) {
+		$('.clear_input').show()
+	} else {
+		$('.clear_input').hide()
+	}
+})
 
 function changeTypeFilters() {
 	const filtersContainer = $('.tag_srch_filters')
@@ -201,13 +222,15 @@ function searchType(type) {
 function search() {
 	let url = ''
 
-	const fid_3 = $('#dropdown-fid_3 .themes_dropdown_item.active').data('id') ?  $('#dropdown-fid_3 .themes_dropdown_item.active').data('id') : ''
-	const fid_4 = $('#dropdown-fid_4 .themes_dropdown_item.active').data('id') ?  $('#dropdown-fid_4 .themes_dropdown_item.active').data('id') : ''
+	const fid_3 = $('#fid_3').val();
+	const fid_4 = $('#fid_4').val();
 
 	if('users' === search_type) {
-		url = `type=${search_type}&query=${$('#query').val()}&country=${$('#country').val()}&age_from=${$('#age_from').val()}&age_to=${$('#age_to').val()}&filterbyage=${$('input[name=filterbyage]:checked').val()}&verified=${$('input[name=verified]:checked').val()}&status=${$('input[name=status]:checked').val()}&gender=${$('input[name=gender]:checked').val()}&image=${$('input[name=image]:checked').val()}&fid_3=${fid_3}&fid_4=${fid_4}`
-	} else {
-		url = `type=${search_type}&query=${$('#query').val()}&fid_3=${fid_3}&privacy=${$('input[name=privacy]:checked').val()}`
+		url = `type=${search_type}&query=${$('#query').val()}&country=${$('#country_input').val()}&city=${$('#city_input').val()}&age_from=${$('#age_from').val()}&age_to=${$('#age_to').val()}&filterbyage=${$('input[name=filterbyage]:checked').val()}&verified=${$('input[name=verified]:checked').val()}&status=${$('input[name=status]:checked').val()}&gender=${$('input[name=gender]:checked').val()}&image=${$('input[name=image]:checked').val()}&fid_3=${fid_3}&fid_4=${fid_4}`
+	} else if('groups' === search_type) {
+		url = `type=${search_type}&query=${$('#query').val()}&fid_3=${fid_3}&privacy=${$('input[name=privacy]:checked').val()}&country=${$('#country_input').val()}&city=${$('#city_input').val()}`
+	} else if('pages' === search_type) {
+		url = `type=${search_type}&query=${$('#query').val()}&fid_3=${fid_3}&country=${$('#country_input').val()}&city=${$('#city_input').val()}`
 	}
 	
 	$.ajax({
@@ -218,13 +241,13 @@ function search() {
 		}
 	})  
 }
-
-var targetElem = $('.width-dynamic');
-
-inputWidth(targetElem);
-
-  jQuery(document).ready(function($) {
+jQuery(document).ready(function($) {
 	/*Search function*/
+	$('#search_form input').on('change', function() {
+		console.log("CHANGING")
+		search();
+	})
+
 	$(".search_btn").on("click", () => search())
 	
     /*Load more users*/
@@ -232,9 +255,6 @@ inputWidth(targetElem);
       var form = document.getElementById('search_form');
 	  var formdata = new FormData(form);
 
-	  const fid_3 = $('#dropdown-fid_3 .themes_dropdown_item.active').data('id') ?  $('#dropdown-fid_3 .themes_dropdown_item.active').data('id') : ''
-
-	  formdata.append('fid_3', fid_3)
 
       var u_offset = ($("[data-search-type=user]").length > 0) ? $("[data-search-type=user]").last().attr('data-id') : 0;
       $.ajax({
@@ -253,12 +273,14 @@ inputWidth(targetElem);
     });
     //Load more groups
     $(".load-more-groups").click(function(event) {
+	  var form = document.getElementById('search_form');
+	  var formdata = new FormData(form);
       var g_offset = ($("[data-search-type=group]").length > 0) ? $("[data-search-type=group]").last().attr('data-id') : 0;
       $.ajax({
-        url: Wo_Ajax_Requests_File(),
+        url: Wo_Ajax_Requests_File()+`?f=load-more-groups&offset=`+g_offset,
         type: 'GET',
         dataType: 'json',
-        data: {f: 'load-more-groups',offset:g_offset,query:$("#query").val()},
+        data: formdata,
         success:function(data){
           if (data['status'] == 200) {
             $("#groups-cont").append(data['html'])
@@ -268,12 +290,14 @@ inputWidth(targetElem);
     });
     //Load more pages
     $(".load-more-pages").click(function(event) {
+	  var form = document.getElementById('search_form');
+	  var formdata = new FormData(form);
       var p_offset = ($("[data-search-type=page]").length > 0) ? $("[data-search-type=page]").last().attr('data-id') : 0;
       $.ajax({
-        url: Wo_Ajax_Requests_File(),
+        url: Wo_Ajax_Requests_File()+`?f=load-more-groups&offset=`+p_offset,
         type: 'GET',
         dataType: 'json',
-        data: {f: 'load-more-pages',offset:p_offset,query:$("#query").val()},
+        data: formdata,
         success:function(data){
           if (data['status'] == 200) {
             $("#pages-cont").append(data['html'])

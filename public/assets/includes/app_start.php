@@ -1,7 +1,7 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(1);
+//ini_set('display_errors', 1);
+//ini_set('display_startup_errors', 1);
+//error_reporting(1);
 @ini_set("max_execution_time", 0);
 @ini_set("memory_limit", "-1");
 @set_time_limit(0);
@@ -391,7 +391,7 @@ try {
     $wo["group_categories"]    = Wo_GetCategoriesWithSub('group');
     //$wo["group_sub_categories"]='';
     $wo["blog_categories"]     = Wo_GetCategoriesWithSub('blog');
-//    $wo["products_categories"] = Wo_GetCategoriesWithSub('product');
+   $wo["products_categories"] = Wo_GetCategoriesWithSub('products');
 //    $wo["job_categories"]      = Wo_GetCategoriesWithSub('job');
 ///* / ahilespelid /// */    
 

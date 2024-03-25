@@ -21,9 +21,10 @@
 					<span><?php echo $wo['lang']['page_description']; ?></span>
 				</label>
 				<div class="help-block"><?php echo $wo['lang']['page_description_info'];?></div>
-				<?php $page_categories = Wo_GetCategoriesWithSub('page', false);?>
+				<?php $page_categories = $wo["page_categories"];?>
 				<label class="tag_field">
 					<select name="page_category" id="page_category" onchange="GetPageSubCategory(this)">
+						<option value=""><?php echo $wo['lang']['none_selected']; ?></option>
 						<?php foreach ($page_categories as $category) {?>
 							<option value="<?php echo $category['id']?>"><?php echo $wo['lang'][$category['lang_key']]; ?></option>
 						<?php } ?>
@@ -57,6 +58,7 @@
 					<button class="btn btn-main btn-mat btn-mat-raised disable_btn" type="submit"><?php echo $wo['lang']['create']; ?></button>
 				</div>
 				<input type="hidden" name="hash_id" value="<?php echo Wo_CreateSession();?>">
+				<input type="hidden" name="category_lang_key" value="">
 			</form>
 		</div>
 	</div>
@@ -64,12 +66,15 @@
 
 <script type="text/javascript">
 	<?php 
+$js_array = json_encode($page_categories);
+echo "var categories_array = ". $js_array . ";\n";
 $js_array = json_encode($wo['page_sub_categories']);
 echo "var sub_categories_array = ". $js_array . ";\n";
 ?>
 	function GetPageSubCategory(self) {
 		id = $(self).val();
 		var text = "";
+		$('input[name="category_lang_key"]').val(categories_array[id].lang_key)
 		if (typeof(sub_categories_array[id]) == 'undefined') {
 		    $('#page_sub_category').html('');
 		}

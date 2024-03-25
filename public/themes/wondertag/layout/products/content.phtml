@@ -72,12 +72,11 @@ if (mysqli_query($wo['sqlConnect'], "DESCRIBE `wondertage_settings`" )) {
 		<?php } ?>
 		<div class="page-margin">
 			<ul class="list-unstyled tag_page_nav product-category-slider tag_market_cats<?php if (!empty($wondertage_settings) && $wondertage_settings['tag_prods_cat_slider'] == 1) { ?><?php } else { ?> tag_market_cats_no_slide<?php } ?> tag_market_main_cats" <?php if($wo['language_type'] == 'rtl') { ?>dir="rtl"<?php } ?>>
-				<?php 
-					$category_id = (!empty($_GET['c_id'])) ? (int) $_GET['c_id'] : 0;
+				<li class="<?php echo $active?>" data_prodect_cat_id=""><a href="/products" class="btn-mat"><?php echo $wo['lang']['all'];?></a></li>
+				<?php
 					foreach ($wo['products_categories'] as $key => $category) {
-						$active = ($category_id == $key) ? 'active' : '';
 				?>
-					<li class="<?php echo $active?>" data_prodect_cat_id="<?php echo($key) ?>"><a href="<?php echo Wo_SeoLink('index.php?link1=products&c_id=' . $key);?>" class="btn-mat"><?php echo $category;?></a></li>
+					<li class="<?php echo $active?>" data_prodect_cat_id="<?=$category['id']; ?>"><a href="<?php echo Wo_SeoLink('index.php?link1=products&c_id=' . $category['id']);?>" class="btn-mat"><?php echo $wo['lang'][$category['lang_key']];?></a></li>
 				<?php } ?>
 			</ul>
 			<?php if ( !empty($_GET['c_id']) && !empty($wo['products_sub_categories'][$_GET['c_id']])) { ?>
@@ -237,7 +236,7 @@ if (mysqli_query($wo['sqlConnect'], "DESCRIBE `wondertage_settings`" )) {
 										foreach ($wo['products_categories'] as $key => $category) {
 											if ($key > 1) {
 									?>
-										<option value="<?php echo $key;?>"><?php echo $category;?></option>
+										<option value="<?php echo $category['id'];?>"><?php echo $wo['lang'][$category['lang_key']];?></option>
 									<?php } ?>
 									<?php if ($key == count($wo['products_categories']) && !empty($wo['products_categories'][1]) ) { ?>
 										<option value="1"><?php echo $wo['products_categories'][1];?></option>

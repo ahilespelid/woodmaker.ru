@@ -6977,6 +6977,18 @@ function Wo_GetCategories($table) {
     }
     return false;
 }
+function Wo_UpdateCategoriesOne($id, $data) {
+    if(empty($id) && empty($data) && !is_numeric($id) && !is_array($data)){return false;}
+    global $sqlConnect, $wo; $e = [];
+    
+    foreach($data as $k=>$v){
+        $e[] = (is_string($v)) ? $k."='".$sqlConnect->real_escape_string($v)."'" : 
+               ((is_numeric($v)) ? $k.'='.$v : $k.'=NULL');
+    }$string_e  = implode(", ", $e);
+    $query = "UPDATE " . T_CATEGORIES . " SET ".$string_e." WHERE `id`= $id;";
+    
+return $sqlConnect->query($query);}
+
 ///*/ ahilespelid ///*/
 function Wo_GetCategoriesKeys($table, $sub = false) {
     global $sqlConnect, $wo;

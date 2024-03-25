@@ -1009,7 +1009,7 @@ if (!empty($_COOKIE['mode']) && $_COOKIE['mode'] == 'night') {
                                     </li>
                                     <li>
                                         <a <?=($page == 'geo_country') ? 'class="active"' : ''; ?> href="<?=Wo_LoadAdminLinkSettings('geo_country');?>" data-ajax="?path=geo_country">
-                                            <span>Manage Country</span>
+                                            <span>Manage Countries</span>
                                         </a>
                                     </li>
                                 </ul>

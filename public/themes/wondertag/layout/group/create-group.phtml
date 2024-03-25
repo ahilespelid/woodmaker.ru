@@ -33,7 +33,7 @@
 						<label class="tag_field">
 							<select name="category" id="category" onchange="GetGroupSubCategory(this)">
 								<?php foreach ($wo['group_categories'] as $category_id => $category_name) {?>
-									<option value="<?php echo $category_id?>"><?php echo $category_name; ?></option>
+									<option value="<?php echo $category_id?>"><?php echo $wo['lang'][$category_name['lang_key']]; ?></option>
 								<?php } ?>
 							</select>
 							<span><?php echo $wo['lang']['category'];?></span>
@@ -67,6 +67,7 @@
 					<button class="btn btn-main btn-mat btn-mat-raised disable_btn" type="submit"><?php echo $wo['lang']['create']; ?></button>
 				</div>
 				<input type="hidden" name="hash_id" value="<?php echo Wo_CreateSession();?>">
+				<input type="hidden" name="category_lang_key" value="">
 			</form>
 		</div>
 	</div>
@@ -74,12 +75,15 @@
 
 <script type="text/javascript">
 	<?php 
+$js_array = json_encode($wo['group_categories']);
+echo "var categories_array = ". $js_array . ";\n";
 $js_array = json_encode($wo['group_sub_categories']);
 echo "var sub_categories_array = ". $js_array . ";\n";
 ?>
 	function GetGroupSubCategory(self) {
 		id = $(self).val();
 		var text = "";
+		$('input[name="category_lang_key"]').val(categories_array[id].lang_key)
 		if (typeof(sub_categories_array[id]) == 'undefined') {
 		    $('#group_sub_category').html('');
 		}

@@ -6,6 +6,7 @@
 		</div>
 		<div class="collapse" id="collapseCAT">
 			<div class="wow_blog_cats">
+				<a class="<?=("blogs" == str_replace("link1=", "", $_SERVER['QUERY_STRING'])) ? 'active' : ''; ?>" href="/blogs"><?php echo $wo['lang']['all'];?></a>
 				<?php 
 					$category_id = (!empty($_GET['id'])) ? (int) $_GET['id'] : 0;
 					foreach ($wo['blog_categories'] as $key => $category) {

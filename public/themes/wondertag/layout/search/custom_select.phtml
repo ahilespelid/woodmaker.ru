@@ -2,7 +2,7 @@
     $fid = $wo['field']['fid'];
     if(!empty($cats = Wo_GetCategoriesWithSub())){
         foreach($cats as $k => $cat){
-            if('blog' == $cat['type']){
+            if('page' == $cat['type']){
                 $cats_blog[] = $cat;
             }elseif('status' == $cat['type']){
                 $cats_status[] = $cat;
@@ -12,8 +12,63 @@
     //pa($cats_status);
 ?>
 <div id="dropdown-<?= $fid;?>" class="tag_srch_fltr_country dropdown post_themes_dropdown dropdown_categories">
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M3,3H11V7.34L16.66,1.69L22.31,7.34L16.66,13H21V21H13V13H16.66L11,7.34V11H3V3M3,13H11V21H3V13Z" /></svg>
-    <div class="d-flex align-items-center category_dropdown_header" data-original-title="<?= $wo['lang']['choose_topic']; ?>" data-toggle="tooltip" data-placement="bottom">                                    
+    <?php if($fid == 'fid_3') {?>
+        <!--svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="32px" height="32px" viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space="preserve">  
+            <image id="image0" width="32" height="32" x="0" y="0"
+                href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAQAAADZc7J/AAAABGdBTUEAALGPC/xhBQAAACBjSFJN
+                AAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAmJLR0QA/4ePzL8AAAAJcEhZ
+                cwAALiMAAC4jAXilP3YAAAT9SURBVEjHpZVpTJRXFIafb2YYQFEBB1F0wA1wqbW4EGUQRSNiXLDV
+                WmNTalKtbWxrbOxiTaM1adybKI0aYzIuJVprDUGQqjGuYEVA0IIoKkthBAHBEcZhlu/0x6BglfaH
+                9/13zz3Pfc/NybmK8HpLBx5EDeXoqdYVx19IuhNTF+bs5tXSt+KNi3Fp/S/3Fh+G05eXL9OAoKKi
+                8oCrbJ09uABBfK0hJSPy+t3yaUWQiOyN8TnUouJ+SfIMINToF6QgyNTUr6ZvCNyk5LBRs9Gwek5s
+                GoIs+aEBeSVAEQSFNv2CIxlvj8hd9UXE1SoeIjTjjy8G+lM0dcvPlcOT95k/VkReKkG7HhdaPttx
+                OHniiW1JweVuFGz4YGYyPQhEZWD59KM3Yk7PczHtvLO94GfSogh2Mma+ezIq7/QUW6uKSoF/WlKV
+                6UbQaMvIS/PSFVsAYbQFx+VUDvwjNvaK/QUHASBU6SNv6pw5USouBHNiyF0E0QuChBdujbbjRkif
+                gZjOPqSG6k4SEFKnIfMPO2hFyEzwcqIu/vHraPOg1aZZOxDf5pwooQkr8aeQjDEWyjtJQHhnF7I/
+                /j4NlAcYK3zaDswo5BiZ7COL7cnI6LxGnYVSNi9CPllTSHYnCRrIN/lZ/QoqqcU89++wFduSTw3B
+                Fdro64eNDw8uPFA0Nj3BRRX+uYoUxjTQ/FyPPJ1oCe1X/cRqp5krkxSGHrtNU+jyop4W04Ho1JKa
+                lUsM5yt8y2jE/aBnQ+WgQkVEAAUnemaDgD3qWhXbiKT7CW9JM5ZQ6jfkDoL0bEjYu2n0SbI5QT75
+                XiH1VBu1RkIJpT8T+AVBu56NqxSncVcg86mdXDou9khITT9Hs0/2dGjrdm/suaUlJvsTn/uiPlBV
+                1Y+Vv8WLiRgmEMebBIMwJN+35XDAWe6yZRGyLOUpZeQG+zchHQorWrZyT1AWuTwgnzSOYuYQ1zwO
+                /hx2PS7x4viyHoyqyJp7Zrau3LdoWGvZ0OIxHQ3zOLgg8fIHdWFUP37YQhM62tASRAgIx01Iwgkb
+                VoTz47ybkan7b3tnjtA5OnvwSOsYl/79zP1e6Zg5yDVPH1i0UVcVOR0nuHnIlrEjryA/LbUy+fTL
+                AI8GXf90eYrhGEUegJ2sSUjErerelZzhFFmadYlr59eye3ZXAAQJsCRtzggXEBwIazYgoy6nhVwg
+                g9/JJJU7VOgiiv8LgfSoE7Tr0aAw9dz9AWfmXZhnvGcoe8ojGulFoOrSnZ/Z1Sz0rx2Yk3Rw1hVF
+                8PRVPd+t37cOxmRNTA3KVS2jnd0dhoAZtxuDOqcpatD90MK++eE5xpvSFE0s7QCoxcLlSYfW5s8A
+                6Fnfy/Z+yjfbv9xp/rwjPXH32L1+pcH2VnRoaCKKhA6Ahbu4sXNn3KVpZRPrB9d1i71+/L2rkUk3
+                3Lr28eVOHel9u5QAWtDjhZUoEtB1NmjHRURejzwbjzDr5rh9ZPytKafOzvJEQyoMFXr6Y/33YO+8
+                BAdPcSDg0oiVNhbvfBaLLDS0+TCMAbi7BnSAwI2NNkznIv/y7A3Nc2DjKYEEo/4fAMALb3zp4/yo
+                3cNb2aBFg4ZwBjxHdAlwEo6LFh4Rf6x3PfSuG3oDdOjQosVIH8+/1BXAQTjDUNCjYGxaYIaBxd6P
+                n2DDho1WWjG0u9C9Kl3Q8i0DcLSXsmLPrwunZQ7G9sIpz2Mqr/u9/wMVxZN8wGPs5AAAACV0RVh0
+                ZGF0ZTpjcmVhdGUAMjAyNC0wMy0yMFQxNzoxMDoyMSswMTowMFpLsN4AAAAldEVYdGRhdGU6bW9k
+                aWZ5ADIwMjQtMDMtMjBUMTc6MTA6MjErMDE6MDArFghiAAAAAElFTkSuQmCC" />
+        </svg-->
+        <svg xmlns="http://www.w3.org/2000/svg" id="Layer_1" viewBox="0 0 32 32" data-name="Layer 1"><path d="m9 29h-3a3 3 0 0 1 -3-3v-3a1 1 0 0 0 -2 0v3a5.006 5.006 0 0 0 5 5h3a1 1 0 0 0 0-2z"/><path d="m30 22a1 1 0 0 0 -1 1v3a3 3 0 0 1 -3 3h-3a1 1 0 0 0 0 2h3a5.006 5.006 0 0 0 5-5v-3a1 1 0 0 0 -1-1z"/><path d="m26 1h-3a1 1 0 0 0 0 2h3a3 3 0 0 1 3 3v3a1 1 0 0 0 2 0v-3a5.006 5.006 0 0 0 -5-5z"/><path d="m2 10a1 1 0 0 0 1-1v-3a3 3 0 0 1 3-3h3a1 1 0 0 0 0-2h-3a5.006 5.006 0 0 0 -5 5v3a1 1 0 0 0 1 1z"/><circle cx="16" cy="16" r="7"/></svg>
+    <?php } else {?>
+        <!--svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="32px" height="32px" viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space="preserve">  
+            <image id="image0" width="32" height="32" x="0" y="0"
+                href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAQAAADZc7J/AAAABGdBTUEAALGPC/xhBQAAACBjSFJN
+                AAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAmJLR0QA/4ePzL8AAAAJcEhZ
+                cwAALiMAAC4jAXilP3YAAAAHdElNRQfoAxQSDhOrh5IZAAACu0lEQVRIx72U20vUQRTHP2fT1S4m
+                osKWmRcyE9tWKrOSijSCoKBCUJNuRPhQYFFEBlIalA89pQ8+RBcx7Q8o0EoLuhIZZqKkgSYaSgWu
+                eUvN08P+st/mri4ZneE3v5nvzHznnDPfGVFmZ5ZZrjcTSJYMSR5IjQzJsr/xYIB2nEAP7Yz5SiD/
+                MAcSJVmyAiRdsiTIZwadLBxFOa/QhJKg+Fb8TFxPOc1joIhIev5bDkweyDbysSBMMMoR7TZPKw1q
+                GLs2MlMODpo68b8apWF5GZtuhrfPSZo5B+NAMdepIDnKCSUxjVsbdrakDQYbO80UAoD/x9E2q/MH
+                thMpq+q3/5gDtvYNt16v60vx4Rjn70Gjy3YXBH51AVFv9xYWpN4OUCzlKI5pQ2gNKN8SkdNKR24H
+                1lF7naMm8X5MY+aEa3TCH7yJ2yBYHT9YA6Ff4l8m3YurPdE2deJaG83ThEASGvzwnM2zm1SgC4bt
+                tRlnCu1l4j5mCEkcNFCh+2UXaYCgk3W11sht2RfW8TkaILIpsXr5g9gXed/cPXCgVCmUTNn+skKV
+                aHJSkSPzVMIj/xEUDe3ceLMgQtEpBFdQTpJGL72kkY9yQaEKxe6aWbLk2IHNVQEDKKl/CumXPdNX
+                MgxaJ2JCjYt/vItyyoNufD/EhAchATAXcC0NNGdbLNiwAAPaN9BLF99NvD7YKCG00EknxaBnWapv
+                vHng2SyM8Zx5QBtIHIukQfs9EwyCKz6GTKhV+9kx2btIJpt54pkgW9awECQXuwkdl0Cy8Qda9Al3
+                cdLlSQdXp+jgknGM8YQbyB1P74EaXwXvEKPt+tcbPT+cHMYKNIPksIli7fjtwUqUSm8vL5UoK92Q
+                WyjrjbsgtcAiEnDywcsJLCOYFreUxhLCe7o1XRT5BAQzgh9WrxoYJ9BNMy7EqYtn/az/BCBWhLUz
+                amBFAAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDI0LTAzLTIwVDE3OjE0OjE5KzAxOjAw7sBZIAAAACV0
+                RVh0ZGF0ZTptb2RpZnkAMjAyNC0wMy0yMFQxNzoxNDoxOSswMTowMJ+d4ZwAAAAASUVORK5CYII=" />
+        </svg-->
+        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve"><g><g><path d="M256,0L27.807,175.546l18.305,23.794l25.753-19.811v191.414h31.165l14.757,61.685l36.536-8.74 c4.56,6.821,9.78,13.143,15.624,18.921l-15.994,33.936L228.755,512l16.165-34.295c8.158,0.749,16.269,0.667,24.315-0.202 l16.56,33.847l74.281-36.346l-16.509-33.738c5.769-5.911,10.9-12.365,15.356-19.316l36.302,8.126l13.238-59.133h31.672V179.528 l25.753,19.811l18.305-23.793L256,0z M372.489,394.223l-29.091-6.513l-5.305,10.321c-5.606,10.907-13.205,20.457-22.583,28.384 l-8.934,7.552l13.341,27.266l-20.352,9.959l-13.346-27.277l-11.406,2.361c-11.691,2.421-23.894,2.576-35.992,0.299l-11.405-2.146 L214.4,472.048l-20.495-9.66l12.956-27.488l-9.1-7.416c-9.504-7.746-17.258-17.121-23.047-27.865l-5.476-10.165l-29.242,6.996 l-5.272-22.035l14.5-3.47h12.057v-2.885l2.424-0.58l0.032-11.808c0.033-12.472,2.51-24.558,7.36-35.922l4.542-10.642 l-23.145-17.988l13.903-17.89l22.964,17.847l9.236-7.354c10.269-8.176,21.85-13.955,34.419-17.176l11.283-2.891v-28.809h22.657 v28.724l11.387,2.832c12.199,3.034,23.48,8.457,33.529,16.12l9.328,7.112l22.632-18.125l14.163,17.685l-22.697,18.178 l4.798,10.616c5.111,11.305,7.84,23.381,8.114,35.893l0.256,11.752l19.83,4.439v0.875h3.91l5.234,1.165L372.489,394.223z M410.117,340.923h-32.775c-1.012-8.302-2.863-16.429-5.547-24.322l28.401-22.745L348.5,229.31l-28.207,22.591 c-7.368-4.571-15.161-8.318-23.315-11.21v-35.868h-82.695v36.119c-8.666,3.14-16.915,7.251-24.681,12.298l-28.484-22.138 l-50.746,65.294l29.033,22.565c-2.272,7.157-3.864,14.493-4.775,21.962h-32.747V156.435L256,37.874l154.117,118.561V340.923z"/></g></g><g><g><path d="M256,289.634c-36.555,0-66.294,29.74-66.294,66.294s29.74,66.294,66.294,66.294s66.294-29.739,66.294-66.294 S292.555,289.634,256,289.634z M256,392.203c-20.002,0-36.275-16.273-36.275-36.275s16.273-36.275,36.275-36.275 s36.275,16.273,36.275,36.275C292.275,375.931,276.002,392.203,256,392.203z"/></g></g></svg>
+    <?php }?>
+    <!-- <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M3,3H11V7.34L16.66,1.69L22.31,7.34L16.66,13H21V21H13V13H16.66L11,7.34V11H3V3M3,13H11V21H3V13Z" /></svg> -->
+    <div class="d-flex align-items-center category_dropdown_header" data-original-title="<?= $fid == 'fid_3' ? $wo['lang']['choose_topic'] : $wo['lang']['status_prompt']; ?>" data-toggle="tooltip" data-placement="bottom">                                    
     <span><?= $fid == 'fid_3' ? $wo["lang"]["choose_directions_woodworking"] : $wo["lang"]["woodworking_reason"]; ?></span>
         <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
             <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
@@ -24,43 +79,99 @@
             <?= $fid == 'fid_3' ? $wo['lang']['search_categories_prompt'] : $wo['lang']['add_your_status']; ?>
         </p>
         <ul>
-            <li class="themes_dropdown_item none_selected"><?php echo $wo["lang"]["none_selected"]; ?></li>
+            <li class="themes_dropdown_item none_selected"><?= $wo["lang"]["none_selected"]; ?></li>
             <?php foreach($fid == 'fid_3' ? $cats_blog : $cats_status as $category_id => $category) { ?>
-                <li data-id="<?= $category['lang_key'];?>" class="themes_dropdown_item"><?= $wo['lang'][$category['lang_key']]; ?></li>
+                <li data-field-id=<?=$category['id']?> data-id="<?= $category['lang_key'];?>" class="themes_dropdown_item"><?= $wo['lang'][$category['lang_key']]; ?></li>
             <?php }; ?>
         </ul>
     </div>
 </div>
+<input type="hidden" value="" name="<?= $fid;?>" id="<?= $fid;?>">
+<input type="hidden" id="input-<?=$fid?>" class="<?= $fid == 'fid_3' ? 'category_lang_key' : 'status_lang_key' ?>" name="<?= $fid == 'fid_3' ? 'category_lang_key' : 'status_lang_key' ?>" value="">
 
 <script>
 $(document).on('mouseup', function() {
 	$(".category_dropdown_header").each((i, header) => {
-		$(header.nextElementSibling).removeClass("show")
-	})
-})
+		$(header.nextElementSibling).removeClass("show");
+	});
+});
 
-$("#dropdown-<?php echo $wo['field']['fid'];?> .category_dropdown_header").on("click", function (e) {
-    e.stopPropagation()
-    if($("#dropdown-<?php echo $wo['field']['fid'];?> .themes_dropdown_body").hasClass("show")) {
-        $("#dropdown-<?php echo $wo['field']['fid'];?> .themes_dropdown_body").removeClass("show")
-    } else {
-        $("#dropdown-<?php echo $wo['field']['fid'];?> .themes_dropdown_body").addClass("show")
-    }
-})
-
-$("#dropdown-<?php echo $wo['field']['fid'];?> .themes_dropdown_item").each((i, item) => {
-    $(item).on("click", function () {
-		$('#dropdown-<?=$wo['field']['fid'] ;?> .category_dropdown_header span').text($(item).text())
-
-        $("#dropdown-<?php echo $wo['field']['fid'];?> .post_themes_dropdown span").text($(item).text())
-
-        $("#dropdown-<?php echo $wo['field']['fid'];?> .themes_dropdown_item").each((index, category) => {
-            $(category).removeClass('active')
+$(document).ready(function() {
+    if(location.href.includes('search')) {
+    $("#dropdown-<?= $wo['field']['fid'];?> .themes_dropdown_item").each((i, item) => {
+        $(item).on("click", function () {
+            $('#<?= $fid;?>').val($(item).data('id'))
+            $("#dropdown-<?= $wo['field']['fid'];?> .themes_dropdown_body").removeClass("show")
+            if ("function" == typeof window.search) {
+                search();
+            }
+            })
         })
-        if(!$(item).hasClass("active")) {
-            $(item).addClass("active")
+    }
+
+    //Если страница настроек в поле подставляются данные пользователя
+    if(location.href.includes('setting')) {    
+        let urlUsername = location.href;
+        let username = urlUsername.match('/setting/(.+)/general-setting');
+        
+        username = ((undefined !== username && null !== username) ? username[1] : false);
+
+        if(username) {
+            getUserApi(username).then((data) => {
+                $("#dropdown-<?= $wo['field']['fid'];?> .themes_dropdown_item").each((i, item) => {
+                    if(String($(item).data('id')) === data.user_data.fields['<?=$fid === 'fid_3' ? 'category_lang_key' : 'status_lang_key'?>']) {
+                        $('#<?= $fid;?>').val($(item).data('field-id'))
+                        $('#input-<?=$fid?>').val($(item).data('id'))
+                        $('#dropdown-<?=$wo['field']['fid'] ;?> .category_dropdown_header span').text($(item).text())
+                        $(item).addClass('active')
+                    }
+                })
+            })
+        } else {
+            $("#dropdown-<?= $wo['field']['fid'];?> .themes_dropdown_item").each((i, item) => {
+                if($(item).data('id') === <?=$wo['user'][$fid === 'fid_3' ? 'category_lang_key' : 'status_lang_key']?>) {
+                    $('#<?= $fid;?>').val($(item).data('field-id'))
+                    $('#input-<?=$fid?>').val($(item).data('id'))
+                    $('#dropdown-<?=$wo['field']['fid'] ;?> .category_dropdown_header span').text($(item).text())
+                    $(item).addClass('active')
+                }
+            }) 
         }
-        $("#dropdown-<?php echo $wo['field']['fid'];?> .themes_dropdown_body").removeClass("show")
+    }
+
+    $("#dropdown-<?= $wo['field']['fid'];?> .category_dropdown_header").on("click", function (e) {
+        e.stopPropagation()
+        if($("#dropdown-<?= $wo['field']['fid'];?> .themes_dropdown_body").hasClass("show")) {
+            $("#dropdown-<?= $wo['field']['fid'];?> .themes_dropdown_body").removeClass("show")
+        } else {
+            $("#dropdown-<?= $wo['field']['fid'];?> .themes_dropdown_body").addClass("show")
+        }
+    })
+
+    $("#dropdown-<?= $wo['field']['fid'];?> .themes_dropdown_item").each((i, item) => {
+        $(item).on("click", function () {
+            //Если выбран вариант "Не выбрано"
+            if($(item).hasClass('none_selected')) {
+                $('#dropdown-<?=$wo['field']['fid'] ;?> .category_dropdown_header span').text('<?= $fid == 'fid_3' ?  $wo["lang"]["choose_directions_woodworking"] : $wo["lang"]["woodworking_reason"]; ?>')
+            } else {
+                $('#dropdown-<?=$wo['field']['fid'] ;?> .category_dropdown_header span').text($(item).text())
+            }
+
+            $("#dropdown-<?= $wo['field']['fid'];?> .themes_dropdown_item").each((index, category) => {
+                $(category).removeClass('active')
+            })
+            if(!$(item).hasClass("active")) {
+                $(item).addClass("active")
+            }
+            if(location.href.includes('setting')) {
+                $('#<?= $fid;?>').val($(item).data('field-id'))
+                $('#input-<?=$fid?>').val($(item).data('id'))
+            } else {
+                $('#<?= $fid;?>').val($(item).data('id'))
+            }
+            $("#dropdown-<?= $wo['field']['fid'];?> .themes_dropdown_body").removeClass("show")
+        })
     })
 })
+
 </script>

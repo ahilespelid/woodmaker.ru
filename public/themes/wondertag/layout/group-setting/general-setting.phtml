@@ -21,6 +21,7 @@
 		</label>
 		<label class="tag_field">
 			<select id="group_category" name="group_category" onchange="GetGroupSubCategory(this)">
+				<option value="" <?php echo $selected_contry;?> ><?php echo $wo['lang']['none_selected'];?></option>
 				<?php 
 					foreach ($wo['group_categories'] as $categorie_id => $category) {
 					$selected_contry = ($categorie_id == $wo['setting']['category_id']) ? ' selected' : '' ;
@@ -28,7 +29,7 @@
 					<option value="<?php echo $categorie_id;?>" <?php echo $selected_contry;?> ><?php echo $wo['lang'][$category['lang_key']];?></option>
 				<?php } ?>
 			</select>
-			<span><?php echo $wo['lang']['category'];?></span>
+			<span><?php echo $wo['lang']['directions_for_group'];?></span>
 		</label>
 
 		<label class="tag_field page_sub_category_c" style="<?php echo (!empty($wo['group_sub_categories'][array_keys($wo['group_categories'])[0]]) ? '' : 'display: none;'); ?>">
@@ -43,7 +44,9 @@
 			</select>
 			<span><?php echo $wo['lang']['sub_category'];?></span>
 		</label>
-
+		<?php echo Wo_LoadPage('reusable_dropdown/countries_dropdown');?>
+		<?php echo Wo_LoadPage('reusable_dropdown/cities_dropdown');?>
+		<br>
 		<?php $fields = Wo_GetCustomFields('group'); 
 		if (!empty($fields)) {
 			foreach ($fields as $key => $wo['field']) {
@@ -56,17 +59,21 @@
 		</div>
 		<input type="hidden" name="group_id" value="<?php echo $wo['setting']['id'];?>">
 		<input type="hidden" name="hash_id" value="<?php echo Wo_CreateSession();?>">
+		<input type="hidden" name="category_lang_key" value="">
 	</form>
 </div>
 
 <script type="text/javascript">
 	<?php 
+$js_array = json_encode($wo['group_categories']);
+echo "var categories_array = ". $js_array . ";\n";
 $js_array = json_encode($wo['group_sub_categories']);
 echo "var sub_categories_array = ". $js_array . ";\n";
 ?>
 	function GetGroupSubCategory(self) {
 		id = $(self).val();
 		var text = "";
+		$('input[name="category_lang_key"]').val(categories_array[id].lang_key)
 		if (typeof(sub_categories_array[id]) == 'undefined') {
 		    $('#group_sub_category').html('');
 			$('.page_sub_category_c').slideUp();

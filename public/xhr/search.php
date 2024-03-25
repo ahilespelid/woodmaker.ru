@@ -28,7 +28,11 @@ if ($f == "search") {
             $response = Wo_SearchForSearchPage($_GET['type'], $_GET['query'], 30, $offset);
             if (count($response) != 0) {
                 foreach ($response as $wo['result']) {
-                    $data['html'] .= Wo_LoadPage('search/user-result');
+                    if('page' == $wo['result']['type']) {
+                        $data['html'] .= Wo_LoadPage('search/page-result');
+                    } else {
+                        $data['html'] .= Wo_LoadPage('search/group-result');
+                    }
                 }
             }
         }

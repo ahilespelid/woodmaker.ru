@@ -39,6 +39,7 @@ if ($f == 'pages') {
                 'page_title' => Wo_Secure($_POST['page_title'],1),
                 'page_description' => Wo_Secure($_POST['page_description'],1),
                 'page_category' => Wo_Secure($_POST['page_category']),
+                'category_lang_key' => Wo_Secure($_POST['category_lang_key']),
                 'sub_category' => $sub_category,
                 'active' => '1',
                 'time' => time()
@@ -236,10 +237,20 @@ if ($f == 'pages') {
                             'page_name' => $_POST['page_name'],
                             'page_title' => Wo_Secure($_POST['page_title'],1),
                             'page_category' => $_POST['page_category'],
+                            'category_lang_key' => $_POST['category_lang_key'],
                             'sub_category' => $sub_category,
                             'call_action_type' => $call_action_type,
                             'call_action_type_url' => $_POST['call_action_type_url']
                         );
+                        if(!empty($_POST['category_lang_key'])) {
+                            $Update_data['category_lang_key'] = $_POST['category_lang_key'];
+                        }
+                        if(!empty($_POST['country'])) {
+                            $Update_data['geo_country_id'] = $_POST['country'];
+                        }
+                        if(!empty($_POST['city'])) {
+                            $Update_data['geo_city_id'] = $_POST['city'];
+                        }
                         $array       = array(
                             'verified' => 1,
                             'notVerified' => 0

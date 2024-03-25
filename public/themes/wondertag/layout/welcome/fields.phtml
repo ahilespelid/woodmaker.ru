@@ -1,13 +1,22 @@
 <label class="tag_field">
     <?php
+    $field_id = $wo['field']['fid'];
+    if(!empty($cats = Wo_GetCategoriesWithSub())){
+        foreach($cats as $k => $cat){
+            if('page' == $cat['type']){
+                $cats_blog[] = $cat;
+            }elseif('status' == $cat['type']){
+                $cats_status[] = $cat;
+    }}};
     if ($wo['field']['select_type'] == 'yes') {
         $options = @explode(',', $wo['field']['type']); ?>
-        <select name="<?php echo $wo['field']['fid'];?>">
+        <select id='select-<?=$wo['field']['fid'];?>' name="<?php echo $wo['field']['fid'];?>">
             <option value=""><?php echo $wo['lang']['none'];?></option>
-            <?php foreach ($options as $key => $value) { ?>
-                <option value="<?php echo $key + 1;?>"><?php echo $value;?></option>
+            <?php foreach ($field_id == 'fid_3' ? $cats_blog : $cats_status as $key => $value) { ?>
+                <option data-lang-key="<?php echo $value['lang_key'];?>" value="<?php echo $value['id'];?>"><?php echo $wo['lang'][$value['lang_key']];?></option>
             <?php } ?>
         </select>
+        <input id="field-<?=$wo['field']['fid'];?>" type="hidden" name="<?= $field_id == 'fid_3' ? 'category_lang_key' : 'status_lang_key'?>" value=''>
     <?php } else { if ($wo['field']['type'] == 'textbox') { ?>
         <input id="<?php echo $wo['field']['fid'];?>" name="<?php echo $wo['field']['fid'];?>" placeholder=" " type="text">
     <?php } else if ($wo['field']['type'] == 'textarea') {?>
@@ -18,3 +27,10 @@
         echo $wo['lang']['in_woodworking'];
         } else {echo $wo['field']['description'];} ?></span>
 </label>
+
+<script>
+    $('#select-<?=$wo['field']['fid'];?>').on('change', function() {
+        $('#field-<?=$wo['field']['fid'];?>').val($(this).find(":selected").data('lang-key'));
+        console.log($('#field-<?=$wo['field']['fid'];?>').val());
+    })
+</script>

@@ -11,17 +11,7 @@
 				<a href="<?php echo $wo['article']['author']['url']; ?>" data-ajax="?link1=timeline&u=<?php echo $wo['article']['author']['username']; ?>"><?php echo $wo['article']['author']['name']; ?></a>
 				<span class="middot">·</span>
 				<time>
-				<?php 
-					$ru_month = array( 'Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь' );
-					$en_month = array( 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December' );
-				?>
-				<?php 
-				if ($_SESSION["lang"] == "russian"){ 
-					echo date("d",$wo['article']['posted'])." " .str_replace($en_month, $ru_month, date('F',strtotime($wo['article']['posted'])))." ". date("Y",$wo['article']['posted']); 
-				} else {
-					echo date("d M Y",$wo['article']['posted']);
-				} 
-				?>
+					<?php Wo_SetDateLangBlog();?>
 				</time>
 			</div>
 		</div>

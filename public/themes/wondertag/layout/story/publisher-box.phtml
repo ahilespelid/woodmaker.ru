@@ -366,7 +366,7 @@ if (!empty($_GET['url'])) {
                                     <ul>
                                         <li class="themes_dropdown_item none_selected"><?php echo $wo["lang"]["none_selected"]; ?></li>
                                         <?php foreach($wo["blog_categories"] as $category_id => $category) { ?>
-                                            <li class="themes_dropdown_item"><?= $wo['lang'][$category['lang_key']]; ?></li>
+                                            <li class="themes_dropdown_item" data-lang-key="<?= $category['lang_key']; ?>"><?= $wo['lang'][$category['lang_key']]; ?></li>
                                         <?php }; ?>
                                     </ul>
                                 </div>
@@ -491,6 +491,7 @@ if (!empty($_GET['url'])) {
 					<input type="hidden" name="ai_post" value="off" id="isAiPost">
 				<?php } ?>
 				<input type="hidden" name="postSticker" value="" id="postSticker" onchange="alert(this.value)">
+				<input type="hidden" name="category_lang_key" value="">
 			</form>
 		</div>
 	</div>
@@ -652,6 +653,10 @@ $(".themes_dropdown_item").each((i, item) => {
         } else {
             $(".post_themes_dropdown span").text($(item).text())
         }
+
+		$('input[name="category_lang_key"]').val($(item).data('lang-key'))
+
+		console.log($('input[name="category_lang_key"]').val())
 
         $(".themes_dropdown_item").each((index, category) => {
             $(category).removeClass('active')

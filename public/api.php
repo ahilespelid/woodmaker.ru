@@ -72,6 +72,8 @@ if ($_GET['type'] == 'user_data') {
         'username' => $api_data['username'],
         'first_name' => $api_data['first_name'],
         'last_name' => $api_data['last_name'],
+        'country' => $api_data['country_id'],
+        'city' => $api_data['city_id'],
         'gender' => $api_data['gender'],
         'birthday' => $api_data['birthday'],
         'about' => $api_data['about'],
@@ -85,6 +87,7 @@ if ($_GET['type'] == 'user_data') {
         'verified' => $api_data['verified'],
         'url' => $api_data['url']
     );
+    $json_data['fields'] = empty($fields = Wo_UserFieldsAll($json_data['id'])) ? '' : $fields;
     header("Content-type: application/json");
     echo json_encode(array(
         'api_status' => 'success',

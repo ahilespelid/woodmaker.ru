@@ -47,7 +47,7 @@
 					<span><?php echo $wo['lang']['gender']; ?></span>
 				</label>
 			</div>
-			<div class="col-lg-6">
+			<!-- <div class="col-lg-6">
 				<label class="tag_field">
 					<select id="country" name="country">
 						<?php 
@@ -60,7 +60,9 @@
 					</select>
 					<span><?php echo $wo['lang']['country']; ?></span>
 				</label>
-			</div>
+			</div> -->
+			<?php echo Wo_LoadPage('reusable_dropdown/countries_dropdown');?>
+			<?php echo Wo_LoadPage('reusable_dropdown/cities_dropdown');?>
 		</div>
 		<?php if ($wo['config']['weather_widget'] == 1 && !empty($wo['config']['weather_key'])) { ?>
 			<div class="row">
@@ -198,17 +200,17 @@
 		<?php } ?>
          
 		<?php
-			$fields = Wo_GetProfileFields('general');
+			$fields = Wo_GetProfileFields('search');
 			if (count($fields) > 0) {
 				foreach ($fields as $key => $wo['field']) {
-					echo Wo_LoadPage('setting/profile-fields');
+					echo Wo_LoadPage('search/custom_select');
 				}
-				echo '<input name="custom_fields" type="hidden" value="1">';
 			}
 		?>
 		<div class="text-center">
 			<button type="submit" class="btn btn-main btn-mat btn-mat-raised disable_btn" id="update_user_data"><?php echo $wo['lang']['save']; ?></button>
 		</div>
+		<input type="hidden" name="custom_fields" value="1">
 		<input type="hidden" name="user_id" value="<?php echo $wo['setting']['user_id'];?>">
 		<input type="hidden" name="hash_id" value="<?php echo Wo_CreateSession();?>">
 	</form>
@@ -232,6 +234,8 @@
 </div>
 
 <script type="text/javascript">
+
+console.log(window.location.pathname)
 	
 $(function() {
   $.datepicker.regional['rus'] = {

@@ -63,6 +63,7 @@
 					<button type="submit" class="btn btn-main btn-mat disable_btn"><?php echo $wo['lang']['create']; ?></button>
 				</div>
 				<input type="hidden" name="hash_id" value="<?php echo Wo_CreateSession();?>">
+				<input type="hidden" name="category_lang_key" value="">
 			</form>
 		</div>
 	</div>
@@ -70,12 +71,15 @@
 
 <script type="text/javascript">
 	<?php 
+$js_array = json_encode($wo['group_categories']);
+echo "var categories_array = ". $js_array . ";\n";
 $js_array = json_encode($wo['group_sub_categories']);
 echo "var sub_categories_array = ". $js_array . ";\n";
 ?>
 	function GetGroupSubCategory(self) {
 		id = $(self).val();
 		var text = "";
+		$('input[name="category_lang_key"]').val(categories_array[id].lang_key)
 		if (typeof(sub_categories_array[id]) == 'undefined') {
 		    $('#group_sub_category').html('');
 		}

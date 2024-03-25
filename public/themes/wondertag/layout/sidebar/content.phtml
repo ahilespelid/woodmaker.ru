@@ -191,6 +191,11 @@ if (mysqli_query($wo['sqlConnect'], "DESCRIBE `wondertage_settings`" )) {
 			</li>
 			<li class="activities-wrapper" id="activities-wrapper">
 				<?php
+                pa(Wo_GetUserER(2));
+                pa(Wo_GetUserER(273));
+                pa(Wo_GetUserER(84));
+                //pa(Wo_GetFriends(2));
+                //pa(Wo_GetActivitiesUser(2, '01.01.2024'));
 					if (count($activities) == 0) {
 						echo '<h2><div class="no-activities text-center">' . $wo['lang']['no_activities'] . '</div><h2>';
 					} else {

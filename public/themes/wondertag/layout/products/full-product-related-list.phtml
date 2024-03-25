@@ -13,7 +13,7 @@
 			<div class="product-by">
 				<?php
 				    $product_by_ = $wo['product']['category'];
-				    $product_by_ = str_replace('{product_category_name}', $wo['products_categories'][$wo['product']['category']], $product_by_);
+				    $product_by_ = str_replace('{product_category_name}', $wo['products_categories'][$wo['product']['category']]['lang_key'], $product_by_);
 				?>
 				<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><path fill="currentColor" d="M11,13.5V21.5H3V13.5H11M12,2L17.5,11H6.5L12,2M17.5,13C20,13 22,15 22,17.5C22,20 20,22 17.5,22C15,22 13,20 13,17.5C13,15 15,13 17.5,13Z"></path></svg>&nbsp;<a href="<?php echo Wo_SeoLink('index.php?link1=products&c_id=' . $wo['product']['category']);?>" data-ajax="?link1=products&c_id=<?php echo $wo['product']['category'];?>"><?php echo $wo['products_categories'][$wo['product']['category']];?></a>
 			</div>

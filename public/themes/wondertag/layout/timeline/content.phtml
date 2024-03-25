@@ -1,7 +1,7 @@
 <?php
-ini_set('error_reporting', E_ALL);
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
+//ini_set('error_reporting', E_ALL);
+//ini_set('display_errors', 1);
+//ini_set('display_startup_errors', 1);
 //pa(Wo_GetMutualFriends($wo['user_profile']['user_id'],'profile',100)); exit;
 
 $IsOwner       = Wo_IsOnwer($wo['user_profile']['user_id']);
@@ -1700,7 +1700,7 @@ var qrCode = new QRCodeStyling({
 	image: "<?php echo $wo['config']['theme_url'];?>/img/icon.png",
 	margin: 10,
 	imageOptions: {
-		crossOrigin: "anonymous",margin: 10,
+        crossOrigin: "anonymous",margin: 10,
 	},
 	dotsOptions: {
 		color: "<?php echo $wo['config']['btn_background_color'];?>",type: "dots"

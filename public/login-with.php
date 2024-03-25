@@ -183,6 +183,7 @@ if (isset($provider) && in_array($provider, $types)) {
                 // Получение access_token
                 $data = file_get_contents($url);
                 $data = json_decode($data, true);
+                //pa($data); exit;
                 }
                 if(!empty($data['access_token'])){
                     // Получили email
@@ -204,6 +205,8 @@ if (isset($provider) && in_array($provider, $types)) {
                         'displayName'       => $info['response'][0]['first_name'],
                         'firstName'         => $info['response'][0]['first_name'],
                         'email'             => $email,
+                        'username'          => Wo_NewUsername(),
+                        
                         'profileURL'        => '',
                         'lastName'          => $info['response'][0]['last_name'],
                         'photoURL'          => (empty($info['response'][0]['photo_max_orig'])) ? 'https://woodmaker.ru/upload/photos/n-avatar.jpg' : $info['response'][0]['photo_max_orig'],
@@ -211,7 +214,9 @@ if (isset($provider) && in_array($provider, $types)) {
                         'gender'            => '',
                     ];
 
+                    
                         $query = mysqli_query($sqlConnect, $sql = "SELECT username FROM " . T_USERS . " WHERE `vk`='$user_profile->identifier' ORDER BY user_id DESC LIMIT 1;");
+                        //pa();
                         if(Wo_UserExists($user_id = $query->fetch_array()['username']) === true){
                             Wo_SetLoginWithSessionFromUsername($user_id); header("Location: " . $config['site_url']); exit;}
                  }               
@@ -252,8 +257,7 @@ if (isset($provider) && in_array($provider, $types)) {
                     echo "Error: ".$e->getMessage();
                     exit();
             }
-        }
-        else{
+        }else{
             $hybridauth = new Hybridauth( $LoginWithConfig );
 
             $authProvider = $hybridauth->authenticate($provider);
@@ -322,20 +326,21 @@ if (isset($provider) && in_array($provider, $types)) {
                 Wo_SetLoginWithSession($user_email);
                 header("Location: " . $config['site_url']);
                 exit();
-            }
+            }                 
+            
+            $str          = md5(microtime());
+            $id           = substr($str, 0, 9);
 ///*/            
 
-                $str          = md5(microtime());
-                $id           = substr($str, 0, 9);
-                $user_uniq_id = (Wo_UserExists($id) === false) ? $id : 'u_' . $id;
 
-            if (Wo_UserExists($user_uniq_id) === true) {
+            $user_uniq_id = Wo_NewUsername();
+
+            if(Wo_UserExists($user_uniq_id) === true){
                 //Wo_SetLoginWithSession($user_email);
                 Wo_SetLoginWithSessionFromUsername($user_uniq_id);
                 header("Location: " . $config['site_url']);
                 exit();
-            }
-             else {
+            } else {
                 $social_url   = substr($user_profile->profileURL, strrpos($user_profile->profileURL, '/') + 1);
                 $imported_image = Wo_ImportImageFromLogin($user_profile->photoURL, 1);
                 if (empty($imported_image)) {

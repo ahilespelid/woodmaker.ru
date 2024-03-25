@@ -1,5 +1,5 @@
 <?php
-if ($f == 'register') {
+if ($f == 'register') { 
     if (!empty($_SESSION['user_id'])) {
         $_SESSION['user_id'] = '';
         unset($_SESSION['user_id']);
@@ -11,7 +11,8 @@ if ($f == 'register') {
         setcookie('user_id', '', -1, '/');
     }
     if ($wo['config']['auto_username'] == 1) {
-        $_POST['username'] = time() . rand(111111, 999999);
+        //$_POST['username'] = time() . rand(111111, 999999);
+        $_POST['username'] = Wo_NewUsername();
         if (empty($_POST['first_name']) || empty($_POST['last_name'])) {
             $errors = $error_icon . $wo['lang']['first_name_last_name_empty'];
             header("Content-type: application/json");
@@ -23,7 +24,7 @@ if ($f == 'register') {
         if (preg_match('/[^\w\s]+/u', $_POST['first_name']) || preg_match('/[^\w\s]+/u', $_POST['last_name'])) {
             $errors = $error_icon . $wo['lang']['username_invalid_characters'];
         }
-    }
+    } //pa($_POST); 
     $fields = Wo_GetWelcomeFileds();
     if (empty($_POST['email']) || empty($_POST['username']) || empty($_POST['password']) || empty($_POST['confirm_password']) || empty($_POST['gender'])) {
         $errors = $error_icon . $wo['lang']['please_check_details'];
@@ -50,7 +51,7 @@ if ($f == 'register') {
         if (in_array($_POST['username'], $wo['site_pages'])) {
             $errors = $error_icon . $wo['lang']['username_invalid_characters'];
         }
-        if (strlen($_POST['username']) < 5 OR strlen($_POST['username']) > 32) {
+        if (strlen($_POST['username']) < 3 OR strlen($_POST['username']) > 32) {
             $errors = $error_icon . $wo['lang']['username_characters_length'];
         }
         if (!preg_match('/^[\w]+$/', $_POST['username'])) {
@@ -113,6 +114,8 @@ if ($f == 'register') {
                     }
                 }
             }
+            $field_data[2]['category_lang_key'] = $_POST['category_lang_key'];
+            $field_data[3]['status_lang_key'] = $_POST['status_lang_key'];
         }
         $activate = ($wo['config']['emailValidation'] == '1') ? '0' : '1';
         $code     = md5(rand(1111, 9999) . time());
@@ -171,6 +174,7 @@ if ($f == 'register') {
             $re_data['phone_number'] = Wo_Secure($_POST['phone_num']);
         }
         $in_code = (isset($_POST['invited'])) ? Wo_Secure($_POST['invited']) : false;
+        //pa($re_data);exit;
         if (empty($_POST['phone_num'])) {
             $register = Wo_RegisterUser($re_data, $in_code);
         } else {
@@ -187,6 +191,8 @@ if ($f == 'register') {
             }
             if ($activate == 1 || ($wo['config']['sms_or_email'] == 'mail' && $activate != 1)) {
                 $wo['user'] = Wo_UserData($r_id);
+                // Обновить Юзернайм
+                /*/
                 if ($wo['config']['auto_username'] == 1) {
                     $_POST['username'] = $_POST['username'] . "_" . $r_id;
                     $db->where('user_id', $r_id)->update(T_USERS, array(
@@ -194,6 +200,7 @@ if ($f == 'register') {
                     ));
                     cache($r_id, 'users', 'delete');
                 }
+                ///*/
                 if (!empty($wo['config']['auto_friend_users'])) {
                     $autoFollow = Wo_AutoFollow(Wo_UserIdFromUsername($_POST['username']));
                 }

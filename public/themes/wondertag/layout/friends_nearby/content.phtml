@@ -50,7 +50,7 @@ navigator.permissions && navigator.permissions.query({name: 'geolocation'}).then
 								<form action="#">
 									<div class="search-blog">
 										<div class="wow_form_fields">
-											<input type="text" placeholder="<?php echo $wo['lang']['search_for_users']; ?>" id="nearby-username" onkeydown="Wo_LoadNearByUsers(this);">
+											<input type="text" placeholder="<?php echo $wo['lang']['enter_request']; ?>" id="nearby-username" onkeydown="Wo_LoadNearByUsers(this);">
 										</div>
 									</div>
 								</form>
@@ -59,6 +59,26 @@ navigator.permissions && navigator.permissions.query({name: 'geolocation'}).then
 										<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path fill="currentColor" d="M11 18h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM3 7c0 .55.45 1 1 1h16c.55 0 1-.45 1-1s-.45-1-1-1H4c-.55 0-1 .45-1 1zm4 6h10c.55 0 1-.45 1-1s-.45-1-1-1H7c-.55 0-1 .45-1 1s.45 1 1 1z"></path></svg>
 									</a>
 									<ul class="dropdown-menu dropdown-menu-right dropdown-static-menu" role="menu">
+										<div class="wow_frnd_field">
+											<div id="search-nearby-users">
+											<?php
+												$fields = Wo_GetUserCustomFields();
+												if (count($fields) > 0) {
+													foreach ($fields as $key => $wo['field']) {
+											?>
+												<h4><?//php echo $wo['field']['name']; ?></h4>
+												<div class="nearby-users-gender-collapse nearby-users-relationship-collapse">
+													<?php
+															$wo['field']['issearch'] = true;
+															//echo Wo_LoadPage('setting/profile-fields');
+															echo Wo_LoadPage('search/custom_select');
+															}
+														}
+													?>
+												</div>
+											</div>
+										</div>
+										<hr class="style-two">
 										<div class="wow_frnd_field">
 											<h4><?php echo $wo['lang']['gender'];?></h4>
 											<div class="nearby-users-gender-cont">
@@ -89,31 +109,12 @@ navigator.permissions && navigator.permissions.query({name: 'geolocation'}).then
 										</div>
 										<hr class="style-two">
 										<div class="wow_frnd_field">
-											<h4><?php echo $wo['lang']['location_dist'];?> (km)</h4>
+											<h4><?php echo $wo['lang']['location_dist'];?></h4>
 											<div class="select-nearby-users-distance">
 												<form class="valign">
 													<input type="range" class="cusrange" id="nearby-users-distance" name="amountRange" onchange="Wo_LoadNearByUsers();" value="10000" min="1" max="10000" oninput="this.form.amountInput.value=this.value">
 													<input type="number" name="amountInput" min="1" max="10000" value="10000" oninput="this.form.amountRange.value=this.value" readonly id="cusrange-reader"/>
 												</form>
-											</div>
-										</div>
-										<hr class="style-two">
-										<div class="wow_frnd_field">
-											<div id="search-nearby-users">
-											<?php
-												$fields = Wo_GetUserCustomFields();
-												if (count($fields) > 0) {
-													foreach ($fields as $key => $wo['field']) {
-											?>
-												<h4><?php echo $wo['field']['name']; ?></h4>
-												<div class="nearby-users-gender-collapse nearby-users-relationship-collapse">
-															<?php
-																		$wo['field']['issearch'] = true;
-																		echo Wo_LoadPage('setting/profile-fields');
-																	}
-																}
-															?>
-												</div>
 											</div>
 										</div>
 									</ul>
@@ -241,7 +242,8 @@ $('.tag_onboard_btn').click(function() {
 		var status   = $(".nearby-users-status-collapse").find('.active').attr('data-nearby-user-status');
 		var gender   = $(".nearby-users-gender-cont").find('.active').attr('data-gender');
 		var fid_1 = $('[name="fid_1"]').find(":selected").val();
-		console.log(fid_1);
+		var fid_3 = $('#fid_3').val();
+		var fid_4 = $('#fid_4').val();
 		var name     = $("#nearby-username").val();
 		var distance = $("#nearby-users-distance").val();
 		if (!gender && !name && !distance && !status) { return false;}
@@ -262,6 +264,8 @@ $('.tag_onboard_btn').click(function() {
 				gender:gender,
 				name:name,
 				fid_1:fid_1,
+				fid_3,
+				fid_4,
 				distance:distance,
 				status:status
 			},

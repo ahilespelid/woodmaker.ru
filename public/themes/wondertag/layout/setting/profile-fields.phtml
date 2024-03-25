@@ -27,7 +27,7 @@
 		<select name="<?php echo $wo['field']['fid'];?>" multiple>
 				<?php if( isset( $wo['field']['issearch'] ) ){ ?> <option value=""><?php echo $wo['lang']['all'];?></option> <?php } ?>
 				<?php
-					foreach ($options as $key => $value) {
+					foreach ($wo['field']['fid'] == "fid_3" ? $wo['blog_categories'] : Wo_GetCategoriesWithSub('status') as $key => $value) {
 					if (is_array($fid)){
 						if (in_array(($key + 1), $fid)){
 						  $selected = 'selected';
@@ -38,7 +38,7 @@
 						$selected = (($key + 1) == $fid) ? 'selected' : '';
 					}
 				?>
-				<option value="<?php echo $key + 1;?>" <?php echo $selected;?>><?php echo $value;?></option>
+				<option value="<?php echo $value['id'];?>" <?php echo $selected;?>><?php echo $wo['lang'][$value['lang_key']];?></option>
 				<?php } ?>
 		</select>
 	<?php } else { if ($wo['field']['type'] == 'textbox') { ?>
@@ -49,5 +49,5 @@
 	<span><?php echo $wo['field']['name'];?> </span>
 </label>
 <?php if( !isset( $wo['field']['issearch'] ) ){ ?>
-	<div class="help-block"><?php echo $wo['field']['description']; ?> <?php if($wo['field']['id'] == 3) {echo $wo['lang']['in_woodworking'];} ?></div>
+	<div class="help-block"> <?php if($wo['field']['id'] == 3) {echo $wo['lang']['search_categories_prompt'];} ?></div>
 <?php } ?>

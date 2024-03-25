@@ -55,12 +55,12 @@
 			</div>
 			<label class="tag_field">
 				<select name="blog_category" id="blog_category">
-					<option value="0"><?php echo $wo['lang']['category'];?></option>
+					<option value="0"><?php echo $wo['lang']['none_selected'];?></option>
 					<?php foreach ($wo['blog_categories'] as $category): ?>
 						<option value="<?php echo $category['id']?>"><?php echo $wo['lang'][$category['lang_key']]; ?></option>
 					<?php endforeach; ?>
 				</select>
-				<span><?php echo $wo['lang']['category'] ?></span>
+				<span><?php echo $wo['lang']['directions_for_blog'] ?></span>
 			</label>
 			<label class="tag_field">
 				<input data-role="tagsinput" id="blog_tags" name="blog_tags" type="text" placeholder=" ">

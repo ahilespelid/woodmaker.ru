@@ -57,7 +57,7 @@
 										$selected = ($key == $wo['product']['category']) ? 'selected' : '';
 										if ($key > 0) {
 								?>
-									<option value="<?php echo $key;?>" <?php echo $selected?>><?php echo $category;?></option>
+									<option value="<?php echo $category['id'];?>" <?=$selected?>><?php echo $wo['lang'][$category['lang_key']];?></option>
 								<?php } } ?>
 							</select>
 							<span><?php echo $wo['lang']['category'] ?></span>

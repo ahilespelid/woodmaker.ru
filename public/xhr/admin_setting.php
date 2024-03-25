@@ -1847,7 +1847,8 @@ if ($f == 'admin_setting' AND (Wo_IsAdmin() || Wo_IsModerator())) {
     if($s == 'add_new_category'){//pa($_GET);pa($_POST); exit;
         $data['status']  = 400;
         $data['message'] = 'Please check your details';
-        
+        //pa(Wo_CheckMainSession($_GET['hash']));
+        //pa($_POST['type']);
         if(Wo_CheckMainSession($_GET['hash']) && !empty($_POST['type'] ?? '')){
             foreach(Wo_LangsNamesFromDB() as $lang){
                 if(!empty($_POST[$lang])){
@@ -2563,7 +2564,7 @@ if ($f == 'admin_setting' AND (Wo_IsAdmin() || Wo_IsModerator())) {
                 $data_sql .= ((0 == $i) ? '' : ', ')."`{$key}` = '{$value}'";
             }$i++;}
             
-            $data['status'] = (!empty($data_sql) && $sqlConnect->query($q = "UPDATE " . T_LANGS . " SET " . $data_sql . " WHERE `id` = '{$id}';")) ? 200 : $data['status'];
+            $data['status'] = (!empty($data_sql) && $sqlConnect->query($q = "UPDATE " . T_LANGS . " SET " . $data_sql . " WHERE `lang_key` = '{$id}';")) ? 200 : $data['status'];
             // pa($q); "UPDATE " . T_LANGS . " SET `{$key}` = '{$value}' WHERE `lang_key` = '{$lang_key}';" 
 ///*/ ahilespelid ///*/           
             $image = '';

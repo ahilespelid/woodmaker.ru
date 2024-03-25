@@ -1,5 +1,5 @@
 <?php
-ini_set('display_errors', '1'); ini_set('display_startup_errors', '1'); error_reporting(-1); 
+//ini_set('display_errors', '1'); ini_set('display_startup_errors', '1'); error_reporting(-1); 
 if ($f == 're_cover') { 
     function initial($function, $type,$user = false) {
         if(Wo_IsAdmin() && !empty($_POST['user_id']) && is_numeric($_POST['user_id'])){

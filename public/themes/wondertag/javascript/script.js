@@ -24,6 +24,15 @@ $(document).on('input', '#post-textarea textarea', function () {
     }
 });
 
+async function getUserApi(username){
+  try {
+      var res = await (await fetch('/api.php?type=user_data&user='+username)).json();
+      return res; 
+  }catch(err){
+      console.error(err);
+      throw new Error('Ошибка на стороне сервера');
+}};
+
 // Static Dropdown
 $(document).on('click', '.dropdown-static-menu', function (e) {
   e.stopPropagation();
@@ -245,27 +254,6 @@ function Wo_ReloadSideBarGroups() {
   }, function (data) {
     if(data.status == 200) {
       $('.sidebar-group-may-know-container').html(data.html);
-    }
-  });
-}
-
-// side bar pages
-function Wo_ReloadSideBarPages() {
-  var page_id = $('.sidebar-pages-may-know-container').find('.sidebar-page-data').attr('data-page-id');
-  if (page_id == 'undefined') {
-      page_id = '';
-  }
-  $.get(Wo_Ajax_Requests_File(), {
-    f: 'pages',
-    s: 'get_next_page',
-    page_id: page_id
-  }, function (data) {
-    if(data.status == 200) {
-      if (data.html.length == 0) {
-        $('.sidebar-pages-may-know-container').html('<h2><div class="no-more-pages text-center">No more pages to like</div></h2>');
-      } else {
-        $('.sidebar-pages-may-know-container').hide().html(data.html).fadeIn(300);
-      }
     }
   });
 }

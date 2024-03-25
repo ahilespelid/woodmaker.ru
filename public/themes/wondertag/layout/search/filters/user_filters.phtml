@@ -1,16 +1,14 @@
-<div class="tag_srch_fltr_country">
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M12,11.5A2.5,2.5 0 0,1 9.5,9A2.5,2.5 0 0,1 12,6.5A2.5,2.5 0 0,1 14.5,9A2.5,2.5 0 0,1 12,11.5M12,2A7,7 0 0,0 5,9C5,14.25 12,22 12,22C12,22 19,14.25 19,9A7,7 0 0,0 12,2Z" /></svg>
-    <select name="country" id="country">
-        <option value="all" selected><?php echo $wo['lang']['all'];?> <?php echo $wo['lang']['country'];?></option>
-        <?php 
-            foreach ($wo['countries_name'] as $country_ids => $country) { 
-            $selected_c = (!empty($_GET['country']) && $_GET['country'] == $country_ids) ? ' selected': '';
-        ?>
-            <option value="<?php echo $country_ids;?>" <?php echo $selected_c?>><?php echo $country;?></option>
-        <?php } ?>
-    </select>
-    <span class="caret"></span>
-</div>
+<?php
+    $fields = Wo_GetUserCustomFields();
+    if (count($fields) > 0) {
+        foreach ($fields as $key => $wo['field']) {
+            $wo['field']['issearch'] = true;
+            echo Wo_LoadPage('search/custom_select');
+        }
+    }
+?>
+<?php echo Wo_LoadPage('reusable_dropdown/countries_dropdown');?>
+<?php echo Wo_LoadPage('reusable_dropdown/cities_dropdown');?>
 <div class="dropdown">
     <script>
         <?php
@@ -26,13 +24,16 @@
         $( function() {
             $( "#slider-range" ).slider({
                 range: true,
-                min: 10,
+                min: 14,
                 max: 70,
                 values: [ <?php echo $age_from;?>, <?php echo $age_to;?> ],
                 slide: function( event, ui ) {
                     $( "#amount" ).val( ui.values[ 0 ] + " - " + ui.values[ 1 ] );
                     $( "#age_from" ).val( ui.values[ 0 ] );
                     $( "#age_to" ).val( ui.values[ 1 ] );
+                    if(location.href.includes('search')) {
+                        search();
+                    }
                 }
             });
             $( "#amount" ).val( $( "#slider-range" ).slider( "values", 0 ) + " - " + $( "#slider-range" ).slider( "values", 1 ) );
@@ -54,7 +55,15 @@
             } 
         }
     ?>
-    <div class="valign dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M7.5,2A2,2 0 0,1 9.5,4A2,2 0 0,1 7.5,6A2,2 0 0,1 5.5,4A2,2 0 0,1 7.5,2M6,7H9A2,2 0 0,1 11,9V14.5H9.5V22H5.5V14.5H4V9A2,2 0 0,1 6,7M14.5,12A2,2 0 0,1 16.5,10A2,2 0 0,1 18.5,12A2,2 0 0,1 16.5,14A2,2 0 0,1 14.5,12M13.5,15H19.5V19H18V22H15V19H13.5V15Z"></path></svg> <?php echo $wo['lang']['age']; ?> <span class="caret"></span></div>
+    <div class="valign dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+        <div class="w-100 full_flex">
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M7.5,2A2,2 0 0,1 9.5,4A2,2 0 0,1 7.5,6A2,2 0 0,1 5.5,4A2,2 0 0,1 7.5,2M6,7H9A2,2 0 0,1 11,9V14.5H9.5V22H5.5V14.5H4V9A2,2 0 0,1 6,7M14.5,12A2,2 0 0,1 16.5,10A2,2 0 0,1 18.5,12A2,2 0 0,1 16.5,14A2,2 0 0,1 14.5,12M13.5,15H19.5V19H18V22H15V19H13.5V15Z"></path></svg> 
+                <?php echo $wo['lang']['age']; ?> 
+            </div>
+            <span class="caret"></span>
+        </div>
+    </div>
     <div class="dropdown-menu dropdown-static-menu tag_create_menu" role="menu">
         <div class="tag_srch_fltr_age">
             <div class="round-check">
@@ -76,68 +85,6 @@
 </div>
 <div class="dropdown">
     <?php 
-        $selected_verified_all = 'checked';
-        $selected_verified_on = '';
-        $selected_verified_off = '';
-        if (!empty($_GET['verified'])) {
-            if ($_GET['verified'] == 'on') {
-                $selected_verified_on = 'checked';
-                $selected_verified_all = '';
-            } else if ($_GET['verified'] == 'off') {
-                $selected_verified_off = 'checked';
-                $selected_verified_all = '';
-            } 
-        }
-    ?>
-    <div class="valign dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M10,17L5,12L6.41,10.58L10,14.17L17.59,6.58L19,8M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"></path></svg> <?php echo $wo['lang']['verified']; ?> <span class="caret"></span></div>
-    <div class="dropdown-menu dropdown-static-menu tag_create_menu" role="menu">
-        <div class="round-check">
-            <input type="radio" name="verified" id="verified-0" value="all" <?php echo $selected_verified_all;?>>
-            <label for="verified-0"><?php echo $wo['lang']['all']; ?></label> 
-        </div>
-        <div class="round-check">
-            <input type="radio" name="verified" id="verified-1" value="on" <?php echo $selected_verified_on;?>>
-            <label for="verified-1"><?php echo $wo['lang']['verified']; ?></label>
-        </div>
-        <div class="round-check">
-            <input type="radio" name="verified" id="verified-2" value="off"<?php echo $selected_verified_off;?>>
-            <label for="verified-2"><?php echo $wo['lang']['unverified']; ?></label>
-        </div>
-    </div>
-</div>
-<div class="dropdown">
-    <?php 
-        $selected_status_all = 'checked';
-        $selected_status_on = '';
-        $selected_status_off = '';
-        if (!empty($_GET['status'])) {
-            if ($_GET['status'] == 'on') {
-                $selected_status_on = 'checked';
-                $selected_status_all = '';
-            } else if ($_GET['status'] == 'off') {
-                $selected_status_off = 'checked';
-                $selected_status_all = '';
-            } 
-        }
-    ?>
-    <div class="valign dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9M12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17M12,4.5C7,4.5 2.73,7.61 1,12C2.73,16.39 7,19.5 12,19.5C17,19.5 21.27,16.39 23,12C21.27,7.61 17,4.5 12,4.5Z"></path></svg> <?php echo $wo['lang']['status']; ?> <span class="caret"></span></div>
-    <div class="dropdown-menu dropdown-static-menu tag_create_menu" role="menu">
-        <div class="round-check">
-            <input type="radio" name="status" id="status-0" value="all" <?php echo $selected_status_all;?>>
-            <label for="status-0"><?php echo $wo['lang']['all']; ?></label> 
-        </div>
-        <div class="round-check">
-            <input type="radio" name="status" id="status-1" value="on" <?php echo $selected_status_on;?>>
-            <label for="status-1"><?php echo $wo['lang']['online']; ?></label>
-        </div>
-        <div class="round-check">
-            <input type="radio" name="status" id="status-2" value="off"<?php echo $selected_status_off;?>>
-            <label for="status-2"><?php echo $wo['lang']['offline']; ?></label>
-        </div>
-    </div>
-</div>
-<div class="dropdown">
-    <?php 
         $selected_status_all_sex = 'checked';
         $selected_status_male = '';
         $selected_status_female = '';
@@ -151,7 +98,15 @@
             } 
         }
     ?>
-    <div class="valign dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M9,11.75A1.25,1.25 0 0,0 7.75,13A1.25,1.25 0 0,0 9,14.25A1.25,1.25 0 0,0 10.25,13A1.25,1.25 0 0,0 9,11.75M15,11.75A1.25,1.25 0 0,0 13.75,13A1.25,1.25 0 0,0 15,14.25A1.25,1.25 0 0,0 16.25,13A1.25,1.25 0 0,0 15,11.75M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,20C7.59,20 4,16.41 4,12C4,11.71 4,11.42 4.05,11.14C6.41,10.09 8.28,8.16 9.26,5.77C11.07,8.33 14.05,10 17.42,10C18.2,10 18.95,9.91 19.67,9.74C19.88,10.45 20,11.21 20,12C20,16.41 16.41,20 12,20Z"></path></svg> <?php echo $wo['lang']['gender']; ?> <span class="caret"></span></div>
+    <div class="valign dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+        <div class="w-100 full_flex">
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M9,11.75A1.25,1.25 0 0,0 7.75,13A1.25,1.25 0 0,0 9,14.25A1.25,1.25 0 0,0 10.25,13A1.25,1.25 0 0,0 9,11.75M15,11.75A1.25,1.25 0 0,0 13.75,13A1.25,1.25 0 0,0 15,14.25A1.25,1.25 0 0,0 16.25,13A1.25,1.25 0 0,0 15,11.75M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,20C7.59,20 4,16.41 4,12C4,11.71 4,11.42 4.05,11.14C6.41,10.09 8.28,8.16 9.26,5.77C11.07,8.33 14.05,10 17.42,10C18.2,10 18.95,9.91 19.67,9.74C19.88,10.45 20,11.21 20,12C20,16.41 16.41,20 12,20Z"></path></svg> 
+                <?php echo $wo['lang']['gender']; ?> 
+            </div>
+            <span class="caret"></span>
+        </div>
+    </div>
     <div class="dropdown-menu dropdown-static-menu tag_create_menu" role="menu">
         <div class="round-check">
             <input type="radio" name="gender" id="gender-0" value="all" <?php echo $selected_status_all_sex;?>>
@@ -199,7 +154,15 @@
             } 
         }
     ?>
-    <div class="valign dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M8.5,13.5L11,16.5L14.5,12L19,18H5M21,19V5C21,3.89 20.1,3 19,3H5A2,2 0 0,0 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19Z"></path></svg> <?php echo $wo['lang']['avatar']; ?> <span class="caret"></span></div>
+    <div class="valign dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+        <div class="w-100 full_flex">
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M8.5,13.5L11,16.5L14.5,12L19,18H5M21,19V5C21,3.89 20.1,3 19,3H5A2,2 0 0,0 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19Z"></path></svg> 
+                <?php echo $wo['lang']['avatar']; ?> 
+            </div>
+            <span class="caret"></span>
+        </div>
+    </div>
     <div class="dropdown-menu dropdown-static-menu tag_create_menu" role="menu">
         <div class="round-check">
             <input type="radio" name="image" id="image-0" value="all" <?php echo $selected_status_image_all;?>>
@@ -215,12 +178,81 @@
         </div>
     </div>
 </div>
-<?php
-    $fields = Wo_GetUserCustomFields();
-    if (count($fields) > 0) {
-        foreach ($fields as $key => $wo['field']) {
-            $wo['field']['issearch'] = true;
-            echo Wo_LoadPage('search/custom_select');
+<div class="dropdown">
+    <?php 
+        $selected_status_all = 'checked';
+        $selected_status_on = '';
+        $selected_status_off = '';
+        if (!empty($_GET['status'])) {
+            if ($_GET['status'] == 'on') {
+                $selected_status_on = 'checked';
+                $selected_status_all = '';
+            } else if ($_GET['status'] == 'off') {
+                $selected_status_off = 'checked';
+                $selected_status_all = '';
+            } 
         }
-    }
-?>
+    ?>
+    <div class="valign dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+        <div class="w-100 full_flex">
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9M12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17M12,4.5C7,4.5 2.73,7.61 1,12C2.73,16.39 7,19.5 12,19.5C17,19.5 21.27,16.39 23,12C21.27,7.61 17,4.5 12,4.5Z"></path></svg> 
+                <?php echo $wo['lang']['status']; ?> 
+            </div>
+            <span class="caret"></span>
+        </div>
+    </div>
+    <div class="dropdown-menu dropdown-static-menu tag_create_menu" role="menu">
+        <div class="round-check">
+            <input type="radio" name="status" id="status-0" value="all" <?php echo $selected_status_all;?>>
+            <label for="status-0"><?php echo $wo['lang']['all']; ?></label> 
+        </div>
+        <div class="round-check">
+            <input type="radio" name="status" id="status-1" value="on" <?php echo $selected_status_on;?>>
+            <label for="status-1"><?php echo $wo['lang']['online']; ?></label>
+        </div>
+        <div class="round-check">
+            <input type="radio" name="status" id="status-2" value="off"<?php echo $selected_status_off;?>>
+            <label for="status-2"><?php echo $wo['lang']['offline']; ?></label>
+        </div>
+    </div>
+</div>
+<div class="dropdown">
+    <?php 
+        $selected_verified_all = 'checked';
+        $selected_verified_on = '';
+        $selected_verified_off = '';
+        if (!empty($_GET['verified'])) {
+            if ($_GET['verified'] == 'on') {
+                $selected_verified_on = 'checked';
+                $selected_verified_all = '';
+            } else if ($_GET['verified'] == 'off') {
+                $selected_verified_off = 'checked';
+                $selected_verified_all = '';
+            } 
+        }
+    ?>
+    <div class="valign dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+        <div class="w-100 full_flex">
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M10,17L5,12L6.41,10.58L10,14.17L17.59,6.58L19,8M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"></path></svg> 
+                <?php echo $wo['lang']['verified']; ?>
+            </div>
+            <span class="caret"></span>
+        </div>
+    </div>
+    <div class="dropdown-menu dropdown-static-menu tag_create_menu" role="menu">
+        <div class="round-check">
+            <input type="radio" name="verified" id="verified-0" value="all" <?php echo $selected_verified_all;?>>
+            <label for="verified-0"><?php echo $wo['lang']['all']; ?></label> 
+        </div>
+        <div class="round-check">
+            <input type="radio" name="verified" id="verified-1" value="on" <?php echo $selected_verified_on;?>>
+            <label for="verified-1"><?php echo $wo['lang']['verified']; ?></label>
+        </div>
+        <div class="round-check">
+            <input type="radio" name="verified" id="verified-2" value="off"<?php echo $selected_verified_off;?>>
+            <label for="verified-2"><?php echo $wo['lang']['unverified']; ?></label>
+        </div>
+    </div>
+</div>

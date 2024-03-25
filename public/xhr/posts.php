@@ -595,6 +595,7 @@ if ($f == 'posts') {
                 'postTraveling' => Wo_Secure($traveling),
                 'postFileThumb' => Wo_Secure($video_thumb),
                 'postVideoThumb' => Wo_Secure($postVideo_thumb),
+                'category_lang_key' => Wo_Secure($_POST['category_lang_key']),
                 'time' => time(),
                 'blur' => $blur,
                 'multi_image_post' => 0,

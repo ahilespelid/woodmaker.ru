@@ -46,7 +46,7 @@
 							<div class="postMeta--author-text">
 								<a rel="author" href="<?php echo $wo['article']['author']['url']; ?>" data-ajax="?link1=timeline&u=<?php echo $wo['article']['author']['username']; ?>"><?php echo $wo['article']['author']['name']; ?></a>
 								<div>
-									<time itemprop="datePublished" content="<?php echo date("d M Y",$wo['article']['posted']); ?>"><?php echo date("d M Y",$wo['article']['posted']); ?></time> • 
+									<time itemprop="datePublished" content="<?php echo date("d M Y",$wo['article']['posted']); ?>"><?php Wo_SetDateLangBlog();?></time> • 
 									<span class="views"><?php echo $wo['article']['view']?> <?php echo $wo['lang']['views']?></span>
 								</div>
 							</div>
